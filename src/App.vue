@@ -9,8 +9,13 @@
 </template>
 
 <script>
+import Dashboard from './components/Dashboard/Dashboard.vue'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Dashboard
+  }
 }
 </script>
 

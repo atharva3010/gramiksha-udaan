@@ -5,3 +5,8 @@
     </v-card>
   </v-layout>
 </template>
+<<script>
+  export default {
+  name: 'ProgramHead'
+  }
+</script>

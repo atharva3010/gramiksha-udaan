@@ -10,6 +10,7 @@
 <script>
 import ProgramHead from './ProgramHead'
 export default {
+  name: 'Dashboard',
   components: {
     'programhead': ProgramHead
   }
