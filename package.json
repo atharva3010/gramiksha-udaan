@@ -6,8 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "build": "node build/build.js",
-    "start:dev": "webpack-dev-server"
+    "start": "npm run dev",
+    "build": "node build/build.js"
   },
   "dependencies": {
     "firebase": "^5.5.0",
