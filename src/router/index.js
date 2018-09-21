@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import signup from '@/components/User/signup'
+import login from '@/components/User/Login'
+import signupmsg from '@/components/User/signupmsg'
 import Dashboard from '@/components/Dashboard/Dashboard'
 
 Vue.use(Router)
@@ -22,6 +24,16 @@ export default new Router({
       path: '/Signup',
       name: 'Sign Up',
       component: signup
+    },
+    {
+      path: '/Login',
+      name: 'Log in',
+      component: login
+    },
+    {
+      path: '/Signupafter',
+      name: 'Successfully Signed up',
+      component: signupmsg
     }
   ],
   mode: 'history'

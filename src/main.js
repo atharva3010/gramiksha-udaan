@@ -6,10 +6,11 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import { store }  from './store'
-import '@/scripts/firebase'
+import '@/scripts/firebase' 
+import AlertCmp from './components/Shared/Alert.vue'
 
 Vue.use(Vuetify)
-
+Vue.component('app-alert',AlertCmp)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
