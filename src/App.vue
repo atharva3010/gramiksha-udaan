@@ -2,7 +2,7 @@
   <v-app>
     <v-layout row>
       <v-flex>
-        <v-navigation-drawer  permanent dark persistant v-if="isDrawer">
+        <v-navigation-drawer permanent dark persistant v-if="isDrawer">
           <v-toolbar class="transparent" flat>
 
               <v-list class="pa-0">
@@ -82,6 +82,12 @@
         </v-container>
       </v-flex>
     </v-layout>
+    <v-footer class="pa-3" dark>
+        <img src="../static/download.png" style="width:20px;height:20px;border-radius:50%;margin:10px;">
+        <div>Gramiksha</div>
+        <v-spacer></v-spacer>
+        <div> &copy; {{ new Date().getFullYear() }} All rights Reserved.</div>
+      </v-footer>
   </v-app>
 </template>
 
@@ -100,13 +106,7 @@ export default {
         { icon: "lock_open", title: "Sign in", link: "/Login" }
       ];
       if (this.userSignedIn) {
-        menuItems = [
-          {
-            icon: "supervisor_account",
-            title: "View Meetups",
-            link: "/meetups"
-          }
-        ];
+        menuItems = [];
       }
       return menuItems;
     },
@@ -120,6 +120,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>
