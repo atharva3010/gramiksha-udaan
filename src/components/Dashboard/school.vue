@@ -8,7 +8,7 @@
           <h2 style="font-weight:300">{{school.address}}, {{school.city}}</h2>
           <p> Total No of Students : {{school.total}}</p>
   
-          <v-chip v-for="cls in  classes" :key="cls.name">
+          <v-chip  v-for="cls in  classes" :key="cls.name">
             <v-avatar>
               <v-icon>people</v-icon>
             </v-avatar>
