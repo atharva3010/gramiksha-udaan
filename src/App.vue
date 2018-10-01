@@ -42,30 +42,21 @@
               <v-icon >school</v-icon>
             </v-list-tile-action>
           </v-list-tile>
-  
-
-     
       </v-list-group>
         </v-list>
           </v-toolbar>
-  
         </v-navigation-drawer>
       </v-flex>
       <v-flex xs12>
         <v-toolbar dark>
           <v-toolbar-side-icon v-if="!isDrawer" @click="isDrawer=!isDrawer"> </v-toolbar-side-icon>
           <v-toolbar-title class="font-weight-regular">
-            Hello<span v-if="userSignedIn">, {{user.name}}</span>
+            Gramiksha - Udaan<span v-if="userSignedIn">, {{user.name}}</span>
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn icon>
               <v-icon>person</v-icon>
-            </v-btn>
-            <v-btn icon>
-              <a href="http://localhost:8080/dashboard">
-                <v-icon>refresh</v-icon>
-              </a>
             </v-btn>
             <v-btn icon>
               <v-icon>logout</v-icon>
@@ -93,14 +84,6 @@
 
 <script>
 export default {
-<<<<<<< HEAD
-  name: "App"
-};
-</script>
-
-<style>
-</style>
-=======
   name: "App",
   data() {
     return {
@@ -128,4 +111,3 @@ export default {
   }
 };
 </script>
->>>>>>> f03832425b3886f12e591a8411b6a56e5adcc346
