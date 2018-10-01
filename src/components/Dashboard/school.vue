@@ -8,7 +8,7 @@
           <h2 style="font-weight:300">{{school.address}}, {{school.city}}</h2>
           <p> Total No of Students : {{school.total}}</p>
   
-          <v-chip  v-for="cls in  classes" :key="cls.name">
+          <v-chip v-for="cls in  classes" :key="cls.name">
             <v-avatar>
               <v-icon>people</v-icon>
             </v-avatar>
@@ -55,8 +55,13 @@
     </div>
     <div v-else>
   
-      <h2 style="font-weight:300;margin-left:15px;">Select a Session</h2>
-  
+      <v-layout row>
+        <v-flex>
+      <h2 style="float:left;font-weight:300;margin-left:15px;">Select a Session</h2></v-flex>
+      <v-btn @click=" SelectedClass= null;
+      ClassNotSelected= true;" style="float:right;" icon>
+        <v-icon >arrow_back</v-icon>
+      </v-btn></v-layout>
       <v-layout wrap row>
         <v-flex v-for="session in SelectedClass.sessions" :key="session.no" md4 sm6 xs12>
           <v-card style="border-radius:8px;margin:15px;" hover>
