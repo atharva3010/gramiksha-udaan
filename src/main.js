@@ -8,9 +8,10 @@ import "vuetify/dist/vuetify.min.css";
 import { store } from "./store";
 import "@/scripts/firebase";
 import AlertCmp from "./components/Shared/Alert.vue";
-
+import divider from "./components/Shared/divider.vue";
 Vue.use(Vuetify);
 Vue.component("app-alert", AlertCmp);
+Vue.component("Divider", divider);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

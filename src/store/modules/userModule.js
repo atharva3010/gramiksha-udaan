@@ -1,5 +1,5 @@
 import { firebase, db } from "@/scripts/firebase";
-import capitalize from "capitalize";
+
 export default {
   namespaced: true,
   state: {
@@ -39,14 +39,13 @@ export default {
       commit("setLoading", true);
       commit("clearError");
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
       if (re.test(String(payload.email).toLowerCase())) {
         firebase
           .auth()
           .signInWithEmailAndPassword(payload.email, payload.password)
           .then(function(user) {
-            var citiesRef = db.collection("users");
-            citiesRef
+            var usersRef = db.collection("users");
+            usersRef
               .where("uid", "==", user.user.uid)
               .get()
               .then(function(qs) {
@@ -113,7 +112,7 @@ export default {
             .doc(payload.username)
             .set({
               email: payload.email,
-              name: capitalize(payload.name),
+              name: payload.name,
               username: payload.username,
               city: payload.city,
               ngopost: payload.ngopost,
@@ -136,9 +135,8 @@ export default {
         });
     },
     CheckUsename({ commit }, payload) {
-      var citiesRef = db.collection("users");
-
-      var query = citiesRef.where("username", "==", payload.username);
+      var usersref = db.collection("users");
+      var query = usersref.where("username", "==", payload.username);
       query.get().then(function(QuerySnapshot) {
         if (QuerySnapshot.empty) {
           commit("setUserExists", false);
