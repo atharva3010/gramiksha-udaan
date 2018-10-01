@@ -4,7 +4,6 @@
       <v-flex>
         <v-navigation-drawer permanent dark persistant v-if="isDrawer">
           <v-toolbar class="transparent" flat>
-
               <v-list class="pa-0">
                 <v-list-tile style="margin-top:8px;"> 
                   <v-btn @click="isDrawer=!isDrawer" icon><v-icon>close</v-icon></v-btn>
