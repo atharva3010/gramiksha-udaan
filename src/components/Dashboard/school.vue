@@ -58,10 +58,12 @@
       <v-layout row>
         <v-flex>
       <h2 style="float:left;font-weight:300;margin-left:15px;">Select a Session</h2></v-flex>
+      </v-layout>
       <v-btn @click=" SelectedClass= null;
-      ClassNotSelected= true;" style="float:right;" icon>
-        <v-icon >arrow_back</v-icon>
-      </v-btn></v-layout>
+      ClassNotSelected= true;">
+        <v-icon left>arrow_back</v-icon>
+        Select Class
+      </v-btn>
       <v-layout wrap row>
         <v-flex v-for="session in SelectedClass.sessions" :key="session.no" md4 sm6 xs12>
           <v-card style="border-radius:8px;margin:15px;" hover>

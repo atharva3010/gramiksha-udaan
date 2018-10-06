@@ -14,20 +14,20 @@ export default {
           sessions: [
             {
               no: 1,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-11"
             },
             {
               no: 2,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-18"
             },
             {
               no: 4,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-25"
             }
           ]
@@ -38,20 +38,20 @@ export default {
           sessions: [
             {
               no: 1,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-11"
             },
             {
               no: 2,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-18"
             },
             {
               no: 4,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-25"
             }
           ]
@@ -62,20 +62,20 @@ export default {
           sessions: [
             {
               no: 1,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-11"
             },
             {
               no: 2,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-18"
             },
             {
               no: 4,
-              teachers: ["rohit", "shubham"],
-              module: "litrature",
+              teachers: ["Rohit", "Shubham"],
+              module: "Literature",
               date: "2018-10-25"
             }
           ]

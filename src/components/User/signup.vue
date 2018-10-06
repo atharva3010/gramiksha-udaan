@@ -19,7 +19,6 @@
                                 label="name"
                                 id="name"
                                 v-model="name"
-                                required
                               
                                 type="text"
                                 ></v-text-field>
@@ -33,7 +32,6 @@
                                 v-model="email"
                                 type="email"
                                   :rules="[validateEmail]"
-                                required
                                 ></v-text-field>
                                 </v-flex>
 
@@ -46,7 +44,6 @@
                                 v-model="username"
                                 type="text"
                                 :rules="[CheckUsername]"
-                                required
                                 ></v-text-field>
                                 </v-flex>
 
@@ -59,7 +56,6 @@
                                 id="password"
                                 v-model="password"
                                 type="password"
-                                required
                                 ></v-text-field>
                                 </v-flex>
 
@@ -82,7 +78,6 @@
                                 label="City"
                                 id="city"
                                 v-model="city"
-                                required
                                 type="text"
                                 ></v-text-field>
                                 </v-flex>
@@ -93,7 +88,6 @@
                                 label="Post"
                                 id="ngopost"
                                 v-model="ngopost"
-                                required
                                 type="text"
                                 ></v-text-field>
                                 </v-flex>
@@ -124,67 +118,68 @@
 </template>
 
 <script>
-
 export default {
-  data () {
+  data() {
     return {
-      email: '',
-      name:'',
-      password: '',
-      cnpassword: '',
-      username: '',
-      ngopost: '',
-      city:''
-    }
+      email: "",
+      name: "",
+      password: "",
+      cnpassword: "",
+      username: "",
+      ngopost: "",
+      city: ""
+    };
   },
   computed: {
-    comparepass () {
-      return this.password !== this.cnpassword ? 'Password Do not match' : true
-      
+    comparepass() {
+      return this.password !== this.cnpassword ? "Password Do not match" : true;
     },
 
+    validateEmail() {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
- validateEmail() {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    return re.test(String(this.email).toLowerCase())==false ?   'Invalid Email' :true ;
-},
-
-
-    CheckUsername(){
-      
-          this.$store.dispatch('user/CheckUsename',{username:this.username})
-     
-         if(this.$store.getters['user/getUserExists'])
-          return 'Username Exists'
-        else{
-            return true
-        }
+      return re.test(String(this.email).toLowerCase()) == false
+        ? "Invalid Email"
+        : true;
     },
-    userSignedUp(){
-        return this.$store.getters['user/getIsSignedUp'].isSignedUp
-            
-    },
-      error () {
-        return this.$store.getters['user/error']
-      },
-      loading () {
-        return this.$store.getters['user/loading']
+
+    CheckUsername() {
+      this.$store.dispatch("user/CheckUsename", { username: this.username });
+
+      if (this.$store.getters["user/getUserExists"]) return "Username Exists";
+      else {
+        return true;
       }
+    },
+    userSignedUp() {
+      return this.$store.getters["user/getIsSignedUp"].isSignedUp;
+    },
+    error() {
+      return this.$store.getters["user/error"];
+    },
+    loading() {
+      return this.$store.getters["user/loading"];
+    }
   },
-  watch:{
-      userSignedUp(value){
-          if(value)
-          this.$router.push('/Signupafter')
-      }
+  watch: {
+    userSignedUp(value) {
+      if (value) this.$router.push("/Signupafter");
+    }
   },
   methods: {
-    OnSignup () {
-      this.$store.dispatch('user/SignUserup', {email: this.email,name:this.name, password: this.password,username: this.username,ngopost:this.ngopost,city:this.city})
+    OnSignup() {
+      this.$store.dispatch("user/SignUserup", {
+        email: this.email,
+        name: this.name,
+        password: this.password,
+        username: this.username,
+        ngopost: this.ngopost,
+        city: this.city
+      });
     },
-     onDismissed () {
-        this.$store.dispatch('user/clearError')
-      }
+    onDismissed() {
+      this.$store.dispatch("user/clearError");
+    }
   }
-}
+};
 </script>

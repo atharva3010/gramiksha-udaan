@@ -21,8 +21,6 @@
                                 id="email"
                                 v-model="email"
                                 type="text"
-                                
-                                required
                                 ></v-text-field>
                                 </v-flex>
 
@@ -36,7 +34,6 @@
                                 id="password"
                                 v-model="password"
                                 type="password"
-                                required
                                 ></v-text-field>
                                 </v-flex>
                              </v-layout>

@@ -2,12 +2,9 @@
   <v-app>
     <v-layout row>
       <v-flex>
-        <v-navigation-drawer permanent dark persistant v-if="isDrawer">
+        <v-navigation-drawer clipped permanent dark persistant v-if="isDrawer">
           <v-toolbar class="transparent" flat>
               <v-list class="pa-0">
-                <v-list-tile style="margin-top:8px;"> 
-                  <v-btn @click="isDrawer=!isDrawer" icon><v-icon>close</v-icon></v-btn>
-                </v-list-tile>
           <v-list-tile avatar v-if="userSignedIn">
             <v-list-tile-avatar>
               <img src="https://randomuser.me/api/portraits/men/85.jpg">
@@ -48,17 +45,19 @@
       </v-flex>
       <v-flex xs12>
         <v-toolbar dark>
-          <v-toolbar-side-icon v-if="!isDrawer" @click="isDrawer=!isDrawer"> </v-toolbar-side-icon>
+          <v-toolbar-side-icon @click="isDrawer=!isDrawer"> </v-toolbar-side-icon>
           <v-toolbar-title class="font-weight-regular">
             Gramiksha - Udaan<span v-if="userSignedIn">, {{user.name}}</span>
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn icon>
-              <v-icon>person</v-icon>
+            <v-btn>
+              Profile
+              <v-icon right>person</v-icon>
             </v-btn>
-            <v-btn icon>
-              <v-icon>logout</v-icon>
+            <v-btn>
+              Logout
+              <v-icon right>logout</v-icon>
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
@@ -72,7 +71,7 @@
         </v-container>
       </v-flex>
     </v-layout>
-    <v-footer class="pa-3" dark>
+    <v-footer fixed class="pa-3" dark>
         <img src="../static/download.png" style="width:20px;height:20px;border-radius:50%;margin:10px;">
         <div>Gramiksha</div>
         <v-spacer></v-spacer>
