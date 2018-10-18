@@ -1,6 +1,111 @@
 <template>
   <v-container>
   
+                <v-card style="posistion:absolute;">
+                    
+                <v-card-text>
+                    <v-container>
+                    <v-card-title><h1> Sign Up</h1></v-card-title>
+                        <form @submit.prevent="OnSignup"
+                        >   <v-layout row>
+                                <v-flex xs12>
+                                <v-text-field
+                                label="name"
+                                id="name"
+                                v-model="name"
+                              
+                                type="text"
+                                ></v-text-field>
+                                </v-flex>
+                                  </v-layout>
+                            <v-layout row>
+                                <v-flex xs12>
+                                <v-text-field
+                                label="Email"
+                                id="email"
+                                v-model="email"
+                                type="email"
+                                  :rules="[validateEmail]"
+                                ></v-text-field>
+                                </v-flex>
+
+                            </v-layout>
+                             <v-layout row>
+                                <v-flex xs12>
+                                <v-text-field
+                                label="Username"
+                                id="username"
+                                v-model="username"
+                                type="text"
+                                :rules="[CheckUsername]"
+                                ></v-text-field>
+                                </v-flex>
+
+                            </v-layout>
+
+                             <v-layout row>
+                                <v-flex xs12>
+                                <v-text-field
+                                label="Password"
+                                id="password"
+                                v-model="password"
+                                type="password"
+                                ></v-text-field>
+                                </v-flex>
+
+                            </v-layout>
+                               <v-layout row>
+                                <v-flex xs12>
+                                <v-text-field
+                                label="Confirm password"
+                                id="cnpassword"
+                                v-model="cnpassword"
+                                :rules="[comparepass]"
+                                type="password"
+                                ></v-text-field>
+                                </v-flex>
+
+                            </v-layout>
+                              <v-layout row>
+                                <v-flex xs12>
+                                <v-text-field
+                                label="City"
+                                id="city"
+                                v-model="city"
+                                type="text"
+                                ></v-text-field>
+                                </v-flex>
+                              </v-layout>
+                             <v-layout row>
+                                <v-flex xs12>
+                                <v-text-field
+                                label="Post"
+                                id="ngopost"
+                                v-model="ngopost"
+                                type="text"
+                                ></v-text-field>
+                                </v-flex>
+                                  </v-layout>
+                                 <v-layout row>
+                                <v-flex xs12>
+                               <v-btn type="submit" :disabled="loading" :loading="loading">
+                      Sign up
+                       <span slot="loader" class="custom-loader">
+                        <v-icon light>cached</v-icon>
+                       </span>
+                    </v-btn>
+                                </v-flex>
+
+                            </v-layout>
+                            
+
+                        </form>
+
+                    </v-container>
+                </v-card-text>
+                </v-card>
+
+ 
     <v-layout row wrap>
       <v-flex sm4 xs12>
         <div style="padding:25px;">
@@ -64,6 +169,10 @@
         <v-icon left>arrow_back</v-icon>
         Select Class
       </v-btn>
+      <v-btn style="float:right;" @click="addSessionForm= true">
+        <v-icon left>add</v-icon>
+        Add Session
+      </v-btn>
       <v-layout wrap row>
         <v-flex v-for="session in SelectedClass.sessions" :key="session.no" md4 sm6 xs12>
           <v-card style="border-radius:8px;margin:15px;" hover>
@@ -96,6 +205,7 @@
 export default {
   data() {
     return {
+      addSessionForm: false,
       SelectedClass: null,
       ClassNotSelected: true
     };
@@ -113,7 +223,8 @@ export default {
       this.SelectedClass = cls;
       console.log(this.SelectedSchool);
       this.ClassNotSelected = false;
-    }
+    },
+    addSession() {}
   }
 };
 </script>
