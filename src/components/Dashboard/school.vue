@@ -141,6 +141,20 @@
       </v-layout>
   
     </div>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+      :vertical="mode === 'vertical'"
+    >
+      {{ snackbartext }}
+      <v-btn
+        color="pink"
+        flat
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -148,6 +162,10 @@
 export default {
   data() {
     return {
+      snackbar: false,
+      mode: "",
+      timeout: 6000,
+      snackbartext: "Changes Saved",
       dialog: false,
       addSessionForm: false,
       SelectedClass: null,
@@ -183,6 +201,8 @@ export default {
         class: this.SelectedClass
       });
       this.dialog = false;
+      this.snackbar = true;
+      this.snackbartext = "Session Added";
     },
     sessionAddVol() {
       this.addSession.volNo += 1;
