@@ -4,42 +4,34 @@
       <v-flex>
         <v-navigation-drawer clipped permanent dark persistant v-if="isDrawer">
           <v-toolbar class="transparent" flat>
-              <v-list class="pa-0">
-          <v-list-tile avatar v-if="userSignedIn">
-            <v-list-tile-avatar>
-              <img src="https://randomuser.me/api/portraits/men/85.jpg">
-            </v-list-tile-avatar>
-
-            <v-list-tile-content>
-              <v-list-tile-title>{{user.name}}</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-                  <v-list-tile
-          v-for="item in menuItems"
-          :key="item.title"
-          :to="item.link">
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>{{ item.title }}</v-list-tile-content>
-        </v-list-tile>
-         <v-list-group
-        prepend-icon="dashboard"
-        value="true"
-      >
-        <v-list-tile slot="activator">
-          <v-list-tile-title>Dashboard</v-list-tile-title>
-        </v-list-tile>
-         <v-list-tile
-           to="/dashboard/school"
-          >
-            <v-list-tile-title >School</v-list-tile-title>
-            <v-list-tile-action>
-              <v-icon >school</v-icon>
-            </v-list-tile-action>
-          </v-list-tile>
-      </v-list-group>
-        </v-list>
+            <v-list class="pa-0">
+              <v-list-tile avatar v-if="userSignedIn">
+                <v-list-tile-avatar>
+                  <img src="https://randomuser.me/api/portraits/men/85.jpg">
+                </v-list-tile-avatar>
+  
+                <v-list-tile-content>
+                  <v-list-tile-title>{{user.name}}</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile v-for="item in menuItems" :key="item.title" :to="item.link">
+                <v-list-tile-action>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-content>{{ item.title }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-group prepend-icon="dashboard" value="true">
+                <v-list-tile slot="activator">
+                  <v-list-tile-title>Dashboard</v-list-tile-title>
+                </v-list-tile>
+                <v-list-tile to="/dashboard/school">
+                  <v-list-tile-title>School</v-list-tile-title>
+                  <v-list-tile-action>
+                    <v-icon>school</v-icon>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </v-list-group>
+            </v-list>
           </v-toolbar>
         </v-navigation-drawer>
       </v-flex>
@@ -72,11 +64,11 @@
       </v-flex>
     </v-layout>
     <v-footer fixed class="pa-3" dark>
-        <img src="../static/download.png" style="width:20px;height:20px;border-radius:50%;margin:10px;">
-        <div>Gramiksha</div>
-        <v-spacer></v-spacer>
-        <div> &copy; {{ new Date().getFullYear() }} All rights Reserved.</div>
-      </v-footer>
+      <img src="../static/download.png" style="width:20px;height:20px;border-radius:50%;margin:10px;">
+      <div>Gramiksha</div>
+      <v-spacer></v-spacer>
+      <div> &copy; {{ new Date().getFullYear() }} All rights Reserved.</div>
+    </v-footer>
   </v-app>
 </template>
 
@@ -91,8 +83,16 @@ export default {
   computed: {
     menuItems() {
       let menuItems = [
-        { icon: "face", title: "Sign up", link: "/signup" },
-        { icon: "lock_open", title: "Sign in", link: "/Login" }
+        {
+          icon: "face",
+          title: "Sign up",
+          link: "/signup"
+        },
+        {
+          icon: "lock_open",
+          title: "Sign in",
+          link: "/Login"
+        }
       ];
       if (this.userSignedIn) {
         menuItems = [];
