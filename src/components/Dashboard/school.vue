@@ -1,9 +1,5 @@
 <template>
   <v-container>
-  
-  
-  
-  
     <v-layout row wrap>
       <v-flex sm4 xs12>
         <div style="padding:25px;">
@@ -17,9 +13,6 @@
             </v-avatar>
             {{classname}}
           </v-chip>
-  
-  
-  
         </div>
   
       </v-flex>
@@ -118,7 +111,7 @@
   
       <v-layout wrap row>
         <v-flex v-for="session in classes[SelectedClass].sessions" :key="session.no" md4 sm6 xs12>
-          <v-card style="border-radius:8px;margin:15px;" hover>
+          <v-card to="school/session" @click="selectSession(session)" style="border-radius:8px;margin:15px;" hover>
             <v-layout row>
               <v-flex xs6>
                 <v-card-text class="text-xs-center" style="margin-top:10px">
@@ -141,17 +134,9 @@
       </v-layout>
   
     </div>
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="timeout"
-      :vertical="mode === 'vertical'"
-    >
+    <v-snackbar v-model="snackbar" :timeout="timeout" :vertical="mode === 'vertical'">
       {{ snackbartext }}
-      <v-btn
-        color="pink"
-        flat
-        @click="snackbar = false"
-      >
+      <v-btn color="pink" flat @click="snackbar = false">
         Close
       </v-btn>
     </v-snackbar>
@@ -192,6 +177,12 @@ export default {
     }
   },
   methods: {
+    selectSession(selsession) {
+      this.$store.commit("setActiveSession", {
+        class: SelectedClass,
+        session: selsession
+      });
+    },
     SelectClass(cls) {
       this.SelectedClass = cls;
     },

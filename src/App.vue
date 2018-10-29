@@ -2,7 +2,7 @@
   <v-app>
     <v-layout row>
       <v-flex>
-        <v-navigation-drawer clipped permanent dark persistant v-if="isDrawer">
+        <v-navigation-drawer style="z-index:5;" clipped  dark persistant v-if="isDrawer">
           <v-toolbar class="transparent" flat>
             <v-list class="pa-0">
               <v-list-tile avatar v-if="userSignedIn">
@@ -36,8 +36,8 @@
         </v-navigation-drawer>
       </v-flex>
       <v-flex xs12>
-        <v-toolbar dark>
-          <v-toolbar-side-icon @click="isDrawer=!isDrawer"> </v-toolbar-side-icon>
+        <v-toolbar  dark>
+          <v-toolbar-side-icon  @click="isDrawer=!isDrawer"> </v-toolbar-side-icon>
           <v-toolbar-title class="font-weight-regular">
             Gramiksha - Udaan<span v-if="userSignedIn">, {{user.name}}</span>
           </v-toolbar-title>
@@ -77,7 +77,8 @@ export default {
   name: "App",
   data() {
     return {
-      isDrawer: true
+      isDrawer: true,
+      toolbarMargin: ""
     };
   },
   computed: {
@@ -105,6 +106,12 @@ export default {
     },
     user() {
       return this.$store.getters["user/getIsSignedIn"].user;
+    }
+  },
+  methods: {
+    switchDrawer() {
+      this.isDrawer != this.isDrawer;
+      if (isDrawer) this.toolbarMargin = "margin:left:300px";
     }
   }
 };

@@ -165,7 +165,11 @@ export default {
     }, payload) {
       commit("pushAssessment", payload);
     }
-  }
-
+  },
+  getters: {
+    getStudentList(state) {
+      return state.students;
+    }
+  },
 
 }

@@ -6,11 +6,12 @@ import login from "@/components/User/Login";
 import signupmsg from "@/components/User/signupmsg";
 import Dashboard from "@/components/Dashboard/Dashboard";
 import School from "@/components/Dashboard/school";
+import session from "@/components/Dashboard/session";
+
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       name: "HelloWorld",
       component: HelloWorld
@@ -24,6 +25,10 @@ export default new Router({
       path: "/dashboard/school",
       name: "School",
       component: School
+    }, {
+      path: "/dashboard/school/session",
+      name: "School",
+      component: session
     },
     {
       path: "/Signup",
