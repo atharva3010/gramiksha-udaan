@@ -8,7 +8,6 @@
         <v-layout>
             <v-flex sx12 sm6 offset-sm3>
                 <v-card>
-                    
                 <v-card-text>
                     <v-container>
                     <v-card-title><h1> Sign Up</h1></v-card-title>
@@ -16,7 +15,7 @@
                         >   <v-layout row>
                                 <v-flex xs12>
                                 <v-text-field
-                                label="name"
+                                label="Name"
                                 id="name"
                                 v-model="name"
                               
