@@ -2,7 +2,7 @@
   <v-app>
     <v-layout row>
       <v-flex>
-        <v-navigation-drawer style="z-index:5;" clipped  dark persistant v-if="isDrawer">
+        <v-navigation-drawer class="nav-drawer" fixed clipped permanent dark persistant v-if="isDrawer">
           <v-toolbar class="transparent" flat>
             <v-list class="pa-0">
               <v-list-tile avatar v-if="userSignedIn">
@@ -36,13 +36,17 @@
         </v-navigation-drawer>
       </v-flex>
       <v-flex xs12>
-        <v-toolbar  dark>
-          <v-toolbar-side-icon  @click="isDrawer=!isDrawer"> </v-toolbar-side-icon>
+        <v-toolbar fixed dark>
+          <v-toolbar-side-icon @click="isDrawer=!isDrawer"> </v-toolbar-side-icon>
           <v-toolbar-title class="font-weight-regular">
             Gramiksha - Udaan<span v-if="userSignedIn">, {{user.name}}</span>
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
+            <v-btn>
+              Home
+              <v-icon right>home</v-icon>
+            </v-btn>
             <v-btn>
               Profile
               <v-icon right>person</v-icon>
@@ -54,13 +58,14 @@
           </v-toolbar-items>
         </v-toolbar>
   
-  
-        <v-container>
-          <div id="app">
-            <!-- <img src="./assets/logo.png"> -->
-            <router-view/>
-          </div>
-        </v-container>
+        <main :style="isDrawer ? {'padding-left': '300px'} : {'padding-left': '0'}">
+          <v-container>
+            <div id="app">
+              <!-- <img src="./assets/logo.png"> -->
+              <router-view/>
+            </div>
+          </v-container>
+        </main>
       </v-flex>
     </v-layout>
     <v-footer fixed class="pa-3" dark>
@@ -71,6 +76,23 @@
     </v-footer>
   </v-app>
 </template>
+
+<style>
+.nav-drawer {
+  margin-top: 64px !important;
+}
+@media screen and (max-width: 960px) {
+  .nav-drawer {
+    margin-top: 48px !important;
+  }
+  main {
+    padding: 48px 0;
+  }
+}
+main {
+  padding: 64px 0;
+}
+</style>
 
 <script>
 export default {
