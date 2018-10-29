@@ -85,6 +85,12 @@
   .nav-drawer {
     margin-top: 48px !important;
   }
+  main {
+    padding: 48px 0;
+  }
+}
+main {
+  padding: 64px 0;
 }
 </style>
 
