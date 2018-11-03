@@ -5,7 +5,9 @@ import App from "./App";
 import router from "./router";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
-import { store } from "./store";
+import {
+  store
+} from "./store";
 import "@/scripts/firebase";
 import AlertCmp from "./components/Shared/Alert.vue";
 import divider from "./components/Shared/divider.vue";
@@ -19,6 +21,8 @@ new Vue({
   el: "#app",
   router,
   store,
-  components: { App },
+  components: {
+    App
+  },
   template: "<App/>"
 });

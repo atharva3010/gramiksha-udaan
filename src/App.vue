@@ -2,7 +2,8 @@
   <v-app>
     <v-layout row>
       <v-flex>
-        <v-navigation-drawer class="nav-drawer" fixed clipped permanent dark persistant v-if="isDrawer">
+        
+        <v-navigation-drawer style="z-index:1" class="nav-drawer" absolute clipped permanent dark persistant v-if="isDrawer">
           <v-toolbar class="transparent" flat>
             <v-list class="pa-0">
               <v-list-tile avatar v-if="userSignedIn">
@@ -34,6 +35,7 @@
             </v-list>
           </v-toolbar>
         </v-navigation-drawer>
+
       </v-flex>
       <v-flex xs12>
         <v-toolbar fixed dark>
@@ -138,3 +140,4 @@ export default {
   }
 };
 </script>
+

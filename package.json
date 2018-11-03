@@ -10,6 +10,9 @@
     "start:dev": "webpack-dev-server"
   },
   "dependencies": {
+    "@sentry/browser": "^4.2.3",
+    "bugsnag-js": "^4.7.3",
+    "bugsnag-vue": "^1.0.1",
     "capitalize": "^1.0.0",
     "firebase": "^5.5.0",
     "vue": "^2.5.2",

@@ -38,9 +38,9 @@
               </v-flex>
               <v-flex xs6>
                 <v-card-text>
-                  <h3 style="font-weight:300;">Students : <b>{{classdata.Stregnth}}</b></h3>
+                  <h3 style="font-weight:300;">Students : <b>{{classdata.strength}}</b></h3>
   
-                  <h3 style="font-weight:300;"> Sessions : <b> {{Object.keys(classdata.sessions).length}}</b></h3>
+                  <h3 style="font-weight:300;"> Sessions : <b> {{classdata.noofsession}}</b></h3>
                 </v-card-text>
               </v-flex>
             </v-layout>
@@ -48,15 +48,16 @@
   
         </v-flex>
       </v-layout>
+      <v-btn @click="foo()"></v-btn>
     </div>
-    <div v-else>
+   <div v-else>
   
       <v-layout row>
         <v-flex>
           <h2 style="float:left;font-weight:300;margin-left:15px;">Select a Session</h2>
         </v-flex>
       </v-layout>
-      <v-btn @click=" SelectedClass= null;">
+      <v-btn @click="deselectClass()">
         <v-icon left>arrow_back</v-icon>
         Select Class
       </v-btn>
@@ -81,7 +82,8 @@
   
             <v-flex v-for="vol in addSession.volunteer " :key="vol.no" xs10 offset-xs1>
               <div style="display:flex">
-                <v-text-field required :label="'Username of Volunteer ' + vol.no" id="Sname" v-model="addSession.volunteer[vol.no-1].user" type="text"></v-text-field>
+                <v-text-field    
+                                :rules="[usernames[vol.no]]" required :label="'Username of Volunteer ' + vol.no" id="Sname" v-model="addSession.volunteer[vol.no-1].user" type="text"></v-text-field>
                 <v-btn style="float:right;" v-if='vol.no!=1' @click="sessionRemvol(vol)" icon="">
                   <v-icon>close</v-icon>
                 </v-btn>
@@ -110,8 +112,8 @@
   
   
       <v-layout wrap row>
-        <v-flex v-for="session in classes[SelectedClass].sessions" :key="session.no" md4 sm6 xs12>
-          <v-card to="school/session" @click="selectSession(session)" style="border-radius:8px;margin:15px;" hover>
+        <v-flex v-for="(session) in classes[SelectedClass].sessions" :key="session.no" md4 sm6 xs12>
+          <v-card to="school/session"  style="border-radius:8px;margin:15px;" hover>
             <v-layout row>
               <v-flex xs6>
                 <v-card-text class="text-xs-center" style="margin-top:10px">
@@ -153,12 +155,9 @@ export default {
       snackbartext: "Changes Saved",
       dialog: false,
       addSessionForm: false,
-      SelectedClass: null,
       addSession: {
         volNo: 1,
-
         title: " ",
-
         volunteer: [
           {
             no: 1,
@@ -169,14 +168,42 @@ export default {
     };
   },
   computed: {
+    usernames() {
+      this.$store.commit("user/CheckUsernames", this.addSession.volunteer);
+      return this.$store.getters["user/getUsersExists"];
+      /* this.addSession.volunteer.forEach(element => {
+        this.$store.commit("user/CheckUsename", { username: element.user });
+        if (this.$store.getters["user/getUserExists"])
+          uexists[element.no] = true;
+        else uexists[element.no] = "username dosnt exists";
+      });*/
+    },
+    refresh() {
+      return this.$store.getters["school/getRefresh"];
+    },
     school() {
       return this.$store.getters["school/getSchoolDetails"];
     },
     classes() {
       return this.$store.getters["school/getSchoolClasses"];
+    },
+    SelectedClass() {
+      return this.$store.getters["school/getSelectedClass"];
     }
   },
+  watch: {
+    refresh(newval, oldval) {
+      if (newval)
+        this.$store.dispatch("school/getSessions", this.SelectedClass);
+    }
+  },
+  created() {
+    this.$store.dispatch("school/getSchool");
+  },
   methods: {
+    foo() {
+      console.log(this.$store.getters["user/getUsersExists"]);
+    },
     selectSession(selsession) {
       this.$store.commit("setActiveSession", {
         class: SelectedClass,
@@ -184,7 +211,10 @@ export default {
       });
     },
     SelectClass(cls) {
-      this.SelectedClass = cls;
+      this.$store.dispatch("school/getSessions", cls);
+    },
+    deselectClass() {
+      this.$store.commit("school/deselectClass");
     },
     submitSession() {
       this.$store.dispatch("school/addSession", {
