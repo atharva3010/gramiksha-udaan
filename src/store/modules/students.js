@@ -1,174 +1,97 @@
+import {
+  db
+} from "@/scripts/firebase";
+import {
+  stat
+} from "fs";
+
 export default {
   namespaced: true,
   state: {
-    students: [{
-        name: "0",
-        rollno: 0
-      },
-      {
-        name: "1",
-        rollno: 1
-      },
-      {
-        name: "2",
-        rollno: 2
-      },
-      {
-        name: "3",
-        rollno: 3
-      },
-      {
-        name: "4",
-        rollno: 4
-      },
-      {
-        name: "5",
-        rollno: 5
-      },
-      {
-        name: "6",
-        rollno: 6
-      },
-      {
-        name: "7",
-        rollno: 7
-      },
-      {
-        name: "8",
-        rollno: 8
-      },
-      {
-        name: "9",
-        rollno: 9
-      },
-      {
-        name: "10",
-        rollno: 10
-      },
-      {
-        name: "11",
-        rollno: 11
-      },
-      {
-        name: "12",
-        rollno: 12
-      },
-      {
-        name: "13",
-        rollno: 13
-      },
-      {
-        name: "14",
-        rollno: 14
-      },
-      {
-        name: "15",
-        rollno: 15
-      },
-      {
-        name: "16",
-        rollno: 16
-      },
-      {
-        name: "17",
-        rollno: 17
-      },
-      {
-        name: "18",
-        rollno: 18
-      },
-      {
-        name: "19",
-        rollno: 19
-      },
-      {
-        name: "20",
-        rollno: 20
-      },
-      {
-        name: "21",
-        rollno: 21
-      },
-      {
-        name: "22",
-        rollno: 22
-      },
-      {
-        name: "23",
-        rollno: 23
-      },
-      {
-        name: "24",
-        rollno: 24
-      },
-      {
-        name: "25",
-        rollno: 25
-      },
-      {
-        name: "26",
-        rollno: 26
-      },
-      {
-        name: "27",
-        rollno: 27
-      },
-      {
-        name: "28",
-        rollno: 28
-      },
-      {
-        name: "29",
-        rollno: 29
-      }
-
-    ],
-    attendence: [{
-      rollno: 1,
-      status: "P"
+    loading: {
+      "attendance": false,
+      "assessment": false
+    },
+    attendance: [{
+      name: "",
+      status: false
     }],
     assessment: [{
-        rollno: 1,
-        marks: {
-          "Section1": 1,
-          "Section2": 1,
-          "Section3": 1
-        }
+        name: "",
+        marks: 0
       }
 
     ]
   },
   mutations: {
+    getStudents(state, payload) {
+      state.loading["assessment"] = true;
+      state.loading["attendance"] = true;
+      state.city = payload.city
+      state.no = payload.no
+      state.school = payload.school
+      state.class = payload.class
+      db.collection("cities/" + payload.city + "/schools/" + payload.school + "/classes/" + payload.class + "/sessions/").doc(payload.no.toString()).get().then(doc => {
+        state.assessment = doc.data().assessment;
+        state.attendance = doc.data().attendance;
+
+      });
+
+
+      state.loading["assessment"] = false;
+      state.loading["attendance"] = false;
+    },
     pushStudent(state, payload) {
       state.students.push(payload);
     },
-    pushAttendence(state, payload) {
-      state.attendence = payload;
+    pushAttendance(state, payload) {
+      state.attendance = payload;
     },
     pushAssessment(state, payload) {
-      state.assessment = payload;
+      state.loading["assessment"] = true;
+      db.collection("cities/" + state.city + "/schools/" + state.school + "/classes/" + state.class + "/sessions/").doc(state.no.toString()).set({
+        assessment: state.assessment
+      }, {
+        merge: true
+      })
+      state.loading["assessment"] = false;
     },
   },
   actions: {
+    getStudents({
+      commit
+    }, payload) {
+      commit('getStudents', payload);
+    },
     addStudent({
       commit
     }, payload) {
       commit("pushStudent", payload);
     },
-    addAttendence({
+    addAttendance({
       commit
     }, payload) {
-      commit("pushAttendence", payload);
+      commit("pushAttendance", payload);
     },
-    addAssessment({
+    pushAssessment({
       commit
     }, payload) {
       commit("pushAssessment", payload);
+
     }
   },
   getters: {
     getStudentList(state) {
       return state.students;
+    },
+    getAttendance(state) {
+      return state.attendance;
+    },
+    getAssessment(state) {
+      return state.assessment;
+    },
+    getLoading(state) {
+      return state.loading;
     }
   },
 

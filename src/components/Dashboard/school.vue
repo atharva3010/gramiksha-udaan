@@ -1,11 +1,14 @@
 <template>
   <v-container>
-    <v-layout row wrap>
-      <v-flex sm4 xs12>
-        <div style="padding:25px;">
+ 
+    <v-layout  row wrap>
+     
+      <v-flex  v-if="!loading['school']" sm4 xs12>
+        
+        <div  style="padding:25px;">
           <h1>{{school.name}}</h1>
           <h2 style="font-weight:300">{{school.address}}, {{school.city}}</h2>
-          <p> Total No of Students : {{school.total}}</p>
+          <p  > Total No of Students : {{school.total}}</p>
   
           <v-chip v-for="(classdata,classname) in  classes" :key="classname">
             <v-avatar>
@@ -16,9 +19,17 @@
         </div>
   
       </v-flex>
-      <v-flex sm8 xs12>
+      <v-flex v-if="!loading['school']" sm8 xs12>
         <v-img style="border-radius:8px;" :src="school.url" height="400px"></v-img>
       </v-flex>
+      <v-flex  v-if="loading['school']" sm12>
+        <h1  style=" text-align:center;   padding: 179px 30%;"><v-progress-circular
+      indeterminate
+      color="primary"
+    ></v-progress-circular>Loading please wait </h1>
+       
+      </v-flex>
+      
     </v-layout>
     <v-divider style="margin:35px 0px;"></v-divider>
     <h1 style="margin-left:15px;">Sessions</h1>
@@ -26,7 +37,13 @@
       <h2 style="font-weight:300;margin-left:15px;">Select a Class</h2>
   
       <v-layout wrap row>
-        <v-flex @click="SelectClass(classname)" v-for="(classdata,classname) in classes" :key="classname" md4 sm6 xs12>
+         <v-flex  v-if="loading['school']" sm12>
+        <h1  style=" text-align:center;   padding: 80px 30%;"><v-progress-circular
+      indeterminate
+      color="primary"
+    ></v-progress-circular>Loading please wait </h1>
+      </v-flex>
+        <v-flex  v-if="!loading['classes'] && !loading['school']" @click="SelectClass(classname)" v-for="(classdata,classname) in classes" :key="classname" md4 sm6 xs12>
           <v-card style="border-radius:8px;margin:15px;" hover>
             <v-layout row>
               <v-flex xs6>
@@ -47,12 +64,24 @@
           </v-card>
   
         </v-flex>
+        <v-flex  v-if="loading['classes']" sm12>
+       <h1  style=" text-align:center;   padding: 80px 30%;"><v-progress-circular
+      indeterminate
+      color="primary"
+    ></v-progress-circular>Loading please wait </h1>
+      </v-flex>
       </v-layout>
-      <v-btn @click="foo()"></v-btn>
+   
     </div>
    <div v-else>
   
       <v-layout row>
+        <v-flex  v-if="loading['classes']" sm12>
+        <h1  style=" text-align:center;   padding: 179px 30%;"><v-progress-circular
+      indeterminate
+      color="primary"
+    ></v-progress-circular>Loading please wait </h1>
+      </v-flex>
         <v-flex>
           <h2 style="float:left;font-weight:300;margin-left:15px;">Select a Session</h2>
         </v-flex>
@@ -80,10 +109,10 @@
               <v-text-field label="Session Title" id="Sname" v-model="addSession.title" required type="text"></v-text-field>
             </v-flex>
   
-            <v-flex v-for="vol in addSession.volunteer " :key="vol.no" xs10 offset-xs1>
+            <v-flex  v-for="vol in addSession.volunteer " :key="vol.no" xs10 offset-xs1>
               <div style="display:flex">
                 <v-text-field    
-                                :rules="[usernames[vol.no]]" required :label="'Username of Volunteer ' + vol.no" id="Sname" v-model="addSession.volunteer[vol.no-1].user" type="text"></v-text-field>
+                                 required :label="'Username of Volunteer ' + vol.no" id="Sname" v-model="addSession.volunteer[vol.no-1].user" type="text"></v-text-field>
                 <v-btn style="float:right;" v-if='vol.no!=1' @click="sessionRemvol(vol)" icon="">
                   <v-icon>close</v-icon>
                 </v-btn>
@@ -112,8 +141,8 @@
   
   
       <v-layout wrap row>
-        <v-flex v-for="(session) in classes[SelectedClass].sessions" :key="session.no" md4 sm6 xs12>
-          <v-card to="school/session"  style="border-radius:8px;margin:15px;" hover>
+        <v-flex v-if="!loading['classes']" v-for="(session) in classes[SelectedClass].sessions" :key="session.no" @click="selectSession(session.no)"   md4 sm6 xs12>
+          <v-card  style="border-radius:8px;margin:15px;" hover>
             <v-layout row>
               <v-flex xs6>
                 <v-card-text class="text-xs-center" style="margin-top:10px">
@@ -168,16 +197,6 @@ export default {
     };
   },
   computed: {
-    usernames() {
-      this.$store.commit("user/CheckUsernames", this.addSession.volunteer);
-      return this.$store.getters["user/getUsersExists"];
-      /* this.addSession.volunteer.forEach(element => {
-        this.$store.commit("user/CheckUsename", { username: element.user });
-        if (this.$store.getters["user/getUserExists"])
-          uexists[element.no] = true;
-        else uexists[element.no] = "username dosnt exists";
-      });*/
-    },
     refresh() {
       return this.$store.getters["school/getRefresh"];
     },
@@ -189,6 +208,9 @@ export default {
     },
     SelectedClass() {
       return this.$store.getters["school/getSelectedClass"];
+    },
+    loading() {
+      return this.$store.getters["school/getLoading"];
     }
   },
   watch: {
@@ -198,17 +220,20 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("school/getSchool");
+    this.$store.dispatch("school/getSchool", {
+      school: this.school.name,
+      class: this.SelectedClass
+    });
   },
   methods: {
-    foo() {
-      console.log(this.$store.getters["user/getUsersExists"]);
-    },
     selectSession(selsession) {
-      this.$store.commit("setActiveSession", {
-        class: SelectedClass,
-        session: selsession
+      this.$store.dispatch("students/getStudents", {
+        no: selsession,
+        class: this.SelectedClass,
+        school: this.school.name,
+        city: this.school.city
       });
+      this.$router.push("/dashboard/school/session");
     },
     SelectClass(cls) {
       this.$store.dispatch("school/getSessions", cls);
