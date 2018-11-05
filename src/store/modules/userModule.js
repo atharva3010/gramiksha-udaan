@@ -1,7 +1,4 @@
-import {
-  firebase,
-  db
-} from "@/scripts/firebase";
+import { firebase, db } from "@/scripts/firebase";
 
 export default {
   namespaced: true,
@@ -39,24 +36,21 @@ export default {
     },
     CheckUsernames(state, payload) {
       payload.forEach(element => {
-        console.log(element)
+        console.log(element);
         var usersref = db.collection("users");
         var query = usersref.where("username", "==", element.user);
-        query.get().then(function (QuerySnapshot) {
-
+        query.get().then(function(QuerySnapshot) {
           if (QuerySnapshot.empty) {
-            state.usersExists[element.no] = false
+            state.usersExists[element.no] = false;
           } else {
-            state.usersExists[element.no] = true
+            state.usersExists[element.no] = true;
           }
         });
       });
     }
   },
   actions: {
-    SignUserIn({
-      commit
-    }, payload) {
+    SignUserIn({ commit }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -64,14 +58,14 @@ export default {
         firebase
           .auth()
           .signInWithEmailAndPassword(payload.email, payload.password)
-          .then(function (user) {
+          .then(function(user) {
             var usersRef = db.collection("users");
             usersRef
               .where("uid", "==", user.user.uid)
               .get()
-              .then(function (qs) {
+              .then(function(qs) {
                 var docef = db.collection("users").doc(qs.docs[0].id);
-                docef.get().then(function (doc) {
+                docef.get().then(function(doc) {
                   commit("setUser", doc.data());
                 });
               });
@@ -84,7 +78,7 @@ export default {
         var docRef = db.collection("users").doc(payload.email);
         docRef
           .get()
-          .then(function (doc) {
+          .then(function(doc) {
             if (doc.exists) {
               firebase
                 .auth()
@@ -96,9 +90,9 @@ export default {
                     .get()
                     .then(qs => {
                       (docRef = db.collection("users").doc(qs.docs[0].id)),
-                      docRef.get().then(function (doc) {
-                        commit("setUser", doc.data());
-                      });
+                        docRef.get().then(function(doc) {
+                          commit("setUser", doc.data());
+                        });
                     });
                 })
                 .catch(error => {
@@ -107,30 +101,28 @@ export default {
                 });
             } else {
               commit("setLoading", false);
-              errorn => {
+              error => {
                 message: "Username Not found";
               };
-              commit("setError", errorn);
+              commit("setError", error);
             }
           })
-          .catch(function (error) {
+          .catch(function(error) {
             commit("setLoading", false);
-            errorn => {
+            error => {
               message: "Can't access Server";
             };
-            commit("setError", errorn);
+            commit("setError", error);
           });
       }
     },
-    SignUserup({
-      commit
-    }, payload) {
+    SignUserup({ commit }, payload) {
       commit("setLoading", true);
       commit("clearError");
       firebase
         .auth()
         .createUserWithEmailAndPassword(payload.email, payload.password)
-        .then(function (user) {
+        .then(function(user) {
           db.collection("users")
             .doc(payload.username)
             .set({
@@ -141,7 +133,7 @@ export default {
               ngopost: payload.ngopost,
               uid: user.user.uid
             })
-            .then(function (docRef) {
+            .then(function(docRef) {
               commit("setLoading", false);
               commit("setSignedUp", {
                 name: payload.name
@@ -157,12 +149,10 @@ export default {
           commit("setError", error);
         });
     },
-    CheckUsename({
-      commit
-    }, payload) {
+    CheckUsename({ commit }, payload) {
       var usersref = db.collection("users");
       var query = usersref.where("username", "==", payload.username);
-      query.get().then(function (QuerySnapshot) {
+      query.get().then(function(QuerySnapshot) {
         if (QuerySnapshot.empty) {
           commit("setUserExists", false);
         } else {
@@ -170,9 +160,7 @@ export default {
         }
       });
     },
-    clearError({
-      commit
-    }) {
+    clearError({ commit }) {
       commit("clearError");
     }
   },
