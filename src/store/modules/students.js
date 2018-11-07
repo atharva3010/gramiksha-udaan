@@ -1,9 +1,6 @@
 import {
   db
 } from "@/scripts/firebase";
-import {
-  stat
-} from "fs";
 
 export default {
   namespaced: true,
@@ -24,22 +21,23 @@ export default {
     ]
   },
   mutations: {
-    getStudents(state, payload) {
-      state.loading["assessment"] = true;
-      state.loading["attendance"] = true;
+    setSession(state, payload) {
       state.city = payload.city
       state.no = payload.no
       state.school = payload.school
       state.class = payload.class
-      db.collection("cities/" + payload.city + "/schools/" + payload.school + "/classes/" + payload.class + "/sessions/").doc(payload.no.toString()).get().then(doc => {
+    },
+    getStudents(state, payload) {
+      state.loading["assessment"] = true;
+      state.loading["attendance"] = true;
+      db.collection("cities/" + state.city + "/schools/" + state.school + "/classes/" + state.class + "/sessions/").doc(payload.no.toString()).get().then(doc => {
         state.assessment = doc.data().assessment;
         state.attendance = doc.data().attendance;
+        state.loading["assessment"] = false;
+        state.loading["attendance"] = false;
 
       });
 
-
-      state.loading["assessment"] = false;
-      state.loading["attendance"] = false;
     },
     pushStudent(state, payload) {
       state.students.push(payload);
@@ -58,6 +56,11 @@ export default {
     },
   },
   actions: {
+    setSession({
+      commit
+    }, payload) {
+      commit('setSession', payload);
+    },
     getStudents({
       commit
     }, payload) {
