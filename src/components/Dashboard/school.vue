@@ -220,6 +220,7 @@ export default {
     }
   },
   created() {
+    this.$store.commit("school/deselectClass");
     this.$store.dispatch("school/getSchool", {
       school: this.school.name,
       class: this.SelectedClass
@@ -227,13 +228,14 @@ export default {
   },
   methods: {
     selectSession(selsession) {
-      this.$store.dispatch("students/getStudents", {
-        no: selsession,
-        class: this.SelectedClass,
-        school: this.school.name,
-        city: this.school.city
-      });
-      this.$router.push("/dashboard/school/session");
+      this.$router.push(
+        "/dashboard/session/" +
+          this.school.name +
+          "/" +
+          this.SelectedClass +
+          "/" +
+          selsession
+      );
     },
     SelectClass(cls) {
       this.$store.dispatch("school/getSessions", cls);

@@ -29,6 +29,8 @@ export default {
   mutations: {
     deselectClass(state) {
       state.SelectedClass = null;
+      state.loading["classes"] = false;
+
     },
     getSessions(state, payload) {
       state.loading["classes"] = true;

@@ -26,7 +26,7 @@ export default new Router({
       name: "School",
       component: School
     }, {
-      path: "/dashboard/school/session",
+      path: "/dashboard/session/:school/:class/:session",
       name: "Session",
       component: session
     },
