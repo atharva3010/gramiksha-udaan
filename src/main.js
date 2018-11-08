@@ -11,9 +11,11 @@ import {
 import "@/scripts/firebase";
 import AlertCmp from "./components/Shared/Alert.vue";
 import divider from "./components/Shared/divider.vue";
+import signout from "./components/Shared/signedout.vue";
 Vue.use(Vuetify);
 Vue.component("app-alert", AlertCmp);
 Vue.component("Divider", divider);
+Vue.component('signedout', signout);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

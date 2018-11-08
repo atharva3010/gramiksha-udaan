@@ -5,6 +5,11 @@ import {
 export default {
   namespaced: true,
   state: {
+    city: null,
+    no: null,
+    school: null,
+    class: null,
+    date: null,
     loading: {
       "attendance": false,
       "assessment": false
@@ -33,6 +38,7 @@ export default {
       db.collection("cities/" + state.city + "/schools/" + state.school + "/classes/" + state.class + "/sessions/").doc(payload.no.toString()).get().then(doc => {
         state.assessment = doc.data().assessment;
         state.attendance = doc.data().attendance;
+        state.date = doc.data().date;
         state.loading["assessment"] = false;
         state.loading["attendance"] = false;
 
@@ -43,9 +49,18 @@ export default {
       state.students.push(payload);
     },
     pushAttendance(state, payload) {
-      state.attendance = payload;
+      state.attandance = payload
+      state.loading["attandance"] = true;
+      db.collection("cities/" + state.city + "/schools/" + state.school + "/classes/" + state.class + "/sessions/").doc(state.no.toString()).set({
+        attandance: state.attandance
+      }, {
+        merge: true
+      })
+      state.loading["assessment"] = false;
+
     },
     pushAssessment(state, payload) {
+      state.assessment = payload
       state.loading["assessment"] = true;
       db.collection("cities/" + state.city + "/schools/" + state.school + "/classes/" + state.class + "/sessions/").doc(state.no.toString()).set({
         assessment: state.assessment
@@ -81,7 +96,13 @@ export default {
     }, payload) {
       commit("pushAssessment", payload);
 
-    }
+    },
+    pushAttendance({
+      commit
+    }, payload) {
+      commit("pushAttendance", payload);
+
+    },
   },
   getters: {
     getStudentList(state) {
@@ -95,6 +116,9 @@ export default {
     },
     getLoading(state) {
       return state.loading;
+    },
+    getDate(state) {
+      return state.date;
     }
   },
 

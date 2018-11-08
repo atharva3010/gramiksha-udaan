@@ -1,8 +1,10 @@
 <template>
     <v-container>
-      <v-layout row><h1>Session 1</h1> <v-spacer></v-spacer><h3 class="date">Date 11-11-18 </h3></v-layout>
-      <v-layout row><h2 class="classname">Class <b>Eighth</b></h2></v-layout>
+
+      <v-layout row><h1>Session {{$route.params.session}}</h1> <v-spacer></v-spacer><h3 class="date">Date {{sdate}} </h3></v-layout>
+      <v-layout row><h2 class="classname">Class <b>{{$route.params.class}}</b></h2></v-layout>
       <v-divider style="margin:30px 0px;"></v-divider>
+      <signedout></signedout>
         <div>
     <v-tabs
       v-model="active"
@@ -38,9 +40,7 @@
 </div>
       <div style="padding-bottom:16px">
         <v-card-title>
-          <h1 class="font-weight-thin">
-              Attendance
-          </h1>
+          
         </v-card-title>
         <ul>
           <li v-for="(data,index) in attendance" :key='index'>
@@ -58,7 +58,7 @@
         </ul>
       </div>
       </v-card>
-      
+        <v-btn style="float:right;margin-top:25px;" @click="pushAttendance()" primary > Submit </v-btn>
       </v-tab-item>
        <v-tab-item>
         <v-card flat> <div v-if="loading['assessment']" style="    height: 100%;
@@ -86,7 +86,7 @@
 
 </v-list>
         </v-card>
-        <v-btn @click="pushAssessment()" primary > Submit </v-btn>
+      <v-btn style="float:right;margin-top:25px;" @click="pushAssessment()" primary > Submit </v-btn>
       </v-tab-item>
     </v-tabs>
 
@@ -110,6 +110,9 @@ export default {
     Marks() {
       return this.$store.getters["students/getAssessment"];
     },
+    sdate() {
+      return this.$store.getters["students/getDate"];
+    },
     attendance() {
       return this.$store.getters["students/getAttendance"];
     },
@@ -132,6 +135,9 @@ export default {
   methods: {
     pushAssessment() {
       this.$store.dispatch("students/pushAssessment", this.Marks);
+    },
+    pushAttendance() {
+      this.$store.dispatch("students/pushAttendance", this.attendance);
     }
   }
 };
