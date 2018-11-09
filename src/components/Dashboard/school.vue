@@ -230,6 +230,8 @@ export default {
     selectSession(selsession) {
       this.$router.push(
         "/dashboard/session/" +
+          this.school.city +
+          "/" +
           this.school.name +
           "/" +
           this.SelectedClass +
