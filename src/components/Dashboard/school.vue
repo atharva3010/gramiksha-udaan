@@ -82,17 +82,17 @@
       color="primary"
     ></v-progress-circular>Loading please wait </h1>
       </v-flex>
-        <v-flex>
+        <v-flex v-if="!loading['classes']" >
           <h2 style="float:left;font-weight:300;margin-left:15px;">Select a Session</h2>
         </v-flex>
       </v-layout>
-      <v-btn @click="deselectClass()">
+      <v-btn v-if="!loading['classes']" @click="deselectClass()">
         <v-icon left>arrow_back</v-icon>
         Select Class
       </v-btn>
   
   
-      <v-dialog style="float:right;" v-model="dialog" width="500">
+      <v-dialog v-if="!loading['classes']" style="float:right;" v-model="dialog" width="500">
   
         <v-btn slot="activator" @click="addSessionForm= true">
           <v-icon left>add</v-icon>

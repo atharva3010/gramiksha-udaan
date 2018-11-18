@@ -33,6 +33,7 @@ export default {
 
     },
     getSessions(state, payload) {
+      state.refresh = false
       state.loading["classes"] = true;
       var classRef = db.collection(
         "cities/" +
@@ -46,15 +47,18 @@ export default {
       classRef.get().then(doc => {
         state.SelectedClass = payload;
         state.currentschool.classes[payload].sessions = [];
-        doc.docs.forEach(function (sessiondoc, index) {
-          let sessiondata = sessiondoc.data();
-          state.currentschool.classes[payload].sessions.unshift({
-            no: index + 1,
-            title: sessiondata.title,
-            date: sessiondata.date
+        if (doc.docs.length > 0)
+          doc.docs.forEach(function (sessiondoc, index) {
+            let sessiondata = sessiondoc.data();
+            state.currentschool.classes[payload].sessions.unshift({
+              no: index + 1,
+              title: sessiondata.title,
+              date: sessiondata.date
+            });
+            state.loading["classes"] = false;
           });
+        else
           state.loading["classes"] = false;
-        });
       });
 
     },
@@ -135,16 +139,26 @@ export default {
               status: false
             }
           }
-          assessment[i] = { ...element,
+          assessment[i++] = { ...element,
             ...{
               marks: 0
             }
           }
         });
+        var vol = [];
+        payload.data.volunteer.forEach(element => {
+
+          db.collection("users/").doc(element.user).get().then(doc => {
+            console.log(doc)
+            if (doc.exists)
+              vol.push(doc.data().uid);
+
+          })
+        })
         sessionref.get().then(doc => {
           payload.data = {
             title: payload.data.title,
-            volunteers: payload.data.volunteer,
+            volunteers: vol,
             no: doc.docs.length + 1,
             date: sdate,
             assessment: assessment,
