@@ -152,6 +152,7 @@
                 </v-card-text>
               </v-flex>
               <v-flex xs6>
+              
                 <v-card-text>
                   <h3 style="font-weight:300;">Date : <b>{{session.date}}</b></h3>
   
@@ -165,9 +166,9 @@
       </v-layout>
   
     </div>
-    <v-snackbar v-model="snackbar" :timeout="timeout" :vertical="mode === 'vertical'">
-      {{ snackbartext }}
-      <v-btn color="pink" flat @click="snackbar = false">
+    <v-snackbar v-model="snackbar.bar" :timeout="snackbar.timeout" :vertical="snackbar.mode === 'vertical'">
+      {{ snackbar.text }}
+      <v-btn color="pink" flat @click="snackbar.bar = false">
         Close
       </v-btn>
     </v-snackbar>
@@ -178,10 +179,6 @@
 export default {
   data() {
     return {
-      snackbar: false,
-      mode: "",
-      timeout: 6000,
-      snackbartext: "Changes Saved",
       dialog: false,
       addSessionForm: false,
       addSession: {
@@ -197,6 +194,9 @@ export default {
     };
   },
   computed: {
+    snackbar() {
+      return this.$store.getters["school/getsnackbar"];
+    },
     refresh() {
       return this.$store.getters["school/getRefresh"];
     },
@@ -251,8 +251,6 @@ export default {
         class: this.SelectedClass
       });
       this.dialog = false;
-      this.snackbar = true;
-      this.snackbartext = "Session Added";
     },
     sessionAddVol() {
       this.addSession.volNo += 1;

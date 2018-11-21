@@ -8,6 +8,19 @@
     </v-layout>
     <v-layout row>
       <h2 class="classname">Class <b>{{$route.params.class}}</b></h2>
+     <v-spacer></v-spacer> <v-btn  flat="" slot="activator" @click=" dialog2 =true" color="red">Delete</v-btn>
+      <v-dialog v-model="dialog2" width="300">
+        <v-card>
+          <v-card-title>
+            <v-spacer></v-spacer>Are You sure?<br>
+            <v-spacer></v-spacer>
+          </v-card-title>
+          <v-card-actions style="padding-bottom:25px;"><v-spacer></v-spacer>
+            <v-btn color="red" @click="deleteSession()">Delete</v-btn><v-spacer></v-spacer>
+            <v-btn @click="dialog2=false">Cancel</v-btn><v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-layout>
     <v-divider style="margin:30px 0px;"></v-divider>
     <signedout></signedout>
@@ -28,10 +41,10 @@
         <v-tab-item>
           <v-card style="padding:25px;">
             <div v-if="loading['lessonplan']" style="    height: 100%;
-      width: 100%;
-      position: absolute;
-      background-color: #00000069;
-      z-index: 1;">
+          width: 100%;
+          position: absolute;
+          background-color: #00000069;
+          z-index: 1;">
               <v-progress-circular style="position: absolute;top: calc(50% - 16px); left: calc(50% - 16px);" indeterminate color="primary"></v-progress-circular>
   
             </div>
@@ -43,10 +56,10 @@
         <v-tab-item>
           <v-card hover dark>
             <div v-if="loading['assessment']" style="    height: 100%;
-      width: 100%;
-      position: absolute;
-      background-color: #00000069;
-      z-index: 1;">
+          width: 100%;
+          position: absolute;
+          background-color: #00000069;
+          z-index: 1;">
               <!-- LODING OVERLAY  !-->
   
               <v-progress-circular style="position: absolute;top: calc(50% - 16px); left: calc(50% - 16px);" indeterminate color="primary"></v-progress-circular>
@@ -125,10 +138,10 @@
         <v-tab-item>
           <v-card style="padding-bottom:16px;" flat>
             <div v-if="loading['assessment']" style="    height: 100%;
-      width: 100%;
-      position: absolute;
-      background-color: #00000069;
-      z-index: 1;">
+          width: 100%;
+          position: absolute;
+          background-color: #00000069;
+          z-index: 1;">
               <v-progress-circular style="position: absolute;top: calc(50% - 16px); left: calc(50% - 16px);" indeterminate color="primary"></v-progress-circular>
   
             </div>
@@ -146,7 +159,7 @@
                     </v-avatar>{{ student.name}}</v-chip>
                 </v-list-tile-content>
                 <v-list-tile-action>
-                  <v-text-field single-line type="number"  v-model="student.marks" style="width:25px;"></v-text-field>
+                  <v-text-field single-line type="number" v-model="student.marks" style="width:25px;"></v-text-field>
                 </v-list-tile-action>
               </v-list-tile>
   
@@ -194,6 +207,12 @@
   
   
     </div>
+    <v-snackbar v-model="snackbar.bar" :timeout="snackbar.timeout" :vertical="snackbar.mode === 'vertical'">
+      {{ snackbar.text }}
+      <v-btn color="pink" flat @click="snackbar.bar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -208,12 +227,16 @@ export default {
         }
       ],
       dialog: false,
+      dialog2: false,
       active: null,
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     };
   },
   computed: {
+    snackbar() {
+      return this.$store.getters["students/getsnackbar"];
+    },
     lessonplan() {
       return this.$store.getters["students/getLessonPlan"];
     },
@@ -231,6 +254,9 @@ export default {
     },
     refresh() {
       return this.$store.getters["students/getRefresh"];
+    },
+    goBack() {
+      return this.$store.getters["students/getGoBack"];
     }
   },
   watch: {
@@ -242,9 +268,14 @@ export default {
       if (to) {
         this.$store.dispatch("students/getStudents");
       }
+    },
+    goBack(to) {
+      if (to) this.$router.push("/dashboard/school");
+      //when we want to go back to sessions page.like in case of deleting a session
     }
   },
   created() {
+    //when page is rendered we set session's identity in state from the url,then fetch the details from firebase by getStudents
     this.$store.dispatch("students/setSession", {
       city: this.$route.params.city,
       school: this.$route.params.school,
@@ -280,6 +311,9 @@ export default {
     },
     pushAttendance() {
       this.$store.dispatch("students/pushAttendance", this.attendance);
+    },
+    deleteSession() {
+      this.$store.dispatch("students/deleteSession");
     }
   }
 };
@@ -289,6 +323,7 @@ export default {
 .classname {
   font-weight: 300;
 }
+
 .date {
   font-weight: 400;
   height: fit-content;
