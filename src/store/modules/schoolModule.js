@@ -6,6 +6,12 @@ export default {
 
   namespaced: true,
   state: {
+    snackbar: {
+      text: "", //snackbartext
+      bar: false, //snackbar
+      mode: "", //mode
+      timeout: 6000,
+    },
     loading: {
       "school": false,
       "classes": false
@@ -33,6 +39,7 @@ export default {
 
     },
     getSessions(state, payload) {
+      state.refresh = false
       state.loading["classes"] = true;
       var classRef = db.collection(
         "cities/" +
@@ -46,19 +53,23 @@ export default {
       classRef.get().then(doc => {
         state.SelectedClass = payload;
         state.currentschool.classes[payload].sessions = [];
-        doc.docs.forEach(function (sessiondoc, index) {
-          let sessiondata = sessiondoc.data();
-          state.currentschool.classes[payload].sessions.unshift({
-            no: index + 1,
-            title: sessiondata.title,
-            date: sessiondata.date
+        if (doc.docs.length > 0)
+          doc.docs.forEach(function (sessiondoc, index) {
+            let sessiondata = sessiondoc.data();
+            state.currentschool.classes[payload].sessions.unshift({
+              no: parseInt(sessiondoc.id),
+              title: sessiondata.title,
+              date: sessiondata.date
+            });
+            state.loading["classes"] = false;
           });
+        else
           state.loading["classes"] = false;
-        });
       });
 
     },
     getSchool(state) {
+      state.snackbar.bar = false;
       state.loading["school"] = true;
       var schoolsRef = db
         .collection("cities/" + state.currentcity + "/schools/")
@@ -124,39 +135,33 @@ export default {
 
       db.collection(
         "cities/" + state.currentcity + "/schools/" + state.currentschoolname + "/classes/").doc(state.SelectedClass).get().then(classdoc => {
-        let attendance = []
-        let assessment = []
-        var i = 0
-        console.log(classdoc.data())
+        classdoc.data()
+        var vol = [];
+        payload.data.volunteer.forEach(element => {
 
-        classdoc.data().students.forEach(element => {
-          attendance[i] = { ...element,
-            ...{
-              status: false
-            }
-          }
-          assessment[i] = { ...element,
-            ...{
-              marks: 0
-            }
-          }
-        });
+          db.collection("users/").doc(element.user).get().then(doc => {
+            if (doc.exists)
+              vol.push(doc.data().uid);
+
+          })
+        })
         sessionref.get().then(doc => {
           payload.data = {
             title: payload.data.title,
-            volunteers: payload.data.volunteer,
+            volunteers: vol,
             no: doc.docs.length + 1,
             date: sdate,
-            assessment: assessment,
-            attendance: attendance
-
           };
-          sessionref.doc([doc.docs.length + 1].toString()).set(payload.data).then(dooc => {
 
+          if (doc.docs.length != 0)
+            var nextSessonno = [parseInt(doc.docs[doc.docs.length - 1].id) + 1].toString()
+          else
+            var nextSessonno = "1"
+          sessionref.doc(nextSessonno).set(payload.data).then(dooc => {
             state.refresh = true
             state.loading["classes"] = false;
-
-
+            state.snackbar.text = "Session Added"
+            state.snackbar.bar = true;
           })
         })
       });
@@ -204,6 +209,9 @@ export default {
     },
     getSchoolClasses(state) {
       return state.currentschool.classes;
+    },
+    getsnackbar(state) {
+      return state.snackbar;
     }
   }
 };

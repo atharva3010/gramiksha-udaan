@@ -82,17 +82,17 @@
       color="primary"
     ></v-progress-circular>Loading please wait </h1>
       </v-flex>
-        <v-flex>
+        <v-flex v-if="!loading['classes']" >
           <h2 style="float:left;font-weight:300;margin-left:15px;">Select a Session</h2>
         </v-flex>
       </v-layout>
-      <v-btn @click="deselectClass()">
+      <v-btn v-if="!loading['classes']" @click="deselectClass()">
         <v-icon left>arrow_back</v-icon>
         Select Class
       </v-btn>
   
   
-      <v-dialog style="float:right;" v-model="dialog" width="500">
+      <v-dialog v-if="!loading['classes']" style="float:right;" v-model="dialog" width="500">
   
         <v-btn slot="activator" @click="addSessionForm= true">
           <v-icon left>add</v-icon>
@@ -152,6 +152,7 @@
                 </v-card-text>
               </v-flex>
               <v-flex xs6>
+              
                 <v-card-text>
                   <h3 style="font-weight:300;">Date : <b>{{session.date}}</b></h3>
   
@@ -165,9 +166,9 @@
       </v-layout>
   
     </div>
-    <v-snackbar v-model="snackbar" :timeout="timeout" :vertical="mode === 'vertical'">
-      {{ snackbartext }}
-      <v-btn color="pink" flat @click="snackbar = false">
+    <v-snackbar v-model="snackbar.bar" :timeout="snackbar.timeout" :vertical="snackbar.mode === 'vertical'">
+      {{ snackbar.text }}
+      <v-btn color="pink" flat @click="snackbar.bar = false">
         Close
       </v-btn>
     </v-snackbar>
@@ -178,10 +179,6 @@
 export default {
   data() {
     return {
-      snackbar: false,
-      mode: "",
-      timeout: 6000,
-      snackbartext: "Changes Saved",
       dialog: false,
       addSessionForm: false,
       addSession: {
@@ -197,6 +194,9 @@ export default {
     };
   },
   computed: {
+    snackbar() {
+      return this.$store.getters["school/getsnackbar"];
+    },
     refresh() {
       return this.$store.getters["school/getRefresh"];
     },
@@ -230,6 +230,8 @@ export default {
     selectSession(selsession) {
       this.$router.push(
         "/dashboard/session/" +
+          this.school.city +
+          "/" +
           this.school.name +
           "/" +
           this.SelectedClass +
@@ -249,8 +251,6 @@ export default {
         class: this.SelectedClass
       });
       this.dialog = false;
-      this.snackbar = true;
-      this.snackbartext = "Session Added";
     },
     sessionAddVol() {
       this.addSession.volNo += 1;
