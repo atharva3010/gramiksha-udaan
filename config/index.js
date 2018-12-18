@@ -1,3 +1,4 @@
+
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
@@ -18,7 +19,7 @@ module.exports = {
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
-    poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
+    poll: 1000, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
     
     /**
