@@ -3,27 +3,38 @@ import { firebase, db } from "@/scripts/firebase";
 export default {
   namespaced: true,
   state: {
-    usersExists: "r",
-    userExist: false,
-    user: null,
+    userExists: { no: false },
+    user: JSON.parse(localStorage.getItem("gramiksha-udaan:user")),
     isSignedUp: false,
-    isSignedIn: false,
+    userDetails: JSON.parse(
+      localStorage.getItem("gramiksha-udaan:userDetails")
+    ),
+    isSignedIn: localStorage.getItem("gramiksha-udaan:signedIn") === "true",
     SignedUpUser: null,
     loading: false,
     error: null
   },
   mutations: {
     setUser(state, payload) {
-      (state.isSignedIn = true), (state.user = payload);
+      state.user = payload;
+      localStorage.setItem("gramiksha-udaan:user", JSON.stringify(payload));
     },
     setUserExists(state, payload) {
       state.userExist = payload;
     },
     setSignedUp(state, payload) {
-      (state.isSignedUp = true), (state.SignedUpUser = payload.name);
+      state.isSignedUp = payload;
+    },
+    setUserDetails(state, payload) {
+      state.userDetails = payload;
+      localStorage.setItem(
+        "gramiksha-udaan:userDetails",
+        JSON.stringify(payload)
+      );
     },
     setSignedIn(state, payload) {
-      (state.isSignedUp = true), (state.SignedUpUser = payload.name);
+      state.isSignedIn = payload;
+      localStorage.setItem("gramiksha-udaan:signedIn", payload);
     },
     setLoading(state, payload) {
       state.loading = payload;
@@ -36,14 +47,13 @@ export default {
     },
     CheckUsernames(state, payload) {
       payload.forEach(element => {
-        console.log(element);
         var usersref = db.collection("users");
         var query = usersref.where("username", "==", element.user);
         query.get().then(function(QuerySnapshot) {
           if (QuerySnapshot.empty) {
-            state.usersExists[element.no] = false;
+            state.userExists[element.no] = false;
           } else {
-            state.usersExists[element.no] = true;
+            state.userExists[element.no] = true;
           }
         });
       });
@@ -65,9 +75,17 @@ export default {
               .get()
               .then(function(qs) {
                 var docef = db.collection("users").doc(qs.docs[0].id);
-                docef.get().then(function(doc) {
-                  commit("setUser", doc.data());
-                });
+                docef
+                  .get()
+                  .then(function(doc) {
+                    commit("setUser", user.user);
+                    commit("setUserDetails", doc.data());
+                    commit("setSignedIn", true);
+                  })
+                  .catch(error => {
+                    commit("setLoading", false);
+                    commit("setError", error);
+                  });
               });
           })
           .catch(error => {
@@ -80,10 +98,12 @@ export default {
           .get()
           .then(function(doc) {
             if (doc.exists) {
+              console.log(doc.data());
               firebase
                 .auth()
                 .signInWithEmailAndPassword(doc.data().email, payload.password)
                 .then(user => {
+                  console.log(user);
                   var citiesRef = db.collection("users");
                   citiesRef
                     .where("uid", "==", user.user.uid)
@@ -91,7 +111,9 @@ export default {
                     .then(qs => {
                       (docRef = db.collection("users").doc(qs.docs[0].id)),
                         docRef.get().then(function(doc) {
-                          commit("setUser", doc.data());
+                          commit("setUser", user.user);
+                          commit("setUserDetails", doc.data());
+                          commit("setSignedIn", true);
                         });
                     });
                 })
@@ -119,25 +141,27 @@ export default {
     SignUserup({ commit }, payload) {
       commit("setLoading", true);
       commit("clearError");
+      var userDetails = {
+        email: payload.email,
+        name: payload.name,
+        username: payload.username,
+        city: payload.city,
+        ngopost: payload.ngopost
+      };
       firebase
         .auth()
         .createUserWithEmailAndPassword(payload.email, payload.password)
         .then(function(user) {
+          userDetails.uid = user.user.uid;
           db.collection("users")
             .doc(payload.username)
-            .set({
-              email: payload.email,
-              name: payload.name,
-              username: payload.username,
-              city: payload.city,
-              ngopost: payload.ngopost,
-              uid: user.user.uid
-            })
-            .then(function(docRef) {
+            .set(userDetails)
+            .then(function() {
               commit("setLoading", false);
-              commit("setSignedUp", {
-                name: payload.name
-              });
+              commit("setUser", user.user);
+              commit("setUserDetails", userDetails);
+              commit("setSignedUp", true);
+              commit("setSignedIn", true);
             })
             .catch(error => {
               commit("setLoading", false);
@@ -149,16 +173,20 @@ export default {
           commit("setError", error);
         });
     },
-    CheckUsename({ commit }, payload) {
-      var usersref = db.collection("users");
-      var query = usersref.where("username", "==", payload.username);
-      query.get().then(function(QuerySnapshot) {
-        if (QuerySnapshot.empty) {
-          commit("setUserExists", false);
-        } else {
-          commit("setUserExists", true);
-        }
-      });
+    async logout({ commit }) {
+      await firebase
+        .auth()
+        .signOut()
+        .then(function() {
+          commit("setUser", null);
+          commit("setLoading", false);
+          commit("setSignedIn", false);
+          commit("setSignedUp", false);
+          commit("setUserDetails", null);
+          localStorage.removeItem("gramiksha-udaan:user");
+          localStorage.removeItem("gramiksha-udaan:userDetails");
+          localStorage.removeItem("gramiksha-udaan:signedIn");
+        });
     },
     clearError({ commit }) {
       commit("clearError");
@@ -166,16 +194,13 @@ export default {
   },
   getters: {
     getUserExists(state) {
-      return state.userExist;
-    },
-    getUsersExists(state) {
-      return state.usersExist;
+      return state.userExists;
     },
     getIsSignedUp(state) {
-      return {
-        isSignedUp: state.isSignedUp,
-        SignedUpUser: state.SignedUpUser
-      };
+      return state.isSignedUp;
+    },
+    getUserDetails(state) {
+      return state.userDetails;
     },
     loading(state) {
       return state.loading;
@@ -183,11 +208,11 @@ export default {
     error(state) {
       return state.error;
     },
+    getUser(state) {
+      return state.user;
+    },
     getIsSignedIn(state) {
-      return {
-        user: state.user,
-        isSignedIn: state.isSignedIn
-      };
+      return state.isSignedIn;
     }
   }
 };

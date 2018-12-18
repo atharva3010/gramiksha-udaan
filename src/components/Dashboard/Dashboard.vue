@@ -1,11 +1,10 @@
  <template>
   <div>
     <h1>Dashboard</h1>
-    <h1> {{user.name}} </h1><h3> ( {{ user.username }} ) </h3>
+    <h1>{{user.name}}</h1>
+    <h3>( {{ user.username }} )</h3>
     <br>
-    <h2>
-      {{user.ngopost}}
-      </h2>
+    <h2>{{user.ngopost}}</h2>
     <v-layout>
       <programhead></programhead>
     </v-layout>
@@ -21,7 +20,7 @@ export default {
   },
   computed: {
     user() {
-      return this.$store.getters["user/getIsSignedIn"].user;
+      return this.$store.getters["user/getUserDetails"];
     }
   }
 };

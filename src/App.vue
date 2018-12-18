@@ -2,15 +2,23 @@
   <v-app>
     <v-layout row>
       <v-flex>
-        
-        <v-navigation-drawer style="z-index:1" class="nav-drawer" absolute clipped permanent dark persistant v-if="isDrawer">
+        <v-navigation-drawer
+          style="z-index:1"
+          class="nav-drawer"
+          fixed
+          clipped
+          permanent
+          dark
+          persistant
+          v-if="isDrawer"
+        >
           <v-toolbar class="transparent" flat>
             <v-list class="pa-0">
               <v-list-tile avatar v-if="userSignedIn">
                 <v-list-tile-avatar>
                   <img src="https://randomuser.me/api/portraits/men/85.jpg">
                 </v-list-tile-avatar>
-  
+
                 <v-list-tile-content>
                   <v-list-tile-title>{{user.name}}</v-list-tile-title>
                 </v-list-tile-content>
@@ -35,31 +43,34 @@
             </v-list>
           </v-toolbar>
         </v-navigation-drawer>
-
       </v-flex>
       <v-flex xs12>
         <v-toolbar fixed dark>
-          <v-toolbar-side-icon @click="isDrawer=!isDrawer"> </v-toolbar-side-icon>
+          <v-toolbar-side-icon @click="isDrawer=!isDrawer"></v-toolbar-side-icon>
           <v-toolbar-title class="font-weight-regular">
-            Gramiksha - Udaan<span v-if="userSignedIn">, {{user.name}}</span>
+            Gramiksha - Udaan
+            <span v-if="userSignedIn">, {{user.name}}</span>
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn>
-              Home
+            <v-btn @click="goto('/')">Home
               <v-icon right>home</v-icon>
             </v-btn>
-            <v-btn>
-              Profile
+            <v-btn>Profile
               <v-icon right>person</v-icon>
             </v-btn>
-            <v-btn>
-              Logout
+            <v-btn v-if="userSignedIn" @click="logout">Logout
               <v-icon right>logout</v-icon>
+            </v-btn>
+            <v-btn @click="goto('/login')" v-if="!userSignedIn">Sign In
+              <v-icon right>person</v-icon>
+            </v-btn>
+            <v-btn @click="goto('/signup')" v-if="!userSignedIn">Sign Up
+              <v-icon right>person</v-icon>
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
-  
+
         <main :style="isDrawer ? {'padding-left': '300px'} : {'padding-left': '0'}">
           <v-container>
             <div id="app">
@@ -71,10 +82,13 @@
       </v-flex>
     </v-layout>
     <v-footer fixed class="pa-3" dark>
-      <img src="../static/download.png" style="width:20px;height:20px;border-radius:50%;margin:10px;">
+      <img
+        src="../static/download.png"
+        style="width:20px;height:20px;border-radius:50%;margin:10px;"
+      >
       <div>Gramiksha</div>
       <v-spacer></v-spacer>
-      <div> &copy; {{ new Date().getFullYear() }} All rights Reserved.</div>
+      <div>&copy; {{ new Date().getFullYear() }} All rights Reserved.</div>
     </v-footer>
   </v-app>
 </template>
@@ -97,6 +111,7 @@ main {
 </style>
 
 <script>
+import firebase from "firebase";
 export default {
   name: "App",
   data() {
@@ -116,7 +131,7 @@ export default {
         {
           icon: "lock_open",
           title: "Sign in",
-          link: "/Login"
+          link: "/login"
         }
       ];
       if (this.userSignedIn) {
@@ -124,18 +139,29 @@ export default {
       }
       return menuItems;
     },
-
     userSignedIn() {
-      return this.$store.getters["user/getIsSignedIn"].isSignedIn;
+      return this.$store.getters["user/getIsSignedIn"];
     },
     user() {
-      return this.$store.getters["user/getIsSignedIn"].user;
+      return this.$store.getters["user/getUserDetails"];
+    }
+  },
+  watch: {
+    userSignedIn(value) {
+      if (value) this.$router.push("/dashboard");
     }
   },
   methods: {
+    goto(route) {
+      this.$router.push(route);
+    },
     switchDrawer() {
       this.isDrawer != this.isDrawer;
       if (isDrawer) this.toolbarMargin = "margin:left:300px";
+    },
+    logout() {
+      this.$store.dispatch("user/logout");
+      this.$router.push("/");
     }
   }
 };
