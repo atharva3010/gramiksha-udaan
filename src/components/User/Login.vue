@@ -81,7 +81,9 @@ export default {
   },
   watch: {
     userSignedIn(value) {
-      if (value) this.$router.push("/dashboard");
+      this.$router.push(
+        decodeURIComponent(this.$route.query.redirect) || "/dashboard"
+      );
     }
   },
   methods: {

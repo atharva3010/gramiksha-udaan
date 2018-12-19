@@ -1,23 +1,64 @@
 <template>
   <v-container>
-  
+    <v-dialog style="float:left" v-model="dialog" width="500">
+      <v-card>
+        <form @submit.prevent="submitAddstudents">
+          <v-card-title class="headline grey lighten-2" primary-title>Add Students</v-card-title>
+          <v-flex v-for="(newstudent, index) in addStudentsList" :key="index" xs10 offset-xs1>
+            <div style="display:flex">
+              <v-text-field
+                required
+                :label="'Name of Student '"
+                v-model="newstudent.name"
+                :prefix="index+1"
+                id="Sname"
+                type="text"
+              ></v-text-field>
+              <v-btn style="float:right;" @click="remAddStudent(index)" icon>
+                <v-icon>close</v-icon>
+              </v-btn>
+            </div>
+          </v-flex>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="primary" @click="addAddStudent()">add more Students</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn type="submit" color="secondary">Submit</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </form>
+      </v-card>
+    </v-dialog>
     <v-layout row>
       <h1>Session {{$route.params.session}}</h1>
       <v-spacer></v-spacer>
-      <h3 class="date">Date {{sdate}} </h3>
+      <h3 class="date">Date {{sdate}}</h3>
     </v-layout>
     <v-layout row>
-      <h2 class="classname">Class <b>{{$route.params.class}}</b></h2>
-     <v-spacer></v-spacer> <v-btn  flat="" slot="activator" @click=" dialog2 =true" color="red">Delete</v-btn>
-      <v-dialog v-model="dialog2" width="300">
+      <h2 class="classname">
+        Class
+        <b>{{$route.params.class}}</b>
+      </h2>
+      <v-spacer></v-spacer>
+      <v-btn @click="dialog=true" color="primary" dark>Add students</v-btn>
+      <v-btn flat slot="activator" @click=" dialog2 =true" color="red">Delete</v-btn>
+      <v-dialog v-model="dialog2" width="500">
         <v-card>
-          <v-card-title>
-            <v-spacer></v-spacer>Are You sure?<br>
+          <v-card-title class="headline grey lighten-2" primary-title>Add Students</v-card-title>
+          <v-card-text>
+            <h3
+              class="font-weight-regular subheading"
+            >Clicking on Yes will delete this session forever. This action is not reversible. Are you user you want to continue?</h3>
+          </v-card-text>
+          <v-card-actions style="padding-bottom:25px;">
             <v-spacer></v-spacer>
-          </v-card-title>
-          <v-card-actions style="padding-bottom:25px;"><v-spacer></v-spacer>
-            <v-btn color="red" @click="deleteSession()">Delete</v-btn><v-spacer></v-spacer>
-            <v-btn @click="dialog2=false">Cancel</v-btn><v-spacer></v-spacer>
+            <v-btn color="red--text" @click="deleteSession()">Yes</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn @click="dialog2=false">No</v-btn>
+            <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -26,59 +67,88 @@
     <signedout></signedout>
     <div>
       <v-tabs v-model="active" color="transparent" slider-color="primary">
-        <v-tab ripple>
-          Lesson Plan
-  
-        </v-tab>
-        <v-tab ripple>
-          Attendance
-  
-        </v-tab>
-        <v-tab ripple>
-          Assessment
-  
-        </v-tab>
+        <v-tab ripple>Lesson Plan</v-tab>
+        <v-tab ripple>Students</v-tab>
+        <v-tab ripple>Attendance</v-tab>
+        <v-tab ripple>Assessment</v-tab>
         <v-tab-item>
           <v-card style="padding:25px;">
-            <div v-if="loading['lessonplan']" style="    height: 100%;
-          width: 100%;
-          position: absolute;
-          background-color: #00000069;
-          z-index: 1;">
-              <v-progress-circular style="position: absolute;top: calc(50% - 16px); left: calc(50% - 16px);" indeterminate color="primary"></v-progress-circular>
-  
-            </div>
-            <v-textarea solo v-model="lessonplan.data" label="Write Lesson plan here"></v-textarea>
-            <v-btn @click="pushLessonPlan"> Save </v-btn>
+            <v-textarea
+              v-if="editLessonPlan"
+              :disabled="loading['lessonplan']"
+              solo
+              v-model="lessonplan.data"
+              label="Write Lesson plan here"
+            ></v-textarea>
+            <p v-else class="font-weight-light headline">{{lessonplan.data}}</p>
+            <v-btn
+              color="primary"
+              v-if="!editLessonPlan"
+              @click="editLessonPlan = true"
+              :disabled="loading['lessonplan']"
+            >Edit</v-btn>
+            <v-btn
+              color="primary"
+              v-else
+              :disabled="loading['lessonplan']"
+              @click="editLessonPlan = false"
+            >Done</v-btn>
+            <v-btn
+              v-if="editLessonPlan"
+              :disabled="loading['lessonplan']"
+              :loading="loading['lessonplan']"
+              @click="pushLessonPlan"
+            >Save</v-btn>
           </v-card>
-  
+        </v-tab-item>
+        <v-tab-item>
+          <v-card hover>
+            <div style="padding-bottom:16px">
+              <v-list>
+                <v-list-tile>
+                  <v-list-tile-avatar>S.No.</v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title>Student name</v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile v-for="(data,index) in attendance" :key="index">
+                  <v-list-tile-avatar>
+                    <h3 class="font-weight-light">{{index+1}}</h3>
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <h3 class="font-weight-light">{{data.name}}</h3>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+              <!-- <v-btn slot="activator" @click="dialog=true" color="#910000" dark>Add students</v-btn> -->
+            </div>
+          </v-card>
         </v-tab-item>
         <v-tab-item>
           <v-card hover dark>
-            <div v-if="loading['assessment']" style="    height: 100%;
-          width: 100%;
-          position: absolute;
-          background-color: #00000069;
-          z-index: 1;">
+            <div
+              v-if="loading['attendance']"
+              style="height: 100%;
+                width: 100%;
+                position: absolute;
+                background-color: #00000069;
+                z-index: 1;"
+            >
               <!-- LODING OVERLAY  !-->
-  
-              <v-progress-circular style="position: absolute;top: calc(50% - 16px); left: calc(50% - 16px);" indeterminate color="primary"></v-progress-circular>
-  
+              <v-progress-circular
+                style="position: absolute;top: calc(50% - 16px); left: calc(50% - 16px);"
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
             </div>
             <div style="padding-bottom:16px">
-  
               <v-list>
                 <v-list-tile>
-                  <v-list-tile-avatar>
-                    S.No.
-                  </v-list-tile-avatar>
+                  <v-list-tile-avatar>S.No.</v-list-tile-avatar>
                   <v-list-tile-content>
-                    <v-list-tile-title>
-                      Student name
-                    </v-list-tile-title>
+                    <v-list-tile-title>Student name</v-list-tile-title>
                   </v-list-tile-content>
-                  <v-spacer></v-spacer>
-                  Attendance
+                  <v-spacer></v-spacer>Attendance
                 </v-list-tile>
                 <v-list-tile v-for="(data,index) in attendance" :key="index">
                   <v-list-tile-avatar>
@@ -88,130 +158,123 @@
                     <v-chip>{{data.name}}</v-chip>
                   </v-list-tile-content>
                   <v-spacer></v-spacer>
-                  <v-list-tile-action>
-                    <v-switch style="text-transform: capitalize" v-model="data.status" color="white">
-                    </v-switch>
+                  <v-list-tile-action v-if="editAttendance">
+                    <v-switch
+                      style="text-transform: capitalize"
+                      v-model="data.status"
+                      color="white"
+                    ></v-switch>
+                  </v-list-tile-action>
+                  <v-list-tile-action v-else>
+                    <h3 class="font-weight-light text-capitalize" v-if="data.status">Present</h3>
+                    <h3 class="font-weight-light text-capitalize" v-if="!data.status">Absent</h3>
                   </v-list-tile-action>
                 </v-list-tile>
               </v-list>
               <br>
-              <v-btn color="#910000" @click="pushAttendance()" dark> Submit </v-btn>
-              <v-btn slot="activator" @click="dialog=true" color="#910000" dark> Add students </v-btn>
-              <v-dialog style="float:left" v-model="dialog" width="500">
-                <v-card>
-                  <form @submit.prevent="submitAddstudents">
-                    <v-card-title class="headline grey lighten-2" primary-title>
-                      Add Students
-                    </v-card-title>
-  
-  
-  
-                    <v-flex v-for="(newstudent, index) in addStudentsList" :key="index" xs10 offset-xs1>
-                      <div style="display:flex">
-                        <v-text-field required :label="'Name of Student '" v-model="newstudent.name" id="Sname" type="text"></v-text-field>
-                        <v-btn style="float:right;" @click="remAddStudent(index)" v-if="index!=0" icon="">
-                          <v-icon>close</v-icon>
-                        </v-btn>
-                      </div>
-                    </v-flex>
-  
-  
-  
-                    <v-divider></v-divider>
-  
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn flat color="primary" @click="addAddStudent()">add more Students</v-btn>
-                      <v-spacer></v-spacer>
-                      <v-btn type="submit" color="secondary">
-                        Submit
-                      </v-btn>
-                      <v-spacer></v-spacer>
-                    </v-card-actions>
-                  </form>
-                </v-card>
-              </v-dialog>
+              <v-btn
+                color="#910000"
+                @click="editAttendance=true"
+                :disabled="loading['attendance']"
+                v-if="!editAttendance"
+                dark
+              >Edit</v-btn>
+              <v-btn
+                color="#910000"
+                @click="editAttendance=false"
+                :disabled="loading['attendance']"
+                v-else
+                dark
+              >Done</v-btn>
+              <v-btn
+                color="#910000"
+                @click="pushAttendance()"
+                :disabled="loading['attendance']"
+                :loading="loading['attendance']"
+                dark
+              >Submit</v-btn>
+              <!-- <v-btn slot="activator" @click="dialog=true" color="#910000" dark>Add students</v-btn> -->
             </div>
           </v-card>
-  
         </v-tab-item>
         <v-tab-item>
           <v-card style="padding-bottom:16px;" flat>
-            <div v-if="loading['assessment']" style="    height: 100%;
+            <div
+              v-if="loading['assessment']"
+              style="    height: 100%;
           width: 100%;
           position: absolute;
           background-color: #00000069;
-          z-index: 1;">
-              <v-progress-circular style="position: absolute;top: calc(50% - 16px); left: calc(50% - 16px);" indeterminate color="primary"></v-progress-circular>
-  
+          z-index: 1;"
+            >
+              <v-progress-circular
+                style="position: absolute;top: calc(50% - 16px); left: calc(50% - 16px);"
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
             </div>
             <v-list>
               <v-list-tile>
                 <v-list-tile-content>Sno / Student name</v-list-tile-content>
-                <v-spacer></v-spacer> Marks
+                <v-spacer></v-spacer>Marks
               </v-list-tile>
               <v-list-tile v-for="(student , index) in Marks" :key="index">
-  
                 <v-list-tile-content>
                   <v-chip>
                     <v-avatar class="grey">
                       <div style="color:white !important">{{index+1}}</div>
-                    </v-avatar>{{ student.name}}</v-chip>
+                    </v-avatar>
+                    {{ student.name}}
+                  </v-chip>
                 </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-text-field single-line type="number" v-model="student.marks" style="width:25px;"></v-text-field>
+                <v-list-tile-action v-if="editAssessment">
+                  <v-text-field
+                    single-line
+                    type="number"
+                    class="font-weight-light"
+                    v-model="student.marks"
+                    style="width:25px;"
+                  ></v-text-field>
+                </v-list-tile-action>
+                <v-list-tile-action v-else>
+                  <h3 class="font-weight-light">{{ student.marks }}</h3>
                 </v-list-tile-action>
               </v-list-tile>
-  
             </v-list>
             <br>
-            <v-btn color="primary" @click="pushAssessment()" dark> Submit </v-btn>
-            <v-btn @click="dialog=true" color="primary" dark> Add students </v-btn>
-            <v-dialog style="float:left" v-model="dialog" width="500">
-              <v-card>
-                <form @submit.prevent="submitAddstudents">
-                  <v-card-title class="headline grey lighten-2" primary-title>
-                    Add Students
-                  </v-card-title>
-  
-  
-  
-                  <v-flex v-for="(newstudent, index) in addStudentsList" :key="index" xs10 offset-xs1>
-                    <div style="display:flex">
-                      <v-text-field required :label="'Name of Student '" v-model="newstudent.name" id="Sname" type="text"></v-text-field>
-                      <v-btn style="float:right;" @click="remAddStudent(index)" v-if="index!=0" icon="">
-                        <v-icon>close</v-icon>
-                      </v-btn>
-                    </div>
-                  </v-flex>
-  
-  
-  
-                  <v-divider></v-divider>
-  
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="addAddStudent()">add more Students</v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn type="submit" color="secondary">
-                      Submit
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                  </v-card-actions>
-                </form>
-              </v-card>
-            </v-dialog>
+            <v-btn
+              color="primary"
+              @click="editAssessment=true"
+              :disabled="loading['assessment']"
+              v-if="!editAssessment"
+              dark
+            >Edit</v-btn>
+            <v-btn
+              color="primary"
+              @click="editAssessment=false"
+              :disabled="loading['assessment']"
+              v-else
+              dark
+            >Done</v-btn>
+            <v-btn
+              color="primary"
+              :disabled="loading['assessment']"
+              :loading="loading['assessment']"
+              @click="pushAssessment()"
+              dark
+            >Submit</v-btn>
+            <!-- <v-btn @click="dialog=true" color="primary" dark>Add students</v-btn> -->
           </v-card>
         </v-tab-item>
       </v-tabs>
-  
-  
     </div>
-    <v-snackbar v-model="snackbar.bar" :timeout="snackbar.timeout" :vertical="snackbar.mode === 'vertical'">
+    <v-snackbar
+      v-model="snackbar.bar"
+      :timeout="snackbar.timeout"
+      :vertical="snackbar.mode === 'vertical'"
+    >
       {{ snackbar.text }}
-      <v-btn color="pink" flat @click="snackbar.bar = false">
-        Close
-      </v-btn>
+      <v-btn color="pink" flat @click="snackbar.bar = false">Close</v-btn>
     </v-snackbar>
   </v-container>
 </template>
@@ -227,6 +290,9 @@ export default {
         }
       ],
       dialog: false,
+      editLessonPlan: false,
+      editAttendance: false,
+      editAssessment: false,
       dialog2: false,
       active: null,
       text:
@@ -260,9 +326,6 @@ export default {
     }
   },
   watch: {
-    $route(to, from) {
-      console.log(to);
-    },
     refresh(to) {
       //whenever refresh value is changed the records are fetched again ,after updating some thing like lesson plan
       if (to) {
@@ -295,7 +358,11 @@ export default {
       ];
     },
     remAddStudent(index) {
-      console.log(this.addStudentsList);
+      if (this.addStudentsList.length == 1) {
+        this.addStudentsList[0].name = "";
+        this.dialog = false;
+        return;
+      }
       this.addStudentsList.splice(index, 1);
     },
     addAddStudent() {

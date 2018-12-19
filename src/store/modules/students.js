@@ -1,7 +1,4 @@
-import {
-  firebase,
-  db
-} from "@/scripts/firebase";
+import { firebase, db } from "@/scripts/firebase";
 
 export default {
   namespaced: true,
@@ -10,7 +7,7 @@ export default {
       text: "", //snackbartext
       bar: false, //snackbar
       mode: "", //mode
-      timeout: 6000,
+      timeout: 6000
     },
     goBack: false,
     lessonplan: {
@@ -31,14 +28,18 @@ export default {
       assessment: false,
       lessonplan: false
     },
-    attendance: [{
-      name: "",
-      status: false
-    }],
-    assessment: [{
-      name: "",
-      marks: 0
-    }]
+    attendance: [
+      {
+        name: "",
+        status: false
+      }
+    ],
+    assessment: [
+      {
+        name: "",
+        marks: 0
+      }
+    ]
   },
   mutations: {
     setSession(state, payload) {
@@ -51,12 +52,12 @@ export default {
     deleteSession(state) {
       db.collection(
         "cities/" +
-        state.city +
-        "/schools/" +
-        state.school +
-        "/classes/" +
-        state.class +
-        "/sessions/"
+          state.city +
+          "/schools/" +
+          state.school +
+          "/classes/" +
+          state.class +
+          "/sessions/"
       )
         .doc(state.no.toString())
         .delete()
@@ -73,12 +74,12 @@ export default {
       state.goBack = false;
       db.collection(
         "cities/" +
-        state.city +
-        "/schools/" +
-        state.school +
-        "/classes/" +
-        state.class +
-        "/sessions/"
+          state.city +
+          "/schools/" +
+          state.school +
+          "/classes/" +
+          state.class +
+          "/sessions/"
       )
         .doc(state.no.toString())
         .get()
@@ -142,19 +143,22 @@ export default {
       state.loading["lessonplan"] = true;
       db.collection(
         "cities/" +
-        state.city +
-        "/schools/" +
-        state.school +
-        "/classes/" +
-        state.class +
-        "/sessions/"
+          state.city +
+          "/schools/" +
+          state.school +
+          "/classes/" +
+          state.class +
+          "/sessions/"
       )
         .doc(state.no.toString())
-        .set({
-          lessonplan: payload.data
-        }, {
+        .set(
+          {
+            lessonplan: payload.data
+          },
+          {
             merge: true
-          })
+          }
+        )
         .then(doc => {
           state.loading["lessonplan"] = false;
           state.refresh = true;
@@ -167,19 +171,22 @@ export default {
       state.loading["attendance"] = true;
       db.collection(
         "cities/" +
-        state.city +
-        "/schools/" +
-        state.school +
-        "/classes/" +
-        state.class +
-        "/sessions/"
+          state.city +
+          "/schools/" +
+          state.school +
+          "/classes/" +
+          state.class +
+          "/sessions/"
       )
         .doc(state.no.toString())
-        .set({
-          attendance: state.attendance
-        }, {
+        .set(
+          {
+            attendance: state.attendance
+          },
+          {
             merge: true
-          })
+          }
+        )
         .then(doc => {
           state.loading["attendance"] = false;
           state.refresh = true;
@@ -191,19 +198,22 @@ export default {
       state.loading["assessment"] = true;
       db.collection(
         "cities/" +
-        state.city +
-        "/schools/" +
-        state.school +
-        "/classes/" +
-        state.class +
-        "/sessions/"
+          state.city +
+          "/schools/" +
+          state.school +
+          "/classes/" +
+          state.class +
+          "/sessions/"
       )
         .doc(state.no.toString())
-        .set({
-          assessment: state.assessment
-        }, {
+        .set(
+          {
+            assessment: state.assessment
+          },
+          {
             merge: true
-          })
+          }
+        )
         .then(
           doc => {
             state.loading["assessment"] = false;
@@ -215,7 +225,6 @@ export default {
         );
     },
     addStudents(state, payload) {
-
       //pushing the added students to firebase, and making the loading value True during that time.
       state.loading["assessment"] = true;
       state.loading["attendance"] = true;
@@ -225,8 +234,9 @@ export default {
         )
         .doc(state.class);
       classref.get().then(doc => {
-        var updatedstudentlist = doc.data().students;
-
+        if (doc.data().students != undefined && doc.data().students != null)
+          var updatedstudentlist = doc.data().students;
+        else var updatedstudentlist = [];
         //getting a copy of students list of class from firebase and appending the new students to it.
         payload.forEach(element => {
           updatedstudentlist.push(element);
@@ -234,14 +244,19 @@ export default {
 
         //pushing the updated student list to the firebase if sucessfull then setting the loading value false
         classref
-          .set({
-            students: updatedstudentlist
-          }, {
+          .set(
+            {
+              students: updatedstudentlist
+            },
+            {
               merge: true
-            })
+            }
+          )
           .then(aaa => {
             //code for adding the new students to the assessment and attendence records
-            var sref = classref.collection("/sessions/").doc(state.no.toString());
+            var sref = classref
+              .collection("/sessions/")
+              .doc(state.no.toString());
             var updatedAttendance = state.attendance;
             var updatedAssessment = state.assessment;
             payload.forEach(element => {
@@ -255,64 +270,55 @@ export default {
               });
             });
             sref
-              .set({
-                attendance: updatedAttendance,
-                assessment: updatedAssessment
-              }, {
+              .set(
+                {
+                  attendance: updatedAttendance,
+                  assessment: updatedAssessment
+                },
+                {
                   merge: true
-                })
+                }
+              )
               .then(asdf => {
                 state.refresh = true;
                 //if successful the seting the refresh value to true
                 state.loading["assessment"] = false;
                 state.loading["attendance"] = false;
-                state.snackbar.bar = true
-                state.snackbar.text = "Students Added"
+                state.snackbar.bar = true;
+                state.snackbar.text = "Students Added";
               });
-
-
-
           });
       });
-
-
     },
     deleteSession(state) {
       //deleteing session and making goBack true to that getters react and watch propery in the session page reacts to it and goes back to school page
-      var sref = db.collection(
-        "cities/" +
-        state.city +
-        "/schools/" +
-        state.school +
-        "/classes/" +
-        state.class +
-        "/sessions/"
-      )
-        .doc(state.no.toString())
+      var sref = db
+        .collection(
+          "cities/" +
+            state.city +
+            "/schools/" +
+            state.school +
+            "/classes/" +
+            state.class +
+            "/sessions/"
+        )
+        .doc(state.no.toString());
       sref.delete().then(success => {
         state.goBack = true;
-      })
+      });
     }
   },
   actions: {
-    deleteSession({
-      commit
-    }) {
+    deleteSession({ commit }) {
       commit("deleteSession");
     },
-    addStudents({
-      commit
-    }, payload) {
+    addStudents({ commit }, payload) {
       commit("addStudents", payload);
     },
-    setSession({
-      commit
-    }, payload) {
+    setSession({ commit }, payload) {
       commit("setSession", payload);
     },
-    getStudents({
-      commit
-    }) {
+    getStudents({ commit }) {
       commit("getStudents");
     },
     addStudent({ commit }, payload) {
@@ -327,9 +333,7 @@ export default {
     pushAttendance({ commit }, payload) {
       commit("pushAttendance", payload);
     },
-    pushLessonPlan({
-      commit
-    }, payload) {
+    pushLessonPlan({ commit }, payload) {
       commit("pushLessonPlan", payload);
     }
   },
