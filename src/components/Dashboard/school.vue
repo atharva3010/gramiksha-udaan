@@ -94,7 +94,7 @@
       </v-btn>
 
       <v-dialog v-if="!loading['classes']" style="float:right;" v-model="dialog" width="500">
-        <v-btn slot="activator" @click="addSessionForm= true">
+        <v-btn slot="activator">
           <v-icon left>add</v-icon>Add Session
         </v-btn>
         <v-card>
@@ -111,16 +111,16 @@
               ></v-text-field>
             </v-flex>
 
-            <v-flex v-for="vol in addSession.volunteer " :key="vol.no" xs10 offset-xs1>
+            <v-flex v-for="(vol,index) in addSession.volunteer" :key="index" xs10 offset-xs1>
               <div style="display:flex">
                 <v-text-field
                   required
-                  :label="'Username of Volunteer ' + vol.no"
+                  :label="'Username of Volunteer ' + (index+1)"
                   id="Sname"
-                  v-model="addSession.volunteer[vol.no-1].user"
+                  v-model="addSession.volunteer[index].user"
                   type="text"
                 ></v-text-field>
-                <v-btn style="float:right;" v-if="vol.no!=1" @click="sessionRemvol(vol)" icon>
+                <v-btn style="float:right;" @click="sessionRemvol(vol)" icon>
                   <v-icon>close</v-icon>
                 </v-btn>
               </div>
@@ -172,6 +172,15 @@
             </v-layout>
           </v-card>
         </v-flex>
+        <v-flex v-if="classes[SelectedClass].sessions.length == 0">
+          <h3
+            class="font-weight-light display-1 pt-4"
+            style="text-align:center"
+          >No Sessions Have Been Added Yet.
+            <br>
+            <v-btn color="primary" flat @click="dialog = true">Add Session</v-btn>
+          </h3>
+        </v-flex>
       </v-layout>
     </div>
     <v-snackbar
@@ -190,10 +199,9 @@ export default {
   data() {
     return {
       dialog: false,
-      addSessionForm: false,
       addSession: {
         volNo: 1,
-        title: " ",
+        title: "",
         volunteer: [
           {
             no: 1,
@@ -270,10 +278,20 @@ export default {
       });
     },
     sessionRemvol(vol) {
-      this.addSession.volunteer.splice(
-        this.addSession.volunteer.indexOf(vol),
-        1
+      // if (this.addSession.volunteer.length == 1) {
+      //   this.addSession.volunteer[0].user == "";
+      //   this.dialog = false;
+      //   return;
+      // }
+      console.log(vol);
+      console.log(this.addSession.volunteer);
+      this.addSession.volunteer = this.addSession.volunteer.filter(
+        ele => ele.no != vol.no
       );
+      // this.addSession.volunteer.splice(
+      //   this.addSession.volunteer.indexOf(vol),
+      //   1
+      // );
       this.addSession.volNo -= 1;
     }
   }

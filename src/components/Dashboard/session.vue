@@ -10,7 +10,7 @@
                 required
                 :label="'Name of Student '"
                 v-model="newstudent.name"
-                :prefix="index+1"
+                :prefix="toString(index+1)"
                 id="Sname"
                 type="text"
               ></v-text-field>
@@ -80,19 +80,27 @@
               v-model="lessonplan.data"
               label="Write Lesson plan here"
             ></v-textarea>
-            <p v-else class="font-weight-light headline">{{lessonplan.data}}</p>
+            <p
+              v-if="!editLessonPlan && lessonplan.data != ''"
+              class="font-weight-light headline"
+            >{{lessonplan.data}}</p>
+            <p
+              v-if="!editLessonPlan && lessonplan.data == ''"
+              class="font-weight-light headline"
+            >Please add a Lesson Plan.</p>
+
             <v-btn
               color="primary"
-              v-if="!editLessonPlan"
+              v-if="!editLessonPlan && lessonplan.data != ''"
               @click="editLessonPlan = true"
               :disabled="loading['lessonplan']"
             >Edit</v-btn>
             <v-btn
               color="primary"
-              v-else
+              v-if="!editLessonPlan && lessonplan.data == ''"
+              @click="editLessonPlan = true"
               :disabled="loading['lessonplan']"
-              @click="editLessonPlan = false"
-            >Done</v-btn>
+            >Add</v-btn>
             <v-btn
               v-if="editLessonPlan"
               :disabled="loading['lessonplan']"
@@ -181,16 +189,10 @@
               >Edit</v-btn>
               <v-btn
                 color="#910000"
-                @click="editAttendance=false"
-                :disabled="loading['attendance']"
-                v-else
-                dark
-              >Done</v-btn>
-              <v-btn
-                color="#910000"
                 @click="pushAttendance()"
                 :disabled="loading['attendance']"
                 :loading="loading['attendance']"
+                v-if="editAttendance"
                 dark
               >Submit</v-btn>
               <!-- <v-btn slot="activator" @click="dialog=true" color="#910000" dark>Add students</v-btn> -->
@@ -251,16 +253,10 @@
             >Edit</v-btn>
             <v-btn
               color="primary"
-              @click="editAssessment=false"
-              :disabled="loading['assessment']"
-              v-else
-              dark
-            >Done</v-btn>
-            <v-btn
-              color="primary"
               :disabled="loading['assessment']"
               :loading="loading['assessment']"
               @click="pushAssessment()"
+              v-if="editAssessment"
               dark
             >Submit</v-btn>
             <!-- <v-btn @click="dialog=true" color="primary" dark>Add students</v-btn> -->
@@ -371,13 +367,19 @@ export default {
       });
     },
     pushLessonPlan() {
-      this.$store.dispatch("students/pushLessonPlan", this.lessonplan);
+      if (this.$store.dispatch("students/pushLessonPlan", this.lessonplan)) {
+        this.editLessonPlan = false;
+      }
     },
     pushAssessment() {
-      this.$store.dispatch("students/pushAssessment", this.Marks);
+      if (this.$store.dispatch("students/pushAssessment", this.Marks)) {
+        this.editAssessment = false;
+      }
     },
     pushAttendance() {
-      this.$store.dispatch("students/pushAttendance", this.attendance);
+      if (this.$store.dispatch("students/pushAttendance", this.attendance)) {
+        this.editAttendance = false;
+      }
     },
     deleteSession() {
       this.$store.dispatch("students/deleteSession");

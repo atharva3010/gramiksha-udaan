@@ -87,7 +87,6 @@ export default {
           state.assessment = doc.data().assessment;
           state.attendance = doc.data().attendance;
           state.lessonplan.data = doc.data().lessonplan;
-
           if (!("attendance" in doc.data())) {
             state.attendance = [];
             db.collection(
@@ -162,6 +161,7 @@ export default {
         .then(doc => {
           state.loading["lessonplan"] = false;
           state.refresh = true;
+          return true;
         });
     },
     pushAttendance(state, payload) {
@@ -190,6 +190,7 @@ export default {
         .then(doc => {
           state.loading["attendance"] = false;
           state.refresh = true;
+          return true;
         });
     },
     pushAssessment(state, payload) {
@@ -218,6 +219,7 @@ export default {
           doc => {
             state.loading["assessment"] = false;
             state.refresh = true;
+            return true;
           },
           err => {
             console.log(err);
