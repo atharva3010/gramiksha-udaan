@@ -13,6 +13,7 @@ export default {
     lessonplan: {
       data: ""
     },
+    Level: 0,
     refresh: false,
     city: null,
     no: null,

@@ -18,6 +18,9 @@ export default {
   components: {
     programhead: ProgramHead
   },
+  created() {
+    if (!this.$store.getters["user/getIsSignedIn"]) this.$router.push("/login");
+  },
   computed: {
     user() {
       return this.$store.getters["user/getUserDetails"];

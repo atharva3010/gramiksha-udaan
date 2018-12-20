@@ -12,7 +12,8 @@ export default {
     isSignedIn: localStorage.getItem("gramiksha-udaan:signedIn") === "true",
     SignedUpUser: null,
     loading: false,
-    error: null
+    error: null,
+    accessLevel: localStorage.getItem("gramiksha-udaan:accessLevel")
   },
   mutations: {
     setUser(state, payload) {
@@ -27,10 +28,12 @@ export default {
     },
     setUserDetails(state, payload) {
       state.userDetails = payload;
+      state.accessLevel = payload.accessLevel;
       localStorage.setItem(
         "gramiksha-udaan:userDetails",
         JSON.stringify(payload)
       );
+      localStorage.setItem("gramiksha-udaan:accessLevel", payload.accessLevel);
     },
     setSignedIn(state, payload) {
       state.isSignedIn = payload;
@@ -44,6 +47,9 @@ export default {
     },
     clearError(state) {
       state.error = null;
+    },
+    setAccessLevel(state, payload) {
+      state.accessLevel = payload;
     },
     CheckUsernames(state, payload) {
       payload.forEach(element => {
@@ -60,7 +66,7 @@ export default {
     }
   },
   actions: {
-    SignUserIn({ commit }, payload) {
+    SignUserIn({ commit, dispatch }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -80,6 +86,7 @@ export default {
                   .then(function(doc) {
                     commit("setUser", user.user);
                     commit("setUserDetails", doc.data());
+                    dispatch("setAccessLevel");
                     commit("setSignedIn", true);
                   })
                   .catch(error => {
@@ -113,6 +120,7 @@ export default {
                         docRef.get().then(function(doc) {
                           commit("setUser", user.user);
                           commit("setUserDetails", doc.data());
+                          dispatch("setAccessLevel");
                           commit("setSignedIn", true);
                         });
                     });
@@ -138,7 +146,7 @@ export default {
           });
       }
     },
-    SignUserup({ commit }, payload) {
+    SignUserup({ commit, dispatch }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var userDetails = {
@@ -146,7 +154,9 @@ export default {
         name: payload.name,
         username: payload.username,
         city: payload.city,
-        ngopost: payload.ngopost
+        wantedPost: payload.ngopost,
+        ngopost: "Joined",
+        accessLevel: 0
       };
       firebase
         .auth()
@@ -160,6 +170,7 @@ export default {
               commit("setLoading", false);
               commit("setUser", user.user);
               commit("setUserDetails", userDetails);
+              dispatch("setAccessLevel");
               commit("setSignedUp", true);
               commit("setSignedIn", true);
             })
@@ -213,6 +224,9 @@ export default {
     },
     getIsSignedIn(state) {
       return state.isSignedIn;
+    },
+    getAccessLevel(state) {
+      return state.accessLevel;
     }
   }
 };

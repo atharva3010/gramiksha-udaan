@@ -19,7 +19,7 @@
         <v-img style="border-radius:8px;" :src="school.url" height="400px"></v-img>
       </v-flex>
       <v-flex v-if="loading['school']" sm12>
-        <h1 style=" text-align:center;   padding: 179px 30%;">
+        <h1 style="text-align:center;padding: 179px 30%;">
           <v-progress-circular indeterminate color="primary"></v-progress-circular>
           <br>Loading, Please Wait
         </h1>
@@ -238,6 +238,7 @@ export default {
     }
   },
   created() {
+    if (!this.$store.getters["user/getIsSignedIn"]) this.$router.push("/login");
     this.$store.commit("school/deselectClass");
     this.$store.dispatch("school/getSchool", {
       school: this.school.name,
