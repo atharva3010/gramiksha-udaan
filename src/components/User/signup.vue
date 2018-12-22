@@ -77,13 +77,19 @@
                 </v-layout>
                 <v-layout row>
                   <v-flex xs12>
-                    <v-text-field
+                    <v-select
+                      :items="cities"
+                      label="Select City"
+                      v-model="city"
+                      :rules="[rules.empty]"
+                    ></v-select>
+                    <!-- <v-text-field
                       label="City"
                       id="city"
                       v-model="city"
                       :rules="[rules.empty]"
                       type="text"
-                    ></v-text-field>
+                    ></v-text-field>-->
                   </v-flex>
                 </v-layout>
                 <v-layout row>
@@ -127,6 +133,7 @@ export default {
       username: "",
       ngopost: "",
       city: "",
+      cities: ["Jaipur", "Delhi", "Gwalior", "Bhopal", "Laxmangarh", "Indore"],
       usernames: [],
       rules: {
         empty: v => !!v || "Required"
@@ -146,6 +153,9 @@ export default {
           vm.usernames.push(doc.id);
         });
       });
+  },
+  created() {
+    this.$store.dispatch["user/getCities"];
   },
   computed: {
     comparepass() {

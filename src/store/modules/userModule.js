@@ -28,12 +28,17 @@ export default {
     },
     setUserDetails(state, payload) {
       state.userDetails = payload;
-      state.accessLevel = payload.accessLevel;
+      if (payload != null) {
+        state.accessLevel = payload.accessLevel;
+        localStorage.setItem(
+          "gramiksha-udaan:accessLevel",
+          payload.accessLevel
+        );
+      }
       localStorage.setItem(
         "gramiksha-udaan:userDetails",
         JSON.stringify(payload)
       );
-      localStorage.setItem("gramiksha-udaan:accessLevel", payload.accessLevel);
     },
     setSignedIn(state, payload) {
       state.isSignedIn = payload;
@@ -50,6 +55,7 @@ export default {
     },
     setAccessLevel(state, payload) {
       state.accessLevel = payload;
+      localStorage.setItem("gramiksha-udaan:accessLevel", payload);
     },
     CheckUsernames(state, payload) {
       payload.forEach(element => {
@@ -86,7 +92,6 @@ export default {
                   .then(function(doc) {
                     commit("setUser", user.user);
                     commit("setUserDetails", doc.data());
-                    dispatch("setAccessLevel");
                     commit("setSignedIn", true);
                   })
                   .catch(error => {
@@ -120,7 +125,6 @@ export default {
                         docRef.get().then(function(doc) {
                           commit("setUser", user.user);
                           commit("setUserDetails", doc.data());
-                          dispatch("setAccessLevel");
                           commit("setSignedIn", true);
                         });
                     });
@@ -194,9 +198,7 @@ export default {
           commit("setSignedIn", false);
           commit("setSignedUp", false);
           commit("setUserDetails", null);
-          localStorage.removeItem("gramiksha-udaan:user");
-          localStorage.removeItem("gramiksha-udaan:userDetails");
-          localStorage.removeItem("gramiksha-udaan:signedIn");
+          commit("setAccessLevel", -1);
         });
     },
     clearError({ commit }) {

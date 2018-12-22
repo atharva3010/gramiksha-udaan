@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import HelloWorld from "@/components/HelloWorld";
+import ProgramHead from "@/components/Dashboard/ProgramHead";
 import signup from "@/components/User/SignUp";
 import login from "@/components/User/Login";
 import signupmsg from "@/components/User/signupmsg";
@@ -14,8 +14,8 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "HelloWorld",
-      component: HelloWorld
+      name: "Head",
+      component: ProgramHead
     },
     {
       path: "/dashboard",
