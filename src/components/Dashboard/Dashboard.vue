@@ -5,6 +5,7 @@
     <h3>( {{ user.username }} )</h3>
     <br>
     <h2>{{user.ngopost}}</h2>
+    <br>
     <v-layout>
       <programhead></programhead>
     </v-layout>
