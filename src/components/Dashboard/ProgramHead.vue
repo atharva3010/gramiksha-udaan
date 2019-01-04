@@ -25,7 +25,7 @@
     <v-expand-transition>
       <div
         v-if="hover"
-        class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-1 white--text"
+        class="d-flex transition-fast-in-fast-out primary darken-2 v-card--reveal display-1 white--text"
         style="height: 100%;"
         @click="show"
       >
@@ -200,7 +200,7 @@ ul {
   align-items: center;
   bottom: 0;
   justify-content: center;
-  opacity: .6;
+  opacity: 0.8;
   position: absolute;
   width: 100%;
 }
