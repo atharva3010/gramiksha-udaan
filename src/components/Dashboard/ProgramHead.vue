@@ -1,40 +1,30 @@
 <template>
-  <v-layout align-start justify-space-between row fill-height>
-    <v-flex xs12 sm6 md4>
-    <v-hover>
-    <v-card
-    hover
-    light
+  <v-layout justify-space-between justify-space-around align-center wrap>
+    <v-flex v-if="loading['cities']" sm12>
+      <h1 style="text-align:center;padding: 179px 30%;">
+        <v-progress-circular indeterminate color="primary"></v-progress-circular>
+        <br>Loading, Please Wait
+      </h1>
+    </v-flex>
+    <v-flex v-for="city in cities" :key="city.name" xs12 sm6 md4>
+      <div style="margin:10px;">
+        <v-hover>
+          <v-card hover light slot-scope="{ hover }">
+            <v-img style="padding-top:50%;max-height:250px;min-height:250px;" :src="city.imgURL">
+              <v-layout align-end fill-height pa-3 white--text>
+                <div class="font-weight-light display-1">{{city.name}}</div>
+              </v-layout>
+              <v-expand-transition>
+                <div
+                  v-if="hover"
+                  class="d-flex transition-fast-in-fast-out primary darken-2 v-card--reveal display-1 white--text"
+                  style="height: 100%; text-align:center;"
+                  @click="show(city.name)"
+                >Click to see Schools</div>
+              </v-expand-transition>
+            </v-img>
 
-    slot-scope="{ hover }"
-    >
-    <v-img
-      src="https://media-cdn.tripadvisor.com/media/photo-s/15/91/97/6c/day-trip-to-gwalior-from.jpg"
-      
-    >
-    <v-layout
-      align-end
-      fill-height
-      pa-3
-      white--text
-    >
-      <div class="font-weight-light display-1">
-        Gwalior
-      </div>
-    </v-layout>
-    <v-expand-transition>
-      <div
-        v-if="hover"
-        class="d-flex transition-fast-in-fast-out primary darken-2 v-card--reveal display-1 white--text"
-        style="height: 100%;"
-        @click="show"
-      >
-        Click to see cities
-      </div>
-    </v-expand-transition>
-    </v-img>
-
-      <!-- <v-btn
+            <!-- <v-btn
         absolute
         dark
         fab
@@ -87,65 +77,39 @@
         @click="snackbar = true"
         >
         <v-icon>check</v-icon>
-      </v-btn>  -->
+            </v-btn>-->
+          </v-card>
+        </v-hover>
 
-    </v-card>
-    </v-hover>
+        <v-card hover v-if="!thisShow[city.name]">
+          <div style="padding-bottom:50px">
+            <v-card-title>
+              <h1 class="font-weight-thin">Schools</h1>
+            </v-card-title>
 
+            <v-chip
+              v-for="(item,index) in city.schools"
+              :key="index"
+              :color="color[(index)%5]"
+              text-color="white"
+              class="pa-1 ma-1"
+            >{{item}}</v-chip>
 
-    <v-card
-    hover
-    v-if="!thisShow"
-    >
-    <div style="padding-bottom:50px">
-      <v-card-title>
-        <h1 class="font-weight-thin">
-          Schools
-        </h1>
-      </v-card-title>
-        <v-chip color= "primary" text-color="white" class="pa-1 ma-1">Kanya</v-chip>
+            <v-btn @click="show" absolute dark fab left bottom color="#910000" class="pa-2 ma-2">
+              <v-icon>undo</v-icon>
+            </v-btn>
 
-        <v-chip color="secondary" text-color="white" class="pa-1 ma-1">RC-Balak</v-chip>
+            <v-btn absolute dark fab right color="#910000" bottom @click="snackbar = true">
+              <v-icon>check</v-icon>
+            </v-btn>
+          </div>
+        </v-card>
 
-        <v-chip color="red" text-color="white" class="pa-1 ma-1">RC-Kanya</v-chip>
-
-        <v-chip color="green" text-color="white" class="pa-1 ma-1">MLB Girls</v-chip>
-
-        <v-chip color="pink" text-color="white" class="pa-1 ma-1">Morar No.1</v-chip>
-
-        <v-btn @click="show" absolute dark fab left bottom color="#910000" class="pa-2 ma-2"> 
-          <v-icon>undo</v-icon> 
-        </v-btn>
-
-      <v-btn
-        absolute
-        dark
-        fab
-        right
-        color="#910000"
-        bottom
-        @click="snackbar = true"
-        >
-        <v-icon>check</v-icon>
-      </v-btn>
-    </div>
-    </v-card>
-
-
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="timeout"
-      :vertical="mode === 'vertical'"
-    >
-      {{ text }}
-      <v-btn
-        color="pink"
-        flat
-        @click="snackbar = false"
-      >
-        Close
-      </v-btn>
-    </v-snackbar>
+        <v-snackbar v-model="snackbar" :timeout="timeout" :vertical="mode === 'vertical'">
+          {{ text }}
+          <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
+      </div>
     </v-flex>
   </v-layout>
 </template>
@@ -156,33 +120,39 @@ export default {
   name: "ProgramHead",
   data() {
     return {
-      alert: true,
       snackbar: false,
-      y: "top",
-      x: null,
       mode: "",
       timeout: 6000,
       text: "Changes Saved",
-      dialog: false,
-      city: "",
-      cities: [
-        { city: "Gwalior" },
-        { city: "Delhi" },
-        { city: "Jaipur" },
-        { city: "Bhopal" },
-        { city: "Indore" }
-      ],
-      dialog: false,
-      thisShow: true
+      thisShow: {
+        Gwalior: true,
+        Bhopal: true,
+        Delhi: true,
+        Jaipur: true,
+        Laxmangarh: true,
+        Indore: true
+      },
+      color: ["primary", "secondary", "red", "green", "pink"]
     };
+  },
+  computed: {
+    cities() {
+      return this.$store.getters["city/getCities"];
+    },
+    loading() {
+      return this.$store.getters["city/getLoading"];
+    }
+  },
+  created() {
+    this.$store.dispatch("city/getAllSchools");
   },
   methods: {
     addcity() {
       this.cities.push({ city: this.city });
       this.city = "";
     },
-    show() {
-      this.thisShow = !this.thisShow;
+    show(cityname) {
+      this.thisShow[cityname] = !this.thisShow[cityname];
     }
   }
 };
@@ -204,5 +174,4 @@ ul {
   position: absolute;
   width: 100%;
 }
-
 </style>
