@@ -1,6 +1,6 @@
 <template>
   <v-layout align-start justify-space-between row fill-height>
-    <v-flex>
+    <v-flex xs12 sm6 md4>
     <v-card
     hover
     light
@@ -8,7 +8,6 @@
     >
     <v-img
       src="https://media-cdn.tripadvisor.com/media/photo-s/15/91/97/6c/day-trip-to-gwalior-from.jpg"
-      aspect-ratio="5"
       @click="show"
     ></v-img>
     <div style="padding-bottom:16px">
@@ -18,7 +17,7 @@
         </h1>
       </v-card-title>
 
-      <v-btn
+      <!-- <v-btn
         absolute
         dark
         fab
@@ -47,7 +46,8 @@
             <v-btn color="green darken-1" flat @click.native="dialog = false" @click="addcity">Add City</v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog>
+      </v-dialog> --!>
+
       <!-- <v-dialog
         v-model="dialog"
         width="300"
@@ -59,6 +59,7 @@
             <input type="text" placeholder="Add city" v-model="city">
           </form>
       </v-dialog> -->
+
       <v-btn
         absolute
         dark
@@ -69,8 +70,8 @@
         @click="snackbar = true"
         >
         <v-icon>check</v-icon>
-        
-      </v-btn>
+      </v-btn>  
+
     </div>
     </v-card>
 
