@@ -1,10 +1,10 @@
  <template>
   <div>
-    <h1>Dashboard</h1>
-    <h1>{{user.name}}</h1>
-    <h3>( {{ user.username }} )</h3>
+    <h1 class="font-weight-regular">Dashboard</h1>
+    <h1 class="font-weight-thin">{{user.name}}</h1>
+    <h3 class="font-weight-thin">( {{ user.username }} )</h3>
     <br>
-    <h2>{{user.ngopost}}</h2>
+    <h2 class="font-weight-regular">{{user.ngopost}}</h2>
     <br>
     <v-layout>
       <programhead></programhead>

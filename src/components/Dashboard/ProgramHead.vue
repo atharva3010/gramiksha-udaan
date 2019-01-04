@@ -1,21 +1,38 @@
 <template>
   <v-layout align-start justify-space-between row fill-height>
     <v-flex xs12 sm6 md4>
+    <v-hover>
     <v-card
     hover
     light
     v-if="thisShow"
+    slot-scope="{ hover }"
     >
     <v-img
       src="https://media-cdn.tripadvisor.com/media/photo-s/15/91/97/6c/day-trip-to-gwalior-from.jpg"
-      @click="show"
-    ></v-img>
-    <div style="padding-bottom:16px">
-      <v-card-title>
-        <h1 class="font-weight-thin">
-          Gwalior
-        </h1>
-      </v-card-title>
+      
+    >
+    <v-layout
+      align-end
+      fill-height
+      pa-3
+      white--text
+    >
+      <div class="font-weight-light display-1">
+        Gwalior
+      </div>
+    </v-layout>
+    <v-expand-transition>
+      <div
+        v-if="hover"
+        class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-1 white--text"
+        style="height: 100%;"
+        @click="show"
+      >
+        Click to see cities
+      </div>
+    </v-expand-transition>
+    </v-img>
 
       <!-- <v-btn
         absolute
@@ -58,7 +75,7 @@
           <form @submit.prevent="addcity">
             <input type="text" placeholder="Add city" v-model="city">
           </form>
-      </v-dialog> -->
+      </v-dialog> 
 
       <v-btn
         absolute
@@ -70,31 +87,31 @@
         @click="snackbar = true"
         >
         <v-icon>check</v-icon>
-      </v-btn>  
+      </v-btn>  -->
 
-    </div>
     </v-card>
+    </v-hover>
 
 
     <v-card
     hover
     v-if="!thisShow"
     >
-    <div style="padding-bottom:16px">
+    <div style="padding-bottom:50px">
       <v-card-title>
         <h1 class="font-weight-thin">
           Schools
         </h1>
       </v-card-title>
-        <v-chip color= "primary" text-color="white" class="pa-2 ma-2">Kanya</v-chip>
+        <v-chip color= "primary" text-color="white" class="pa-1 ma-1">Kanya</v-chip>
 
-        <v-chip color="secondary" text-color="white" class="pa-2 ma-2">RC-Balak</v-chip>
+        <v-chip color="secondary" text-color="white" class="pa-1 ma-1">RC-Balak</v-chip>
 
-        <v-chip color="red" text-color="white" class="pa-2 ma-2">RC-Kanya</v-chip>
+        <v-chip color="red" text-color="white" class="pa-1 ma-1">RC-Kanya</v-chip>
 
-        <v-chip color="green" text-color="white" class="pa-2 ma-2">MLB Girls</v-chip>
+        <v-chip color="green" text-color="white" class="pa-1 ma-1">MLB Girls</v-chip>
 
-        <v-chip color="pink" text-color="white" class="pa-2 ma-2">Morar No.1</v-chip>
+        <v-chip color="pink" text-color="white" class="pa-1 ma-1">Morar No.1</v-chip>
 
         <v-btn @click="show" absolute dark fab left bottom color="#910000" class="pa-2 ma-2"> 
           <v-icon>undo</v-icon> 
@@ -178,4 +195,14 @@ ul {
   list-style: none;
   margin: 0;
 }
+
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: .6;
+  position: absolute;
+  width: 100%;
+}
+
 </style>
