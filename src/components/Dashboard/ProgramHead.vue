@@ -5,7 +5,7 @@
     <v-card
     hover
     light
-    v-if="thisShow"
+
     slot-scope="{ hover }"
     >
     <v-img
