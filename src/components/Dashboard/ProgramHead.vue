@@ -3,25 +3,20 @@
     <v-flex>
     <v-card
     hover
-    dark
+    light
     v-if="thisShow"
     >
+    <v-img
+      src="https://media-cdn.tripadvisor.com/media/photo-s/15/91/97/6c/day-trip-to-gwalior-from.jpg"
+      aspect-ratio="5"
+      @click="show"
+    ></v-img>
     <div style="padding-bottom:16px">
       <v-card-title>
         <h1 class="font-weight-thin">
-          Cities
+          Gwalior
         </h1>
       </v-card-title>
-
-      <v-chip 
-      v-for="(data, index) in cities" :key='index' 
-      outline color="white"
-      @click="show"
-      class="pa-2 ma-2"
-      >
-      <v-avatar color="#910000">{{index+1}}</v-avatar>
-      {{data.city}} 
-      </v-chip>
 
       <v-btn
         absolute
