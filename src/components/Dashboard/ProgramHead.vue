@@ -63,9 +63,9 @@
             <v-btn color="green darken-1" flat @click.native="dialog = false" @click="addcity">Add City</v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog> --!>
+      </v-dialog>!>
 
-      <!-- <v-dialog
+      <! <v-dialog
         v-model="dialog"
         width="300"
         height="600"
