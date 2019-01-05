@@ -30,7 +30,7 @@
                 <v-list-tile-content>{{ item.title }}</v-list-tile-content>
               </v-list-tile>
               <v-list-group prepend-icon="dashboard" value="true">
-                <v-list-tile slot="activator" to="/Dashboard">
+                <v-list-tile slot="activator" to="/">
                   <v-list-tile-title>Dashboard</v-list-tile-title>
                 </v-list-tile>
                 <v-list-tile to="/dashboard/school">
