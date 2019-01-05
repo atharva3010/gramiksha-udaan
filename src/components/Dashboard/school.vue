@@ -38,7 +38,6 @@
           </h1>
         </v-flex>
         <v-flex
-          v-if="!loading['classes'] && !loading['school']"
           @click="SelectClass(classname)"
           v-for="(classdata,classname) in classes"
           :key="classname"
@@ -46,28 +45,30 @@
           sm6
           xs12
         >
-          <v-card style="border-radius:8px;margin:15px;" hover>
-            <v-layout row>
-              <v-flex xs6>
-                <v-card-text class="text-xs-center" style="margin-top:10px">
-                  <h2>{{classname}}</h2>
-                </v-card-text>
-              </v-flex>
-              <v-flex xs6>
-                <v-card-text>
-                  <h3 style="font-weight:300;">
-                    Students :
-                    <b>{{classdata.strength}}</b>
-                  </h3>
+          <div v-if="!loading['classes'] && !loading['school']">
+            <v-card style="border-radius:8px;margin:15px;" hover>
+              <v-layout row>
+                <v-flex xs6>
+                  <v-card-text class="text-xs-center" style="margin-top:10px">
+                    <h2>{{classname}}</h2>
+                  </v-card-text>
+                </v-flex>
+                <v-flex xs6>
+                  <v-card-text>
+                    <h3 style="font-weight:300;">
+                      Students :
+                      <b>{{classdata.strength}}</b>
+                    </h3>
 
-                  <h3 style="font-weight:300;">
-                    Sessions :
-                    <b>{{classdata.noofsession}}</b>
-                  </h3>
-                </v-card-text>
-              </v-flex>
-            </v-layout>
-          </v-card>
+                    <h3 style="font-weight:300;">
+                      Sessions :
+                      <b>{{classdata.noofsession}}</b>
+                    </h3>
+                  </v-card-text>
+                </v-flex>
+              </v-layout>
+            </v-card>
+          </div>
         </v-flex>
         <v-flex v-if="loading['classes']" sm12>
           <h1 style=" text-align:center;   padding: 80px 30%;">
@@ -141,7 +142,6 @@
 
       <v-layout wrap row>
         <v-flex
-          v-if="!loading['classes']"
           v-for="(session) in classes[SelectedClass].sessions"
           :key="session.no"
           @click="selectSession(session.no)"
@@ -149,28 +149,30 @@
           sm6
           xs12
         >
-          <v-card style="border-radius:8px;margin:15px;" hover>
-            <v-layout row>
-              <v-flex xs6>
-                <v-card-text class="text-xs-center" style="margin-top:10px">
-                  <h2>Session {{session.no}}</h2>
-                </v-card-text>
-              </v-flex>
-              <v-flex xs6>
-                <v-card-text>
-                  <h3 style="font-weight:300;">
-                    Date :
-                    <b>{{session.date}}</b>
-                  </h3>
+          <div v-if="!loading['classes']">
+            <v-card style="border-radius:8px;margin:15px;" hover>
+              <v-layout row>
+                <v-flex xs6>
+                  <v-card-text class="text-xs-center" style="margin-top:10px">
+                    <h2>Session {{session.no}}</h2>
+                  </v-card-text>
+                </v-flex>
+                <v-flex xs6>
+                  <v-card-text>
+                    <h3 style="font-weight:300;">
+                      Date :
+                      <b>{{session.date}}</b>
+                    </h3>
 
-                  <h3 style="font-weight:300;">
-                    Module :
-                    <b>{{session.title}}</b>
-                  </h3>
-                </v-card-text>
-              </v-flex>
-            </v-layout>
-          </v-card>
+                    <h3 style="font-weight:300;">
+                      Module :
+                      <b>{{session.title}}</b>
+                    </h3>
+                  </v-card-text>
+                </v-flex>
+              </v-layout>
+            </v-card>
+          </div>
         </v-flex>
         <v-flex v-if="classes[SelectedClass].sessions.length == 0">
           <h3

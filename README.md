@@ -1,6 +1,6 @@
 # gramiksha-udaan
 
-> An admin panel for Gramiksha fellows
+> An Udaan Admin Panel for Gramiksha fellows
 
 ## Build Setup
 

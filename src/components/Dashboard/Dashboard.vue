@@ -13,12 +13,8 @@
 </template>
 
 <script>
-import ProgramHead from "./ProgramHead";
 export default {
   name: "Dashboard",
-  components: {
-    programhead: ProgramHead
-  },
   created() {
     if (!this.$store.getters["user/getIsSignedIn"]) this.$router.push("/login");
   },

@@ -1,4 +1,7 @@
-import { firebase, db } from "@/scripts/firebase";
+import {
+  firebase,
+  db
+} from "@/scripts/firebase";
 
 export default {
   namespaced: true,
@@ -29,18 +32,14 @@ export default {
       assessment: false,
       lessonplan: false
     },
-    attendance: [
-      {
-        name: "",
-        status: false
-      }
-    ],
-    assessment: [
-      {
-        name: "",
-        marks: 0
-      }
-    ]
+    attendance: [{
+      name: "",
+      status: false
+    }],
+    assessment: [{
+      name: "",
+      marks: 0
+    }]
   },
   mutations: {
     setSession(state, payload) {
@@ -52,14 +51,14 @@ export default {
     },
     deleteSession(state) {
       db.collection(
-        "cities/" +
+          "cities/" +
           state.city +
           "/schools/" +
           state.school +
           "/classes/" +
           state.class +
           "/sessions/"
-      )
+        )
         .doc(state.no.toString())
         .delete()
         .then(success => {
@@ -74,14 +73,14 @@ export default {
       state.loading["lessonplan"] = true;
       state.goBack = false;
       db.collection(
-        "cities/" +
+          "cities/" +
           state.city +
           "/schools/" +
           state.school +
           "/classes/" +
           state.class +
           "/sessions/"
-      )
+        )
         .doc(state.no.toString())
         .get()
         .then(doc => {
@@ -91,8 +90,8 @@ export default {
           if (!("attendance" in doc.data())) {
             state.attendance = [];
             db.collection(
-              "cities/" + state.city + "/schools/" + state.school + "/classes/"
-            )
+                "cities/" + state.city + "/schools/" + state.school + "/classes/"
+              )
               .doc(state.class)
               .get()
               .then(classd => {
@@ -113,8 +112,8 @@ export default {
           if (!("assessment" in doc.data())) {
             state.assessment = [];
             db.collection(
-              "cities/" + state.city + "/schools/" + state.school + "/classes/"
-            )
+                "cities/" + state.city + "/schools/" + state.school + "/classes/"
+              )
               .doc(state.class)
               .get()
               .then(classd => {
@@ -142,23 +141,20 @@ export default {
       //pushing the lesson plan to firebase, and making the loading value True during that time.
       state.loading["lessonplan"] = true;
       db.collection(
-        "cities/" +
+          "cities/" +
           state.city +
           "/schools/" +
           state.school +
           "/classes/" +
           state.class +
           "/sessions/"
-      )
-        .doc(state.no.toString())
-        .set(
-          {
-            lessonplan: payload.data
-          },
-          {
-            merge: true
-          }
         )
+        .doc(state.no.toString())
+        .set({
+          lessonplan: payload.data
+        }, {
+          merge: true
+        })
         .then(doc => {
           state.loading["lessonplan"] = false;
           state.refresh = true;
@@ -171,23 +167,20 @@ export default {
       state.attendance = payload;
       state.loading["attendance"] = true;
       db.collection(
-        "cities/" +
+          "cities/" +
           state.city +
           "/schools/" +
           state.school +
           "/classes/" +
           state.class +
           "/sessions/"
-      )
-        .doc(state.no.toString())
-        .set(
-          {
-            attendance: state.attendance
-          },
-          {
-            merge: true
-          }
         )
+        .doc(state.no.toString())
+        .set({
+          attendance: state.attendance
+        }, {
+          merge: true
+        })
         .then(doc => {
           state.loading["attendance"] = false;
           state.refresh = true;
@@ -199,23 +192,20 @@ export default {
       state.assessment = payload;
       state.loading["assessment"] = true;
       db.collection(
-        "cities/" +
+          "cities/" +
           state.city +
           "/schools/" +
           state.school +
           "/classes/" +
           state.class +
           "/sessions/"
-      )
-        .doc(state.no.toString())
-        .set(
-          {
-            assessment: state.assessment
-          },
-          {
-            merge: true
-          }
         )
+        .doc(state.no.toString())
+        .set({
+          assessment: state.assessment
+        }, {
+          merge: true
+        })
         .then(
           doc => {
             state.loading["assessment"] = false;
@@ -247,14 +237,11 @@ export default {
 
         //pushing the updated student list to the firebase if sucessfull then setting the loading value false
         classref
-          .set(
-            {
-              students: updatedstudentlist
-            },
-            {
-              merge: true
-            }
-          )
+          .set({
+            students: updatedstudentlist
+          }, {
+            merge: true
+          })
           .then(aaa => {
             //code for adding the new students to the assessment and attendence records
             var sref = classref
@@ -273,15 +260,12 @@ export default {
               });
             });
             sref
-              .set(
-                {
-                  attendance: updatedAttendance,
-                  assessment: updatedAssessment
-                },
-                {
-                  merge: true
-                }
-              )
+              .set({
+                attendance: updatedAttendance,
+                assessment: updatedAssessment
+              }, {
+                merge: true
+              })
               .then(asdf => {
                 state.refresh = true;
                 //if successful the seting the refresh value to true
@@ -298,12 +282,12 @@ export default {
       var sref = db
         .collection(
           "cities/" +
-            state.city +
-            "/schools/" +
-            state.school +
-            "/classes/" +
-            state.class +
-            "/sessions/"
+          state.city +
+          "/schools/" +
+          state.school +
+          "/classes/" +
+          state.class +
+          "/sessions/"
         )
         .doc(state.no.toString());
       sref.delete().then(success => {
@@ -312,31 +296,49 @@ export default {
     }
   },
   actions: {
-    deleteSession({ commit }) {
+    deleteSession({
+      commit
+    }) {
       commit("deleteSession");
     },
-    addStudents({ commit }, payload) {
+    addStudents({
+      commit
+    }, payload) {
       commit("addStudents", payload);
     },
-    setSession({ commit }, payload) {
+    setSession({
+      commit
+    }, payload) {
       commit("setSession", payload);
     },
-    getStudents({ commit }) {
+    getStudents({
+      commit
+    }) {
       commit("getStudents");
     },
-    addStudent({ commit }, payload) {
+    addStudent({
+      commit
+    }, payload) {
       commit("pushStudent", payload);
     },
-    addAttendance({ commit }, payload) {
+    addAttendance({
+      commit
+    }, payload) {
       commit("pushAttendance", payload);
     },
-    pushAssessment({ commit }, payload) {
+    pushAssessment({
+      commit
+    }, payload) {
       commit("pushAssessment", payload);
     },
-    pushAttendance({ commit }, payload) {
+    pushAttendance({
+      commit
+    }, payload) {
       commit("pushAttendance", payload);
     },
-    pushLessonPlan({ commit }, payload) {
+    pushLessonPlan({
+      commit
+    }, payload) {
       commit("pushLessonPlan", payload);
     }
   },
