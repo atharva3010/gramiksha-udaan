@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
-import ProgramHead from "@/components/Dashboard/ProgramHead";
+import CitiesHome from "@/components/Home/Cities";
+import CitySchools from "@/components/Home/Schools";
 import signup from "@/components/User/signup";
 import login from "@/components/User/Login";
 import signupmsg from "@/components/User/signupmsg";
@@ -14,8 +15,13 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "Head",
-      component: ProgramHead
+      name: "Cities Home",
+      component: CitiesHome
+    },
+    {
+      path: "/:city",
+      name: "Schools",
+      component: CitySchools
     },
     {
       path: "/dashboard",

@@ -9,18 +9,21 @@
     <v-flex v-for="city in cities" :key="city.name" xs12 sm6 md4>
       <div style="margin:10px;">
         <v-hover>
-          <v-card hover light slot-scope="{ hover }">
+          <v-card hover light slot-scope="{ hover }" :to="goto(city.name)">
             <v-img style="padding-top:50%;max-height:250px;min-height:250px;" :src="city.imgURL">
               <v-layout align-end fill-height pa-3 white--text>
-                <div class="font-weight-light display-1">{{city.name}}</div>
+                <div>
+                  <div class="font-weight-light display-1">{{city.name}}</div>
+                  <div class="font-weight-light subheading">Click to see schools.</div>
+                </div>
               </v-layout>
               <v-expand-transition>
                 <div
                   v-if="hover"
-                  class="d-flex transition-fast-in-fast-out primary darken-2 v-card--reveal display-1 white--text"
+                  class="d-flex transition-fast-in-fast-out primary darken-2 v-card--reveal title font-weight-light white--text px-3"
                   style="height: 100%; text-align:center;"
                   @click="show(city.name)"
-                >Click to see Schools</div>
+                >{{ city.description }}</div>
               </v-expand-transition>
             </v-img>
 
@@ -81,7 +84,7 @@
           </v-card>
         </v-hover>
 
-        <v-card hover v-if="!thisShow[city.name]">
+        <!-- <v-card hover v-if="!thisShow[city.name]">
           <div style="padding-bottom:50px">
             <v-card-title>
               <h1 class="font-weight-thin">Schools</h1>
@@ -103,12 +106,11 @@
               <v-icon>check</v-icon>
             </v-btn>
           </div>
-        </v-card>
-
-        <v-snackbar v-model="snackbar" :timeout="timeout" :vertical="mode === 'vertical'">
+        </v-card>-->
+        <!-- <v-snackbar v-model="snackbar" :timeout="timeout" :vertical="mode === 'vertical'">
           {{ text }}
           <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
-        </v-snackbar>
+        </v-snackbar>-->
       </div>
     </v-flex>
   </v-layout>
@@ -150,6 +152,10 @@ export default {
     addcity() {
       this.cities.push({ city: this.city });
       this.city = "";
+    },
+    goto(city) {
+      city = city.toLowerCase();
+      return "/" + city;
     },
     show(cityname) {
       this.thisShow[cityname] = !this.thisShow[cityname];
