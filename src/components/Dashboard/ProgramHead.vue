@@ -29,7 +29,7 @@
         style="height: 100%;"
         @click="show"
       >
-        Click to see cities
+        Click to see schools
       </div>
     </v-expand-transition>
     </v-img>
