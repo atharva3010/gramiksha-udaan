@@ -19,7 +19,7 @@ export default new Router({
       component: CitiesHome
     },
     {
-      path: "/:city",
+      path: "/:city/schools",
       name: "Schools",
       component: CitySchools
     },

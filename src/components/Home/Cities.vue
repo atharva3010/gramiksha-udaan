@@ -155,7 +155,7 @@ export default {
     },
     goto(city) {
       city = city.toLowerCase();
-      return "/" + city;
+      return "/" + city + "/schools";
     },
     show(cityname) {
       this.thisShow[cityname] = !this.thisShow[cityname];
