@@ -1,15 +1,15 @@
 <template>
   <v-layout justify-space-between justify-space-around align-center wrap>
     <v-flex v-if="loading['cities']" sm12>
-      <h1 style="text-align:center;padding: 179px 30%;" class="font-weight-thin">
+      <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-thin">
         <div class="sk-folding-cube">
           <div class="sk-cube1 sk-cube"></div>
           <div class="sk-cube2 sk-cube"></div>
           <div class="sk-cube4 sk-cube"></div>
           <div class="sk-cube3 sk-cube"></div>
         </div>
-        Udaan App is loading
-      </h1>
+        Udaan App is Loading
+      </h2>
     </v-flex>
     
     <v-flex v-for="city in cities" :key="city.name" xs12 sm6 md4>
@@ -212,7 +212,7 @@ ul {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(231, 120, 28);
+  background-color: rgb(17, 140, 211);
   -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
           animation: sk-foldCubeAngle 2.4s infinite linear both;
   -webkit-transform-origin: 100% 100%;
