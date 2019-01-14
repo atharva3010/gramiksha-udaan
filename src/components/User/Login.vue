@@ -7,7 +7,7 @@
     </v-layout>
     <v-layout>
       <v-flex sx12 sm6 offset-sm3>
-        <v-card>
+        <v-card dark color="rgb(43,43,43)">
           <v-card-text>
             <v-container>
               <v-card-title>

@@ -1,7 +1,7 @@
 <template>
   <v-layout justify-space-between justify-space-around align-center wrap>
     <v-flex v-if="loading['cities']" sm12>
-      <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-thin">
+      <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-regular">
         <div class="sk-folding-cube">
           <div class="sk-cube1 sk-cube"></div>
           <div class="sk-cube2 sk-cube"></div>
@@ -26,7 +26,7 @@
               <v-expand-transition>
                 <div
                   v-if="hover"
-                  class="d-flex transition-fast-in-fast-out primary darken-2 v-card--reveal title font-weight-light white--text px-3"
+                  class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal title font-weight-light white--text px-3"
                   style="height: 100%; text-align:center;"
                   @click="show(city.name)"
                 >{{ city.description }}</div>
@@ -212,7 +212,7 @@ ul {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(17, 140, 211);
+  background-color: rgb(43, 43, 43);
   -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
           animation: sk-foldCubeAngle 2.4s infinite linear both;
   -webkit-transform-origin: 100% 100%;

@@ -26,7 +26,7 @@
           <div class="sk-cube4 sk-cube"></div>
           <div class="sk-cube3 sk-cube"></div>
         </div>
-        Udaan App is Loading
+        School is Loading
       </h2>
       </v-flex>
     </v-layout>
@@ -37,10 +37,15 @@
 
       <v-layout wrap row>
         <v-flex v-if="loading['school']" sm12>
-          <h1 style=" text-align:center;   padding: 80px 30%;">
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
-            <br>Loading, Please Wait
-          </h1>
+          <h2 style=" text-align:center;   padding: 80px 30%;" class="font-weight-thin">
+            <div class="sk-folding-cube">
+              <div class="sk-cube1 sk-cube"></div>
+              <div class="sk-cube2 sk-cube"></div>
+              <div class="sk-cube4 sk-cube"></div>
+              <div class="sk-cube3 sk-cube"></div>
+            </div>
+            Session is Loading
+          </h2>
         </v-flex>
         <v-flex
           @click="SelectClass(classname)"
@@ -76,20 +81,30 @@
           </div>
         </v-flex>
         <v-flex v-if="loading['classes']" sm12>
-          <h1 style=" text-align:center;   padding: 80px 30%;">
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
-            <br>Loading, Please Wait
-          </h1>
+          <h2 style=" text-align:center;   padding: 80px 30%;" class="font-weight-thin">
+            <div class="sk-folding-cube">
+              <div class="sk-cube1 sk-cube"></div>
+              <div class="sk-cube2 sk-cube"></div>
+              <div class="sk-cube4 sk-cube"></div>
+              <div class="sk-cube3 sk-cube"></div>
+            </div>
+            Session is Loading
+          </h2>
         </v-flex>
       </v-layout>
     </div>
     <div v-else>
       <v-layout row>
         <v-flex v-if="loading['classes']" sm12>
-          <h1 style=" text-align:center;   padding: 179px 30%;">
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
-            <br>Loading, Please Wait
-          </h1>
+          <h2 style=" text-align:center;   padding: 80px 30%;" class="font-weight-thin">
+            <div class="sk-folding-cube">
+              <div class="sk-cube1 sk-cube"></div>
+              <div class="sk-cube2 sk-cube"></div>
+              <div class="sk-cube4 sk-cube"></div>
+              <div class="sk-cube3 sk-cube"></div>
+            </div>
+            Session is Loading
+          </h2>
         </v-flex>
         <v-flex v-if="!loading['classes']">
           <h2 style="float:left;font-weight:300;margin-left:15px;">Select a Session</h2>
@@ -332,7 +347,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(233, 143, 70);
+  background-color: rgb(43, 43, 43);
   -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
           animation: sk-foldCubeAngle 2.4s infinite linear both;
   -webkit-transform-origin: 100% 100%;
