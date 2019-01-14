@@ -48,11 +48,14 @@
         <v-toolbar fixed dark>
           <v-toolbar-side-icon @click="isDrawer=!isDrawer"></v-toolbar-side-icon>
           <v-toolbar-title class="font-weight-regular">
-            Gramiksha - Udaan
-            <span v-if="userSignedIn">, {{user.name}}</span>
+            Gramiksha Udaan
+            <!-- <span v-if="userSignedIn">, {{user.name}}</span> -->
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
+            <v-btn @click="back">
+              <v-icon right>arrow_back</v-icon>
+            </v-btn>
             <v-btn @click="goto('/')">Home
               <v-icon right>home</v-icon>
             </v-btn>
@@ -162,6 +165,9 @@ export default {
     logout() {
       this.$store.dispatch("user/logout");
       this.$router.push("/");
+    },
+    back() {
+      this.$router.go(-1);
     }
   }
 };
