@@ -5,6 +5,7 @@
       fixed
       clipped
       temporary
+      hide-overlay
       dark
       enable-resize-watcher
       persistant
