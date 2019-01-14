@@ -8,6 +8,7 @@ import signupmsg from "@/components/User/signupmsg";
 import Dashboard from "@/components/Dashboard/Dashboard";
 import School from "@/components/Dashboard/school";
 import session from "@/components/Dashboard/session";
+import Profile from "@/components/User/Profile";
 
 Vue.use(Router);
 
@@ -47,7 +48,13 @@ export default new Router({
       path: "/login",
       name: "Log in",
       component: login
-    }
+    },
+    {
+      path: "/profile",
+      name: "Profile",
+      component: Profile
+    },
+
   ],
   mode: "history"
 });

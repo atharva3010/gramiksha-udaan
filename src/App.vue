@@ -55,7 +55,7 @@
         <v-btn @click="goto('/')">Home
           <v-icon right>home</v-icon>
         </v-btn>
-        <v-btn>Profile
+        <v-btn @click="goto('/profile')" v-if="userSignedIn">Profile
           <v-icon right>person</v-icon>
         </v-btn>
         <v-btn v-if="userSignedIn" @click="logout">Logout
