@@ -1,125 +1,43 @@
 <template>
-  <v-layout justify-space-between justify-space-around align-center wrap>
-    <v-flex v-if="loading['cities']" sm12>
-      <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-regular">
-        <div class="sk-folding-cube">
-          <div class="sk-cube1 sk-cube"></div>
-          <div class="sk-cube2 sk-cube"></div>
-          <div class="sk-cube4 sk-cube"></div>
-          <div class="sk-cube3 sk-cube"></div>
+  <section>
+    <div class="text-xs-center display-2 font-weight-light text-capitalize">Cities</div>
+    <v-layout justify-space-between justify-space-around align-center wrap>
+      <v-flex v-if="loading['cities']" sm12>
+        <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-regular">
+          <div class="sk-folding-cube">
+            <div class="sk-cube1 sk-cube"></div>
+            <div class="sk-cube2 sk-cube"></div>
+            <div class="sk-cube4 sk-cube"></div>
+            <div class="sk-cube3 sk-cube"></div>
+          </div>Udaan App is Loading
+        </h2>
+      </v-flex>
+      <v-flex v-for="city in cities" :key="city.name" xs12 sm6 md4>
+        <div style="margin:10px;">
+          <v-hover>
+            <v-card hover light slot-scope="{ hover }" :to="goto(city.name)">
+              <v-img style="padding-top:50%;max-height:250px;min-height:250px;" :src="city.imgURL">
+                <v-layout align-end fill-height pa-3 white--text>
+                  <div>
+                    <div class="font-weight-light display-1">{{city.name}}</div>
+                    <div class="font-weight-light subheading">Click to see schools.</div>
+                  </div>
+                </v-layout>
+                <v-expand-transition>
+                  <div
+                    v-if="hover"
+                    class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal title font-weight-light white--text px-3"
+                    style="height: 100%; text-align:center;"
+                    @click="show(city.name)"
+                  >{{ city.description }}</div>
+                </v-expand-transition>
+              </v-img>
+            </v-card>
+          </v-hover>
         </div>
-        Udaan App is Loading
-      </h2>
-    </v-flex>
-    
-    <v-flex v-for="city in cities" :key="city.name" xs12 sm6 md4>
-      <div style="margin:10px;">
-        <v-hover>
-          <v-card hover light slot-scope="{ hover }" :to="goto(city.name)">
-            <v-img style="padding-top:50%;max-height:250px;min-height:250px;" :src="city.imgURL">
-              <v-layout align-end fill-height pa-3 white--text>
-                <div>
-                  <div class="font-weight-light display-1">{{city.name}}</div>
-                  <div class="font-weight-light subheading">Click to see schools.</div>
-                </div>
-              </v-layout>
-              <v-expand-transition>
-                <div
-                  v-if="hover"
-                  class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal title font-weight-light white--text px-3"
-                  style="height: 100%; text-align:center;"
-                  @click="show(city.name)"
-                >{{ city.description }}</div>
-              </v-expand-transition>
-            </v-img>
-
-            <!-- <v-btn
-        absolute
-        dark
-        fab
-        left
-        bottom
-        color="#910000"
-        @click="dialog = true"
-      >
-      <v-icon>add</v-icon>
-      </v-btn>
-
-      <v-dialog v-model="dialog" dark max-width="290">
-        <v-card>
-          <v-card-title class="headline">Add a new City</v-card-title>
-          <v-card-text>
-            <v-flex xs12>
-              <v-text-field
-                label="Add City"
-                v-model="city"
-              >
-              </v-text-field>
-            </v-flex>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" flat @click.native="dialog = false" @click="addcity">Add City</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>!>
-
-      <! <v-dialog
-        v-model="dialog"
-        width="300"
-        height="600"
-        dark
-      >
-          <v-card-title class="headline">Add a new City</v-card-title>
-          <form @submit.prevent="addcity">
-            <input type="text" placeholder="Add city" v-model="city">
-          </form>
-      </v-dialog> 
-
-      <v-btn
-        absolute
-        dark
-        fab
-        right
-        color="#910000"
-        bottom
-        @click="snackbar = true"
-        >
-        <v-icon>check</v-icon>
-            </v-btn>-->
-          </v-card>
-        </v-hover>
-
-        <!-- <v-card hover v-if="!thisShow[city.name]">
-          <div style="padding-bottom:50px">
-            <v-card-title>
-              <h1 class="font-weight-thin">Schools</h1>
-            </v-card-title>
-
-            <v-chip
-              v-for="(item,index) in city.schools"
-              :key="index"
-              :color="color[(index)%5]"
-              text-color="white"
-              class="pa-1 ma-1"
-            >{{item}}</v-chip>
-
-            <v-btn @click="show" absolute dark fab left bottom color="#910000" class="pa-2 ma-2">
-              <v-icon>undo</v-icon>
-            </v-btn>
-
-            <v-btn absolute dark fab right color="#910000" bottom @click="snackbar = true">
-              <v-icon>check</v-icon>
-            </v-btn>
-          </div>
-        </v-card>-->
-        <!-- <v-snackbar v-model="snackbar" :timeout="timeout" :vertical="mode === 'vertical'">
-          {{ text }}
-          <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
-        </v-snackbar>-->
-      </div>
-    </v-flex>
-  </v-layout>
+      </v-flex>
+    </v-layout>
+  </section>
 </template>
 
 
@@ -176,102 +94,5 @@ ul {
   font-size: 18px;
   list-style: none;
   margin: 0;
-}
-
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: center;
-  opacity: 0.8;
-  position: absolute;
-  width: 100%;
-}
-
-.sk-folding-cube {
-  margin: 20px auto;
-  width: 60px;
-  height: 60px;
-  position: relative;
-  -webkit-transform: rotateZ(45deg);
-          transform: rotateZ(45deg);
-}
-
-.sk-folding-cube .sk-cube {
-  float: left;
-  width: 50%;
-  height: 50%;
-  position: relative;
-  -webkit-transform: scale(1.1);
-      -ms-transform: scale(1.1);
-          transform: scale(1.1); 
-}
-.sk-folding-cube .sk-cube:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(43, 43, 43);
-  -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
-          animation: sk-foldCubeAngle 2.4s infinite linear both;
-  -webkit-transform-origin: 100% 100%;
-      -ms-transform-origin: 100% 100%;
-          transform-origin: 100% 100%;
-}
-.sk-folding-cube .sk-cube2 {
-  -webkit-transform: scale(1.1) rotateZ(90deg);
-          transform: scale(1.1) rotateZ(90deg);
-}
-.sk-folding-cube .sk-cube3 {
-  -webkit-transform: scale(1.1) rotateZ(180deg);
-          transform: scale(1.1) rotateZ(180deg);
-}
-.sk-folding-cube .sk-cube4 {
-  -webkit-transform: scale(1.1) rotateZ(270deg);
-          transform: scale(1.1) rotateZ(270deg);
-}
-.sk-folding-cube .sk-cube2:before {
-  -webkit-animation-delay: 0.1s;
-          animation-delay: 0.1s;
-}
-.sk-folding-cube .sk-cube3:before {
-  -webkit-animation-delay: 0.3s;
-          animation-delay: 0.3s; 
-}
-.sk-folding-cube .sk-cube4:before {
-  -webkit-animation-delay: 0.6s;
-          animation-delay: 0.6s;
-}
-@-webkit-keyframes sk-foldCubeAngle {
-  0%, 10% {
-    -webkit-transform: perspective(140px) rotateX(-180deg);
-            transform: perspective(140px) rotateX(-180deg);
-    opacity: 0; 
-  } 25%, 75% {
-    -webkit-transform: perspective(140px) rotateX(0deg);
-            transform: perspective(140px) rotateX(0deg);
-    opacity: 1; 
-  } 90%, 100% {
-    -webkit-transform: perspective(140px) rotateY(180deg);
-            transform: perspective(140px) rotateY(180deg);
-    opacity: 0; 
-  } 
-}
-
-@keyframes sk-foldCubeAngle {
-  0%, 10% {
-    -webkit-transform: perspective(140px) rotateX(-180deg);
-            transform: perspective(140px) rotateX(-180deg);
-    opacity: 0; 
-  } 25%, 75% {
-    -webkit-transform: perspective(140px) rotateX(0deg);
-            transform: perspective(140px) rotateX(0deg);
-    opacity: 1; 
-  } 90%, 100% {
-    -webkit-transform: perspective(140px) rotateY(180deg);
-            transform: perspective(140px) rotateY(180deg);
-    opacity: 0; 
-  }
 }
 </style>

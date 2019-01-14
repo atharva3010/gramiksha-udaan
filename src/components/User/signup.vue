@@ -7,12 +7,10 @@
     </v-layout>
     <v-layout>
       <v-flex sx12 sm6 offset-sm3>
-        <v-card color="rgb(43,43,43)" dark>
+        <v-card>
           <v-card-text>
             <v-container>
-              <v-card-title>
-                <h1>Sign Up</h1>
-              </v-card-title>
+              <h1 class="font-weight-light display-2">Sign Up</h1>
               <v-form v-model="formValid" ref="signUpForm" @submit.prevent="OnSignup">
                 <v-layout row>
                   <v-flex xs12>
@@ -119,7 +117,7 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import firebase from "firebase/app";
 export default {
   data() {
     return {
@@ -142,8 +140,7 @@ export default {
   },
   created() {
     var vm = this;
-    if (this.$store.getters["user/getIsSignedIn"])
-      this.$router.push("/dashboard");
+    if (this.$store.getters["user/getIsSignedIn"]) this.$router.push("/");
     firebase
       .firestore()
       .collection("users")
@@ -191,7 +188,7 @@ export default {
         ngopost: this.ngopost,
         city: this.city
       });
-      if (!loading) this.$router.push("/dashboard");
+      if (!loading) this.$router.push("/");
     },
     checkUsername() {
       for (let i = 0; i < this.usernames.length; i++) {

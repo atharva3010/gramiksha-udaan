@@ -7,12 +7,10 @@
     </v-layout>
     <v-layout>
       <v-flex sx12 sm6 offset-sm3>
-        <v-card dark color="rgb(43,43,43)">
+        <v-card>
           <v-card-text>
             <v-container>
-              <v-card-title>
-                <h1>Log in</h1>
-              </v-card-title>
+              <h1 class="font-weight-light display-2">Login</h1>
               <v-form ref="loginForm" v-model="loginValid" @submit.prevent="OnSignin">
                 <v-layout row>
                   <v-flex xs12>
@@ -65,8 +63,7 @@ export default {
     };
   },
   created() {
-    if (this.$store.getters["user/getIsSignedIn"])
-      this.$router.push("/dashboard");
+    if (this.$store.getters["user/getIsSignedIn"]) this.$router.push("/");
   },
   computed: {
     userSignedIn() {
@@ -81,9 +78,7 @@ export default {
   },
   watch: {
     userSignedIn(value) {
-      this.$router.push(
-        decodeURIComponent(this.$route.query.redirect) || "/dashboard"
-      );
+      this.$router.push(decodeURIComponent(this.$route.query.redirect) || "/");
     }
   },
   methods: {

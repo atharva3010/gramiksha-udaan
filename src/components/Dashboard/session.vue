@@ -40,7 +40,7 @@
     <v-layout row>
       <h2 class="classname">
         Class
-        <b>{{$route.params.class}}</b>
+        {{$route.params.class}}
       </h2>
       <v-spacer></v-spacer>
       <v-btn @click="dialog=true" color="primary" dark>Add students</v-btn>
@@ -401,15 +401,5 @@ export default {
   color: white;
   border-radius: 9px;
   background-color: rgb(66, 66, 66);
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
 }
 </style>
