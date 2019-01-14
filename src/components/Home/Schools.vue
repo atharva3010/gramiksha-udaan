@@ -10,7 +10,7 @@
             <v-card hover slot-scope="{ hover }" :to="school.link" class="mx-auto" dark>
               <v-img
                 style="padding-top:50%;max-height:250px;min-height:250px;"
-                :src="images[index%5]"
+                :src="images[index%6]"
               >
                 <v-layout align-end fill-height pa-3>
                   <div>
@@ -57,7 +57,8 @@ export default {
         "/static/images/schools/boys.jpg",
         "/static/images/schools/children.jpg",
         "/static/images/schools/bookcase.jpg",
-        "/static/images/schools/children2.jpg"
+        "/static/images/schools/children2.jpg",
+        "/static/images/schools/classroom.jpg"
       ]
     };
   }
