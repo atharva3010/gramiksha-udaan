@@ -1,4 +1,7 @@
-import { firebase, db } from "@/scripts/firebase";
+import {
+  db
+} from "@/scripts/firebase";
+
 
 export default {
   namespaced: true,
@@ -19,14 +22,9 @@ export default {
     }
   },
   mutations: {
-    getSchools(state, payload) {
-      db.collection("cities/" + payload + "/schools")
-        .get()
-        .then(result => {
-          result.docs.forEach(element => {
-            state.schools.push(element.data());
-          });
-        });
+    setSchools(state, payload) {
+      state.schools = payload;
+      console.log(state.schools)
     },
     addSchool(state, payload) {
       db.collection("cities/" + payload + "/schools")
@@ -41,11 +39,11 @@ export default {
       state.loading["cities"] = true;
       db.collection("cities")
         .get()
-        .then(function(result) {
+        .then(function (result) {
           result.docs.forEach(city => {
             db.collection("cities/" + city.id + "/schools")
               .get()
-              .then(function(schoolsResult) {
+              .then(function (schoolsResult) {
                 var schools = [];
                 schoolsResult.docs.forEach(school => {
                   schools.push(school.id);
@@ -64,25 +62,52 @@ export default {
     }
   },
   actions: {
-    addSchooltoCurrentCity({ commit }, newschooldata) {
+    addSchooltoCurrentCity({
+      commit
+    }, newschooldata) {
       commit("addSchool", state.city, newschooldata);
     },
-    getSchoolFromCurrentCity({ commit }) {
+    getSchoolFromCurrentCity({
+      commit
+    }) {
       commit("getSchools", state.city);
     },
-    getSchools(payload) {
-      commit("getSchools", payload);
+    getSchools({
+      commit
+    }, payload) {
+
+      db.collection("cities/" + payload + "/schools")
+        .get()
+        .then(result => {
+          var schools = []
+          result.docs.forEach(element => {
+            schools.push({ ...element.data(),
+              ...{
+                name: element.id
+              }
+            });
+          });
+          commit('setSchools', schools)
+          console.log(schools)
+        });
     },
-    addSchool({ commit }, cityname, newschooldata) {
+    addSchool({
+      commit
+    }, cityname, newschooldata) {
       commit("addSchool", cityname, newschooldata);
     },
-    getAllSchools({ commit }) {
+    getAllSchools({
+      commit
+    }) {
       commit("getAllSchools");
-    }
+    },
   },
   getters: {
     getCities(state) {
       return state.cities;
+    },
+    getSchools(state) {
+      return state.schools
     },
     getLoading(state) {
       return state.loading;

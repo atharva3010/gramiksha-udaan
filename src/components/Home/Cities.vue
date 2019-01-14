@@ -78,8 +78,7 @@ export default {
       this.city = "";
     },
     goto(city) {
-      city = city.toLowerCase();
-      return "/" + city + "/schools";
+      return "/dashboard/schools/" + city;
     },
     show(cityname) {
       this.thisShow[cityname] = !this.thisShow[cityname];

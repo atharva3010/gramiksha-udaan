@@ -7,10 +7,10 @@
       <v-flex xs12 sm6 md4 v-for="(school,index) in schools" :key="index">
         <div style="margin:10px;">
           <v-hover>
-            <v-card hover slot-scope="{ hover }" :to="school.link" class="mx-auto" dark>
+            <v-card hover slot-scope="{ hover }" :to="goto(school.name)" class="mx-auto" dark>
               <v-img
                 style="padding-top:50%;max-height:250px;min-height:250px;"
-                :src="images[index%6]"
+                :src="school.imgurl"
               >
                 <v-layout align-end fill-height pa-3>
                   <div>
@@ -42,25 +42,24 @@
 
 <script>
 export default {
-  data() {
-    return {
-      schools: [
-        { name: "RC Balak", link: "/schools/rcbalak" },
-        { name: "Sample Name 1", link: "/schools/sample1" },
-        { name: "Sample Name 2", link: "/schools/sample2" },
-        { name: "Sample Name 3", link: "/schools/sample3" },
-        { name: "Sample Name 4", link: "/schools/sample4" },
-        { name: "Sample Name 5", link: "/schools/sample5" }
-      ],
-      images: [
-        "/static/images/schools/girl.jpg",
-        "/static/images/schools/boys.jpg",
-        "/static/images/schools/children.jpg",
-        "/static/images/schools/bookcase.jpg",
-        "/static/images/schools/children2.jpg",
-        "/static/images/schools/classroom.jpg"
-      ]
-    };
+  computed: {
+    city() {
+      return this.$route.params.city;
+    },
+    schools() {
+      return this.$store.getters["city/getSchools"];
+    },
+    loading() {
+      return this.$store.getters["city/getLoading"];
+    }
+  },
+  methods: {
+    goto(school) {
+      return "/dashboard/school/" + this.$route.params.city + "/" + school;
+    }
+  },
+  created() {
+    this.$store.dispatch("city/getSchools", this.$route.params.city);
   }
 };
 </script>

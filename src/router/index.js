@@ -18,7 +18,7 @@ export default new Router({
       component: CitiesHome
     },
     {
-      path: "/cities/:city",
+      path: "/dashboard/schools/:city",
       name: "Schools",
       component: CitySchools
     },
@@ -28,7 +28,7 @@ export default new Router({
       component: Dashboard
     },
     {
-      path: "/dashboard/school",
+      path: "/dashboard/school/:city/:school",
       name: "School",
       component: School
     },
