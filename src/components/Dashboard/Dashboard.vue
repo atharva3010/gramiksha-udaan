@@ -6,9 +6,6 @@
     <br>
     <h2 class="font-weight-regular">{{user.ngopost}}</h2>
     <br>
-    <v-layout>
-      <programhead></programhead>
-    </v-layout>
   </div>
 </template>
 

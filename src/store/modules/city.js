@@ -8,6 +8,14 @@ export default {
     cities: [],
     loading: {
       cities: false
+    },
+    imageUrl: {
+      Laxmangarh: "/static/images/cities/Laxmangarh.jpg",
+      Jaipur: "/static/images/cities/Jaipur.jpg",
+      Delhi: "/static/images/cities/Delhi2.jpg",
+      Indore: "/static/images/cities/Indore.jpg",
+      Gwalior: "/static/images/cities/Gwalior.jpg",
+      Bhopal: "/static/images/cities/Bhopal.jpg"
     }
   },
   mutations: {
@@ -25,8 +33,7 @@ export default {
         .doc(payload.name)
         .set({
           address: payload.address,
-          total: payload.total,
-          imgURL: payload.url
+          total: payload.total
         });
     },
     getAllSchools(state) {
@@ -47,7 +54,7 @@ export default {
                 state.cities.push({
                   name: city.id,
                   description: city.data().description,
-                  imgURL: city.data().imgURL,
+                  imgURL: state.imageUrl[city.id],
                   schools: schools
                 });
               });

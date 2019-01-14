@@ -189,17 +189,25 @@ export default {
         });
     },
     async logout({ commit }) {
-      await firebase
-        .auth()
-        .signOut()
-        .then(function() {
-          commit("setUser", null);
-          commit("setLoading", false);
-          commit("setSignedIn", false);
-          commit("setSignedUp", false);
-          commit("setUserDetails", null);
-          commit("setAccessLevel", -1);
-        });
+      return new Promise(
+        await function(resolve, reject) {
+          firebase
+            .auth()
+            .signOut()
+            .then(function() {
+              commit("setUser", null);
+              commit("setLoading", false);
+              commit("setSignedIn", false);
+              commit("setSignedUp", false);
+              commit("setUserDetails", null);
+              commit("setAccessLevel", -1);
+              resolve();
+            })
+            .catch(function(error) {
+              reject(error);
+            });
+        }
+      );
     },
     clearError({ commit }) {
       commit("clearError");
