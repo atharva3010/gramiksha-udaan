@@ -12,7 +12,7 @@ export default {
     imageUrl: {
       Laxmangarh: "/static/images/cities/Laxmangarh.jpg",
       Jaipur: "/static/images/cities/Jaipur.jpg",
-      Delhi: "/static/images/cities/Delhi.jpg",
+      Delhi: "/static/images/cities/Delhi2.jpg",
       Indore: "/static/images/cities/Indore.jpg",
       Gwalior: "/static/images/cities/Gwalior.jpg",
       Bhopal: "/static/images/cities/Bhopal.jpg"
