@@ -13,14 +13,13 @@ import Profile from "@/components/User/Profile";
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       name: "Cities Home",
       component: CitiesHome
     },
     {
-      path: "/:city/schools",
+      path: "/cities/:city",
       name: "Schools",
       component: CitySchools
     },
