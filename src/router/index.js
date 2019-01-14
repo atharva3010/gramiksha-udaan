@@ -12,14 +12,13 @@ import session from "@/components/Dashboard/session";
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       name: "Cities Home",
       component: CitiesHome
     },
     {
-      path: "/:city",
+      path: "/cities/:city",
       name: "Schools",
       component: CitySchools
     },
