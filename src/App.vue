@@ -28,17 +28,17 @@
           </v-list-tile-action>
           <v-list-tile-content class="font-weight-regular subheading">{{ item.title }}</v-list-tile-content>
         </v-list-tile>
-        <v-list-group prepend-icon="dashboard" value="true">
+        <!-- <v-list-group prepend-icon="dashboard" value="true">
           <v-list-tile slot="activator" to="/">
             <v-list-tile-title class="font-weight-regular subheading">Dashboard</v-list-tile-title>
           </v-list-tile>
-          <v-list-tile to="/dashboard/school">
+          <v-list-tile to="/school">
             <v-list-tile-title class="font-weight-regular subheading">School</v-list-tile-title>
             <v-list-tile-action>
               <v-icon>school</v-icon>
             </v-list-tile-action>
           </v-list-tile>
-        </v-list-group>
+        </v-list-group>-->
       </v-list>
     </v-navigation-drawer>
     <v-toolbar fixed dark>

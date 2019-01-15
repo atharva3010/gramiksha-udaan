@@ -78,7 +78,7 @@ export default {
       this.city = "";
     },
     goto(city) {
-      return "/dashboard/schools/" + city;
+      return "/" + city + "/schools";
     },
     show(cityname) {
       this.thisShow[cityname] = !this.thisShow[cityname];

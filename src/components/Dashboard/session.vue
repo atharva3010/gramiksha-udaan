@@ -329,7 +329,7 @@ export default {
       }
     },
     goBack(to) {
-      if (to) this.$router.push("/dashboard/school");
+      if (to) this.$router.go(-1);
       //when we want to go back to sessions page.like in case of deleting a session
     }
   },

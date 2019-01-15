@@ -262,13 +262,14 @@ export default {
       school: this.school.name,
       class: this.SelectedClass
     });
+    console.log(this.$route.params.school);
   },
   methods: {
     selectSession(selsession) {
       this.$router.push(
-        "/dashboard/session/" +
+        "/" +
           this.school.city +
-          "/" +
+          "/schools/" +
           this.school.name +
           "/" +
           this.SelectedClass +

@@ -10,7 +10,7 @@
             <v-card hover slot-scope="{ hover }" :to="goto(school.name)" class="mx-auto" dark>
               <v-img
                 style="padding-top:50%;max-height:250px;min-height:250px;"
-                :src="school.imgurl"
+                :src="images[index%6]"
               >
                 <v-layout align-end fill-height pa-3>
                   <div>
@@ -42,6 +42,18 @@
 
 <script>
 export default {
+  data() {
+    return {
+      images: [
+        "/static/images/schools/girl.jpg",
+        "/static/images/schools/children.jpg",
+        "/static/images/schools/boys.jpg",
+        "/static/images/schools/classroom.jpg",
+        "/static/images/schools/children2.jpg",
+        "/static/images/schools/bookcase.jpg"
+      ]
+    };
+  },
   computed: {
     city() {
       return this.$route.params.city;
@@ -55,7 +67,7 @@ export default {
   },
   methods: {
     goto(school) {
-      return "/dashboard/school/" + this.$route.params.city + "/" + school;
+      return "/" + this.$route.params.city + "/schools/" + school;
     }
   },
   created() {

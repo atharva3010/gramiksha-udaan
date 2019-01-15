@@ -13,28 +13,29 @@ import Profile from "@/components/User/Profile";
 Vue.use(Router);
 
 export default new Router({
-  routes: [{
+  routes: [
+    {
       path: "/",
       name: "Cities Home",
       component: CitiesHome
     },
     {
-      path: "/dashboard/schools/:city",
+      path: "/:city/schools",
       name: "Schools",
       component: CitySchools
     },
+    // {
+    //   path: "",
+    //   name: "Dashboard",
+    //   component: Dashboard
+    // },
     {
-      path: "/dashboard",
-      name: "Dashboard",
-      component: Dashboard
-    },
-    {
-      path: "/dashboard/school/:city/:school",
+      path: "/:city/schools/:school",
       name: "School",
       component: School
     },
     {
-      path: "/dashboard/session/:city/:school/:class/:session",
+      path: "/:city/schools/:school/:class/:session",
       name: "Session",
       component: session
     },
@@ -52,8 +53,7 @@ export default new Router({
       path: "/profile",
       name: "Profile",
       component: Profile
-    },
-
+    }
   ],
   mode: "history"
 });
