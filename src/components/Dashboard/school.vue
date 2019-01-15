@@ -6,13 +6,6 @@
           <h1>{{school.name}}</h1>
           <h2 style="font-weight:300">{{school.address}}, {{school.city}}</h2>
           <p>Total No of Students : {{school.total}}</p>
-
-          <v-chip v-for="(classdata,classname) in  classes" :key="classname">
-            <v-avatar>
-              <v-icon>people</v-icon>
-            </v-avatar>
-            {{classname}}
-          </v-chip>
         </div>
       </v-flex>
       <v-flex v-if="!loading['school']" sm8 xs12>
@@ -269,7 +262,7 @@ export default {
       this.$router.push(
         "/" +
           this.school.city +
-          "/schools/" +
+          "/" +
           this.school.name +
           "/" +
           this.SelectedClass +

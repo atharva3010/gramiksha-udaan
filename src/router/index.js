@@ -13,14 +13,13 @@ import Profile from "@/components/User/Profile";
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       name: "Cities Home",
       component: CitiesHome
     },
     {
-      path: "/:city/schools",
+      path: "/:city/",
       name: "Schools",
       component: CitySchools
     },
@@ -30,12 +29,12 @@ export default new Router({
     //   component: Dashboard
     // },
     {
-      path: "/:city/schools/:school",
+      path: "/:city/:school",
       name: "School",
       component: School
     },
     {
-      path: "/:city/schools/:school/:class/:session",
+      path: "/:city/:school/:class/:session",
       name: "Session",
       component: session
     },

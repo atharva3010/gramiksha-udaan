@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     goto(school) {
-      return "/" + this.$route.params.city + "/schools/" + school;
+      return "/" + this.$route.params.city + school;
     }
   },
   created() {
