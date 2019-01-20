@@ -1,22 +1,22 @@
 <template>
   <v-container grid-list-md>
-    <div class="text-xs-center display-2 font-weight-light text-capitalize">Profile</div>
-    <v-layout justify-space-between justify-space-around align-center wrap>
-      <v-flex xs12 sm6 md4>
-        <div style="margin:10px;">
-          <v-card width="100%">
-            <div style="margin:10px; padding:10px;">
-              <h1>
-                Name: 
-              </h1>
-              <h1> 
-                {{user.name}}
-              </h1>
-              <br>
-              <input v-model="Name" placeholder="Enter a new Name">
-            </div>
-          </v-card>
-        </div>
+    <div class="text-xs-center display-2 font-weight-light text-capitalize">
+      Profile
+    </div>
+    <v-layout row wrap>
+      {{user.name}}
+      <v-flex xs12 lg5 mb-3>
+        <v-expansion-panel popout>
+          <v-expansion-panel-content
+            v-for="(item,i) in 5"
+            :key="i"
+          >
+            <div slot="header">Name</div>
+            <v-card>
+              <v-card-text>Edit Information</v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
       </v-flex>
     </v-layout>
   </v-container>
