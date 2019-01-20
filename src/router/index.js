@@ -18,26 +18,13 @@ export default new Router({
       name: "Cities Home",
       component: CitiesHome
     },
-    {
-      path: "/:city/",
-      name: "Schools",
-      component: CitySchools
-    },
+
     // {
     //   path: "",
     //   name: "Dashboard",
     //   component: Dashboard
     // },
-    {
-      path: "/:city/:school",
-      name: "School",
-      component: School
-    },
-    {
-      path: "/:city/:school/:class/:session",
-      name: "Session",
-      component: session
-    },
+
     {
       path: "/signup",
       name: "Sign Up",
@@ -52,7 +39,22 @@ export default new Router({
       path: "/profile",
       name: "Profile",
       component: Profile
-    }
+    },
+    {
+      path: "/:city/",
+      name: "Schools",
+      component: CitySchools
+    },
+    {
+      path: "/:city/:school",
+      name: "School",
+      component: School
+    },
+    {
+      path: "/:city/:school/:class/:session",
+      name: "Session",
+      component: session
+    },
   ],
   mode: "history"
 });
