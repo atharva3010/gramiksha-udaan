@@ -42,6 +42,11 @@ export default new Router({
       component: Profile
     },
     {
+      path: "/profile",
+      name: "Profile",
+      component: Profile
+    },
+    {
       path: "/:city/",
       name: "Schools",
       component: CitySchools
