@@ -8,13 +8,13 @@ import signupmsg from "@/components/User/signupmsg";
 import Dashboard from "@/components/Dashboard/Dashboard";
 import School from "@/components/Dashboard/school";
 import session from "@/components/Dashboard/session";
-import Profile from "@/components/User/NewProfile";
+import NewProfile from "@/components/User/NewProfile";
+import Profile from "@/components/User/Profile";
 
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       name: "Cities Home",
       component: CitiesHome
@@ -39,7 +39,7 @@ export default new Router({
     {
       path: "/newprofile",
       name: "Profile",
-      component: Profile
+      component: NewProfile
     },
     // {
     //   path: "/profile",
