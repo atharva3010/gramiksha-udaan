@@ -3,7 +3,9 @@ import { firebase, db } from "@/scripts/firebase";
 export default {
   namespaced: true,
   state: {
-    userExists: { no: false },
+    userExists: {
+      no: false
+    },
     user: JSON.parse(localStorage.getItem("gramiksha-udaan:user")),
     isSignedUp: false,
     userDetails: JSON.parse(
@@ -186,6 +188,41 @@ export default {
           commit("setError", error);
         });
     },
+    resetPassword({ commit }, payload) {
+      commit("setLoading", true);
+      commit("clearError");
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (payload.id.test(String(payload.email).toLowerCase())) {
+        firebase
+          .auth()
+          .sendPasswordResetEmail(email)
+          .then(() => {
+            commit("clearError");
+            commit("setLoading", false);
+          })
+          .catch(error => {
+            commit("setLoading", false);
+            commit("setError", error);
+          });
+      } else {
+        var docRef = db.collection("users").doc(payload.email);
+        docRef
+          .get()
+          .then(function(doc) {
+            if (doc.exists) {
+              return firebase.auth().sendPasswordResetEmail(doc.data().email);
+            }
+          })
+          .then(() => {
+            commit("clearError");
+            commit("setLoading", false);
+          })
+          .catch(error => {
+            commit("setLoading", false);
+            commit("setError", error);
+          });
+      }
+    },
     async logout({ commit }) {
       return new Promise(
         await function(resolve, reject) {
@@ -207,23 +244,24 @@ export default {
         }
       );
     },
-    async updatePassword({}, payload) {
-      return new Promise(
-        await function(resolve, reject) {
-          var user = firebase.auth().currentUser;
-          user
-            .updatePassword(payload.new)
-            .then(function() {
-              resolve();
-            })
-            .catch(function(error) {
-              reject(error);
-            });
-        }
-      );
-    },
     clearError({ commit }) {
       commit("clearError");
+    },
+    changePassword({ commit }, payload) {
+      const newPassword = payload.password;
+      commit("setLoading", true);
+      commit("clearError");
+      firebase
+        .auth()
+        .updatePassword(newPassword)
+        .then(() => {
+          commit("setLoading", false);
+          commit("clearError");
+        })
+        .catch(error => {
+          commit("setLoading", false);
+          commit("setError", error);
+        });
     }
   },
   getters: {
