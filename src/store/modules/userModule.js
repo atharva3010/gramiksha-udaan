@@ -1,4 +1,7 @@
-import { firebase, db } from "@/scripts/firebase";
+import {
+  firebase,
+  db
+} from "@/scripts/firebase";
 
 export default {
   namespaced: true,
@@ -63,7 +66,7 @@ export default {
       payload.forEach(element => {
         var usersref = db.collection("users");
         var query = usersref.where("username", "==", element.user);
-        query.get().then(function(QuerySnapshot) {
+        query.get().then(function (QuerySnapshot) {
           if (QuerySnapshot.empty) {
             state.userExists[element.no] = false;
           } else {
@@ -74,7 +77,10 @@ export default {
     }
   },
   actions: {
-    SignUserIn({ commit, dispatch }, payload) {
+    SignUserIn({
+      commit,
+      dispatch
+    }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -82,16 +88,16 @@ export default {
         firebase
           .auth()
           .signInWithEmailAndPassword(payload.email, payload.password)
-          .then(function(user) {
+          .then(function (user) {
             var usersRef = db.collection("users");
             usersRef
               .where("uid", "==", user.user.uid)
               .get()
-              .then(function(qs) {
+              .then(function (qs) {
                 var docef = db.collection("users").doc(qs.docs[0].id);
                 docef
                   .get()
-                  .then(function(doc) {
+                  .then(function (doc) {
                     commit("setUser", user.user);
                     commit("setUserDetails", doc.data());
                     commit("setSignedIn", true);
@@ -110,7 +116,7 @@ export default {
         var docRef = db.collection("users").doc(payload.email);
         docRef
           .get()
-          .then(function(doc) {
+          .then(function (doc) {
             if (doc.exists) {
               firebase
                 .auth()
@@ -122,11 +128,11 @@ export default {
                     .get()
                     .then(qs => {
                       (docRef = db.collection("users").doc(qs.docs[0].id)),
-                        docRef.get().then(function(doc) {
-                          commit("setUser", user.user);
-                          commit("setUserDetails", doc.data());
-                          commit("setSignedIn", true);
-                        });
+                      docRef.get().then(function (doc) {
+                        commit("setUser", user.user);
+                        commit("setUserDetails", doc.data());
+                        commit("setSignedIn", true);
+                      });
                     });
                 })
                 .catch(error => {
@@ -141,7 +147,7 @@ export default {
               commit("setError", error);
             }
           })
-          .catch(function(error) {
+          .catch(function (error) {
             commit("setLoading", false);
             error => {
               message: "Can't access Server";
@@ -150,7 +156,10 @@ export default {
           });
       }
     },
-    SignUserup({ commit, dispatch }, payload) {
+    SignUserup({
+      commit,
+      dispatch
+    }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var userDetails = {
@@ -165,12 +174,12 @@ export default {
       firebase
         .auth()
         .createUserWithEmailAndPassword(payload.email, payload.password)
-        .then(function(user) {
+        .then(function (user) {
           userDetails.uid = user.user.uid;
           db.collection("users")
             .doc(payload.username)
             .set(userDetails)
-            .then(function() {
+            .then(function () {
               commit("setLoading", false);
               commit("setUser", user.user);
               commit("setUserDetails", userDetails);
@@ -188,7 +197,9 @@ export default {
           commit("setError", error);
         });
     },
-    resetPassword({ commit }, payload) {
+    resetPassword({
+      commit
+    }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -208,7 +219,7 @@ export default {
         var docRef = db.collection("users").doc(payload.email);
         docRef
           .get()
-          .then(function(doc) {
+          .then(function (doc) {
             if (doc.exists) {
               return firebase.auth().sendPasswordResetEmail(doc.data().email);
             }
@@ -223,13 +234,16 @@ export default {
           });
       }
     },
-    async logout({ commit }) {
+    async logout({
+      commit
+    }) {
       return new Promise(
-        await function(resolve, reject) {
+        await
+        function (resolve, reject) {
           firebase
             .auth()
             .signOut()
-            .then(function() {
+            .then(function () {
               commit("setUser", null);
               commit("setLoading", false);
               commit("setSignedIn", false);
@@ -238,30 +252,44 @@ export default {
               commit("setAccessLevel", -1);
               resolve();
             })
-            .catch(function(error) {
+            .catch(function (error) {
               reject(error);
             });
         }
       );
     },
-    clearError({ commit }) {
+    clearError({
+      commit
+    }) {
       commit("clearError");
     },
-    changePassword({ commit }, payload) {
-      const newPassword = payload.password;
-      commit("setLoading", true);
-      commit("clearError");
-      firebase
-        .auth()
-        .updatePassword(newPassword)
-        .then(() => {
-          commit("setLoading", false);
-          commit("clearError");
+    updatePassword({
+      commit
+    }, payload) {
+
+      const oldPassword = payload.old;
+      const newPassword = payload.reNew;
+      return new Promise(
+        (resolve, reject) => {
+
+          firebase
+            .auth()
+            .signInWithEmailAndPassword(this.state.user.user.email, oldPassword)
+            .then(() => {
+              return firebase
+                .auth()
+                .currentUser
+                .updatePassword(newPassword)
+            })
+            .then(() => {
+              console.log("yes")
+              resolve();
+            })
+            .catch(error => {
+              console.log(error)
+              reject(error)
+            });
         })
-        .catch(error => {
-          commit("setLoading", false);
-          commit("setError", error);
-        });
     }
   },
   getters: {
