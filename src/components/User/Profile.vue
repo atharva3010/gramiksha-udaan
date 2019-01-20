@@ -4,7 +4,7 @@
       Profile
     </div>
     <v-layout row wrap>
-      {{user.name}}
+      <h1>{{user.name}}</h1>
       <v-flex xs12 lg5 mb-3>
         <v-expansion-panel popout>
           <v-expansion-panel-content

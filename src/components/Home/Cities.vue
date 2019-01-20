@@ -12,7 +12,7 @@
           </div>Udaan App is Loading
         </h2>
       </v-flex>
-      <v-flex v-for="city in cities" :key="city.name" xs12 sm6 md4>
+      <v-flex v-for="(city,index) in cities" :key="index" xs12 sm6 md4>
         <div style="margin:10px;">
           <v-hover>
             <v-card hover light slot-scope="{ hover }" :to="goto(city.name)">
@@ -78,7 +78,7 @@ export default {
       this.city = "";
     },
     goto(city) {
-      return "/" + city ;
+      return "/" + city;
     },
     show(cityname) {
       this.thisShow[cityname] = !this.thisShow[cityname];

@@ -41,11 +41,11 @@ export default new Router({
       name: "Profile",
       component: NewProfile
     },
-    {
-      path: "/profile",
-      name: "Profile",
-      component: Profile
-    },
+    // {
+    //   path: "/profile",
+    //   name: "Profile",
+    //   component: Profile
+    // },
     {
       path: "/:city/",
       name: "Schools",
