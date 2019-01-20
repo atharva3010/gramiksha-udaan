@@ -207,6 +207,21 @@ export default {
         }
       );
     },
+    async updatePassword({}, payload) {
+      return new Promise(
+        await function(resolve, reject) {
+          var user = firebase.auth().currentUser;
+          user
+            .updatePassword(payload.new)
+            .then(function() {
+              resolve();
+            })
+            .catch(function(error) {
+              reject(error);
+            });
+        }
+      );
+    },
     clearError({ commit }) {
       commit("clearError");
     }

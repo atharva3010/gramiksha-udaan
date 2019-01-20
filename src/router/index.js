@@ -8,12 +8,13 @@ import signupmsg from "@/components/User/signupmsg";
 import Dashboard from "@/components/Dashboard/Dashboard";
 import School from "@/components/Dashboard/school";
 import session from "@/components/Dashboard/session";
-import Profile from "@/components/User/Profile";
+import Profile from "@/components/User/NewProfile";
 
 Vue.use(Router);
 
 export default new Router({
-  routes: [{
+  routes: [
+    {
       path: "/",
       name: "Cities Home",
       component: CitiesHome
@@ -36,7 +37,7 @@ export default new Router({
       component: login
     },
     {
-      path: "/profile",
+      path: "/newprofile",
       name: "Profile",
       component: Profile
     },
@@ -54,7 +55,7 @@ export default new Router({
       path: "/:city/:school/:class/:session",
       name: "Session",
       component: session
-    },
+    }
   ],
   mode: "history"
 });
