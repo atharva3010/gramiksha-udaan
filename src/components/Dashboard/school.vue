@@ -255,7 +255,6 @@ export default {
       school: this.school.name,
       class: this.SelectedClass
     });
-    console.log(this.$route.params.school);
   },
   methods: {
     selectSession(selsession) {
@@ -296,8 +295,6 @@ export default {
         this.dialog = false;
         return;
       }
-      console.log(vol);
-      console.log(this.addSession.volunteer);
       this.addSession.volunteer = this.addSession.volunteer.filter(
         ele => ele.no != vol.no
       );

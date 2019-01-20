@@ -110,12 +110,10 @@ export default {
           .get()
           .then(function(doc) {
             if (doc.exists) {
-              console.log(doc.data());
               firebase
                 .auth()
                 .signInWithEmailAndPassword(doc.data().email, payload.password)
                 .then(user => {
-                  console.log(user);
                   var citiesRef = db.collection("users");
                   citiesRef
                     .where("uid", "==", user.user.uid)
