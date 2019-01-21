@@ -3,6 +3,7 @@ import {
   db
 } from "@/scripts/firebase";
 
+
 export default {
   namespaced: true,
   state: {
@@ -200,39 +201,40 @@ export default {
     resetPassword({
       commit
     }, payload) {
-      commit("setLoading", true);
-      commit("clearError");
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (payload.id.test(String(payload.email).toLowerCase())) {
-        firebase
-          .auth()
-          .sendPasswordResetEmail(email)
-          .then(() => {
-            commit("clearError");
-            commit("setLoading", false);
-          })
-          .catch(error => {
-            commit("setLoading", false);
-            commit("setError", error);
-          });
-      } else {
-        var docRef = db.collection("users").doc(payload.email);
-        docRef
-          .get()
-          .then(function (doc) {
-            if (doc.exists) {
-              return firebase.auth().sendPasswordResetEmail(doc.data().email);
-            }
-          })
-          .then(() => {
-            commit("clearError");
-            commit("setLoading", false);
-          })
-          .catch(error => {
-            commit("setLoading", false);
-            commit("setError", error);
-          });
-      }
+
+      var id = payload
+
+      return new Promise((resolve, reject) => {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (re.test(String(id).toLowerCase())) {
+          firebase
+            .auth()
+            .sendPasswordResetEmail(id)
+            .then(() => {
+              resolve()
+            })
+            .catch(error => {
+              console.log(error)
+              reject(error)
+            });
+        } else {
+          var docRef = db.collection("users").doc(id);
+          docRef
+            .get()
+            .then(function (doc) {
+              if (doc.exists) {
+                return firebase.auth().sendPasswordResetEmail(doc.data().email);
+              }
+            })
+            .then(() => {
+              resolve()
+            })
+            .catch(error => {
+              console.log(error)
+              reject(error)
+            });
+        }
+      })
     },
     async logout({
       commit
