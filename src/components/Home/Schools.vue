@@ -36,6 +36,83 @@
           </v-hover>
         </div>
       </v-flex>
+      <v-card>
+        <v-form v-model="valid">
+          <v-container>
+            <v-layout row wrap>
+              <v-flex
+                xs12
+                sm6
+                md4
+              >
+                <v-text-field
+                  v-model="schoolname"
+                  label="School name"
+                  required
+                ></v-text-field>
+                </v-flex>
+
+                <v-flex
+                  xs12
+                  sm6
+                  md4
+                >
+                <v-text-field
+                  v-model="address"
+                  label="Address"
+                  required
+                ></v-text-field>
+                </v-flex>
+
+                <v-flex
+                  xs12
+                  sm6
+                  md4
+                >
+                <v-text-field
+                  v-model="contact"
+                  label="Contact No."
+                  :counter="10"
+                  required
+                ></v-text-field>
+                </v-flex>
+                <v-flex
+                  xs12
+                  sm6
+                  md4
+                >
+                  <v-text-field
+                    v-model="classes"
+                    label="No. of Classes"
+                    required
+                  ></v-text-field>
+                </v-flex>
+                <v-flex
+                  xs12
+                  sm6
+                  md4
+                >
+                <v-text-field
+                  v-model="sections"
+                  label="No. of Sections"
+                  required
+                ></v-text-field>
+                </v-flex>
+                <v-flex
+                  xs12
+                  sm6
+                  md4
+                >
+                <v-text-field
+                  v-model="strength"
+                  label="Strength of School"
+                  required
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-form>
+      </v-card>
     </v-layout>
   </v-container>
 </template>
@@ -51,7 +128,16 @@ export default {
         "/static/images/schools/classroom.jpg",
         "/static/images/schools/children2.jpg",
         "/static/images/schools/bookcase.jpg"
-      ]
+      ],
+      valid: false,
+      firstname: '',
+      lastname: '',
+      schoolname: '',
+      address: '',
+      classes: '',
+      contact: '',
+      sections: '',
+      strength: '',
     };
   },
   computed: {
