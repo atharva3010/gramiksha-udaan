@@ -12,7 +12,9 @@ const nodemailer = require("nodemailer");
 
 exports.sendWelcomeEmail = functions.auth.user().onCreate(user => {
   let transporter = nodemailer.createTransport({
+    service: "Zoho",
     host: "smtp.zoho.com",
+    requireTLS: false,
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
@@ -34,16 +36,21 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate(user => {
   return transporter.sendMail(mailOptions);
 });
 
-var auth = admin.auth()
-exports.createUser = functions.firestore.document("unverified/{uid}").onCreate((data, context) => {
-  var newUser = data.data()
-  return auth.createUser({
-    email: newUser.email,
-    emailVerified: false,
-    disabled: false,
-  }).then(() => {
-    return auth.generateEmailVerificationLink(newUser.email)
-  }).then((link) => {
-    return
-  })
-})
+var auth = admin.auth();
+exports.createUser = functions.firestore
+  .document("unverified/{uid}")
+  .onCreate((data, context) => {
+    var newUser = data.data();
+    return auth
+      .createUser({
+        email: newUser.email,
+        emailVerified: false,
+        disabled: false
+      })
+      .then(() => {
+        return auth.generateEmailVerificationLink(newUser.email);
+      })
+      .then(link => {
+        return;
+      });
+  });
