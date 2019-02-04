@@ -10,7 +10,7 @@
                 required
                 :label="'Name of Student '"
                 v-model="newstudent.name"
-                :prefix="toString(index+1)"
+                :prefix="(index+1).toString()"
                 id="Sname"
                 type="text"
               ></v-text-field>
@@ -51,7 +51,7 @@
           <v-card-text>
             <h3
               class="font-weight-regular subheading"
-            >Clicking on Yes will delete this session forever. This action is not reversible. Are you user you want to continue?</h3>
+            >Clicking on Yes will delete this session forever. This action is not reversible. Are you sure you want to continue?</h3>
           </v-card-text>
           <v-card-actions style="padding-bottom:25px;">
             <v-spacer></v-spacer>

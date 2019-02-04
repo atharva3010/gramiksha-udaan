@@ -22,14 +22,6 @@ export default {
     setSchools(state, payload) {
       state.schools = payload;
     },
-    addSchool(state, payload) {
-      db.collection("cities/" + payload + "/schools")
-        .doc(payload.name)
-        .set({
-          address: payload.address,
-          total: payload.total
-        });
-    },
     getAllSchools(state) {
       state.cities = [];
       state.loading["cities"] = true;
@@ -80,8 +72,15 @@ export default {
           commit("setSchools", schools);
         });
     },
-    addSchool({ commit }, cityname, newschooldata) {
-      commit("addSchool", cityname, newschooldata);
+    addSchool({commit}, payload) {
+      return new Promise(
+        (resolve,reject)=>{
+          
+          db.collection("/cities/"+payload.city+"/schools").doc(payload.data.name).set(payload.data).then(
+       ()=>{   return  resolve()}
+          ).catch((err)=>{return reject(err)})
+        }
+      )
     },
     getAllSchools({ commit }) {
       commit("getAllSchools");

@@ -59,14 +59,14 @@
               <span class="blue--text text--darken-3">{{user.email}}</span>
             </h4>
           </v-flex>
-          <!-- <v-flex xs6>
+          <v-flex xs6>
             <v-btn dark @click="passwordDialog = true">Update Password</v-btn>
-          </v-flex>-->
+          </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>
 
-    <!-- <v-dialog v-model="passwordDialog" dark persistent max-width="300px">
+    <v-dialog v-model="passwordDialog" dark persistent max-width="300px">
       <v-card>
         <v-form ref="changePasswordForm" @submit.prevent="saveNewPassword">
           <v-card-title>
@@ -115,12 +115,12 @@
               type="submit"
               :loading="passwordLoading"
               :disabled="passwordLoading"
-              @click="saveNewPassword"
+              @click.prevent="saveNewPassword"
             >Save</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
-    </v-dialog>-->
+    </v-dialog>
   </v-container>
 </template>
 
@@ -165,25 +165,34 @@ export default {
       this.changePassword.reNew = "";
       this.passwordDialog = false;
     },
-    saveNewPassword() {
-      var self = this;
+    saveNewPassword(event) {
       if (this.changePassword.new != this.changePassword.reNew) {
+        this.snackbar = true;
         this.message = "Both Passwords don't match.";
         return;
+      } else if (
+        this.changePassword.new == "" ||
+        this.changePassword.old == ""
+      ) {
+        this.snackbar = true;
+        this.message = "Fill All Fields";
+        return;
+      } else {
+        this.passwordLoading = true;
+        this.$store
+          .dispatch("user/updatePassword", this.changePassword)
+          .then(() => {
+            this.message = "Password updated successfully.";
+            this.snackbar = true;
+            this.passwordLoading = false;
+            this.passwordDialog = false;
+          })
+          .catch(error => {
+            this.message = error.message;
+            this.snackbar = true;
+            this.passwordLoading = false;
+          });
       }
-      this.passwordLoading = true;
-      this.$store
-        .dispatch("user/updatePassword", this.changePassword)
-        .then(function() {
-          self.message = "Password updated successfully.";
-          self.snackbar = true;
-          self.passwordLoading = false;
-        })
-        .catch(function(error) {
-          self.message = error.message;
-          self.snackbar = true;
-          self.passwordLoading = false;
-        });
     }
   }
 };

@@ -1,0 +1,27 @@
+[debug] [2019-02-04T15:58:04.658Z] ----------------------------------------------------------------------
+[debug] [2019-02-04T15:58:04.660Z] Command:       /usr/local/bin/node /usr/local/bin/firebase functions:shell
+[debug] [2019-02-04T15:58:04.661Z] CLI Version:   4.2.1
+[debug] [2019-02-04T15:58:04.661Z] Platform:      darwin
+[debug] [2019-02-04T15:58:04.661Z] Node Version:  v9.11.1
+[debug] [2019-02-04T15:58:04.661Z] Time:          Mon Feb 04 2019 21:28:04 GMT+0530 (IST)
+[debug] [2019-02-04T15:58:04.661Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-02-04T15:58:04.670Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-02-04T15:58:04.670Z] > authorizing via signed-in user
+[debug] [2019-02-04T15:58:04.672Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/gmportal-b4054  
+ 
+[debug] [2019-02-04T15:58:05.875Z] <<< HTTP RESPONSE 200
+[info] i  functions: Preparing to emulate functions.
+[debug] [2019-02-04T15:58:06.471Z] Fetching environment
+[debug] [2019-02-04T15:58:06.472Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/gmportal-b4054  
+ 
+[debug] [2019-02-04T15:58:09.447Z] <<< HTTP RESPONSE 200
+[debug] [2019-02-04T15:58:09.447Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/238141181023:getServerAppConfig  
+ 
+[debug] [2019-02-04T15:58:10.059Z] <<< HTTP RESPONSE 200
+[debug] [2019-02-04T15:58:10.060Z] Starting @google-cloud/functions-emulator
+[debug] [2019-02-04T15:58:10.142Z] Parsing function triggers
+[debug] [2019-02-04T15:58:10.368Z] Deploying functions locally
+[debug] [2019-02-04T15:58:10.370Z] Deploying functions locally
+[info] ✔  functions: sendWelcomeEmail
+[info] ✔  functions: createUser

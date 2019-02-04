@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="text-xs-center display-2 font-weight-light text-capitalize">Cities</div>
+    <div class="text-xs-center display-2 font-weight-light text-capitalize">Chapters</div>
     <v-layout justify-space-between justify-space-around align-center wrap>
       <v-flex v-if="loading['cities']" sm12>
         <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-regular">
