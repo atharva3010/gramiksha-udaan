@@ -25,7 +25,10 @@ export default new Router({
     //   name: "Dashboard",
     //   component: Dashboard
     // },
-
+    {
+      path: "/signinWithLink/:email",
+      name: "Sign in with email"
+    },
     {
       path: "/signup",
       name: "Sign Up",

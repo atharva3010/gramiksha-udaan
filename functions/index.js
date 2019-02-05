@@ -1,41 +1,12 @@
 const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-admin.initializeApp(functions.config().firebase);
-const nodemailer = require("nodemailer");
+var admin = require("firebase-admin");
+var sendVerification = require("./verificationMailer")
+var serviceAccount = require("./gmportal-b4054-firebase-adminsdk-2l548-03dba39b4a.json");
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   response.send("Hello from Parth!");
-// });
-
-exports.sendWelcomeEmail = functions.auth.user().onCreate(user => {
-  let transporter = nodemailer.createTransport({
-    service: "Zoho",
-    host: "smtp.zoho.com",
-    requireTLS: false,
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "webmaster@gramiksha.in", // generated ethereal user
-      pass: "ZVZYxZDcXZiE" // generated ethereal password
-    }
-  });
-  var userObject = {
-    uid: user.uid,
-    email: user.email
-  };
-  let mailOptions = {
-    from: "webmaster@gramiksha.in", // sender address
-    to: user.email, // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>" // html body
-  };
-  return transporter.sendMail(mailOptions);
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://gmportal-b4054.firebaseio.com"
 });
-
 var auth = admin.auth();
 exports.createUser = functions.firestore
   .document("unverified/{uid}")
@@ -45,12 +16,21 @@ exports.createUser = functions.firestore
       .createUser({
         email: newUser.email,
         emailVerified: false,
-        disabled: false
+        disabled: false,
       })
       .then(() => {
-        return auth.generateEmailVerificationLink(newUser.email);
+        return auth.generateSignInWithEmailLink(newUser.email, {
+          url: "http://localhost:8080/signinWithLink/" + newUser.email
+        });
+      })
+      .then(url => {
+        return auth.generateEmailVerificationLink(newUser.email, {
+          url: url
+        });
       })
       .then(link => {
-        return;
-      });
+        return sendVerification.handler(newUser.name, newUser.email, link)
+      })
+      .then(Promise.resolve())
+      .catch((err) => Promise.reject(err))
   });
