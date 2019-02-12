@@ -1,12 +1,8 @@
 const functions = require("firebase-functions");
 var admin = require("firebase-admin");
-var sendVerification = require("./verificationMailer")
 var serviceAccount = require("./gmportal-b4054-firebase-adminsdk-2l548-03dba39b4a.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://gmportal-b4054.firebaseio.com"
-});
+admin.initializeApp();
 var auth = admin.auth();
 exports.createUser = functions.firestore
   .document("unverified/{uid}")
@@ -24,13 +20,19 @@ exports.createUser = functions.firestore
         });
       })
       .then(url => {
+        console.log(url)
         return auth.generateEmailVerificationLink(newUser.email, {
           url: url
         });
       })
       .then(link => {
+        var sendVerification = require("./verificationMailer")
         return sendVerification.handler(newUser.name, newUser.email, link)
       })
-      .then(Promise.resolve())
-      .catch((err) => Promise.reject(err))
+      .then(() => {
+        return Promise.resolve()
+      })
+      .catch((err) => {
+        return Promise.reject(err)
+      })
   });

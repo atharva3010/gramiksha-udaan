@@ -4,13 +4,10 @@ import CitiesHome from "@/components/Home/Cities";
 import CitySchools from "@/components/Home/Schools";
 import signup from "@/components/User/signup";
 import login from "@/components/User/Login";
-import signupmsg from "@/components/User/signupmsg";
-import Dashboard from "@/components/Dashboard/Dashboard";
 import School from "@/components/Dashboard/school";
 import session from "@/components/Dashboard/session";
 import NewProfile from "@/components/User/NewProfile";
-import Profile from "@/components/User/Profile";
-
+import LoginScreen from "@/components/User/loggerin"
 Vue.use(Router);
 
 export default new Router({
@@ -25,7 +22,11 @@ export default new Router({
     //   name: "Dashboard",
     //   component: Dashboard
     // },
-
+    {
+      path: "/signinWithLink/:link",
+      name: "Signing You In",
+      component: LoginScreen
+    },
     {
       path: "/signup",
       name: "Sign Up",
@@ -46,6 +47,7 @@ export default new Router({
     //   name: "Profile",
     //   component: Profile
     // },
+
     {
       path: "/:city/",
       name: "Schools",

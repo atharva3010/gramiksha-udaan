@@ -23,7 +23,7 @@
                     ></v-text-field>
                   </v-flex>
                 </v-layout>
-                <v-layout row>
+                <!-- <v-layout row>
                   <v-flex xs12>
                     <v-text-field
                       label="Email"
@@ -33,17 +33,15 @@
                       :rules="[rules.empty, validateEmail]"
                     ></v-text-field>
                   </v-flex>
-                </v-layout>
+                </v-layout>-->
                 <v-layout row>
                   <v-flex xs12>
                     <v-text-field
                       label="Username"
                       id="username"
-                      :hint="usernameHint"
                       v-model="username"
                       type="text"
-                      @input="checkUsername"
-                      :rules="[rules.empty]"
+                      :rules="[rules.empty,checkUsername]"
                       :error="usernameError"
                     ></v-text-field>
                   </v-flex>
@@ -73,7 +71,7 @@
                     ></v-text-field>
                   </v-flex>
                 </v-layout>
-                <v-layout row>
+                <!-- <v-layout row>
                   <v-flex xs12>
                     <v-select
                       :items="cities"
@@ -81,13 +79,7 @@
                       v-model="city"
                       :rules="[rules.empty]"
                     ></v-select>
-                    <!-- <v-text-field
-                      label="City"
-                      id="city"
-                      v-model="city"
-                      :rules="[rules.empty]"
-                      type="text"
-                    ></v-text-field>-->
+             
                   </v-flex>
                 </v-layout>
                 <v-layout row>
@@ -100,7 +92,7 @@
                       type="text"
                     ></v-text-field>
                   </v-flex>
-                </v-layout>
+                </v-layout>-->
                 <v-layout row>
                   <v-flex xs12>
                     <v-btn type="submit" :disabled="loading" :loading="loading">Sign up</v-btn>
@@ -121,7 +113,7 @@ import firebase from "firebase/app";
 export default {
   data() {
     return {
-      email: "",
+      // email: "",
       name: "",
       formValid: true,
       usernameHint: "",
@@ -129,9 +121,7 @@ export default {
       cnpassword: "",
       usernameError: false,
       username: "",
-      ngopost: "",
-      city: "",
-      cities: ["Jaipur", "Delhi", "Gwalior", "Bhopal", "Laxmangarh", "Indore"],
+
       usernames: [],
       rules: {
         empty: v => !!v || "Required"
@@ -139,19 +129,17 @@ export default {
     };
   },
   created() {
-    var vm = this;
     if (this.$store.getters["user/getIsSignedIn"]) this.$router.push("/");
     firebase
       .firestore()
       .collection("users")
       .get()
       .then(querySnapshot => {
-        querySnapshot.forEach(function(doc) {
-          vm.usernames.push(doc.id);
+        querySnapshot.forEach(doc => {
+          this.usernames.push(doc.id);
         });
       });
-  },
-  created() {
+    console.log(this.usernames);
     this.$store.dispatch["user/getCities"];
   },
   computed: {
@@ -160,7 +148,6 @@ export default {
     },
     validateEmail() {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
       return re.test(String(this.email).toLowerCase()) == false
         ? "Invalid Email"
         : true;
@@ -181,26 +168,20 @@ export default {
       let validate = this.$refs.signUpForm.validate();
       if (!validate) return;
       this.$store.dispatch("user/SignUserup", {
-        email: this.email,
         name: this.name,
         password: this.password,
-        username: this.username,
-        ngopost: this.ngopost,
-        city: this.city
+        username: this.username
       });
-      if (!loading) this.$router.push("/");
+      if (!this.loading) this.$router.push("/");
     },
     checkUsername() {
       for (let i = 0; i < this.usernames.length; i++) {
         if (this.usernames[i] === this.username) {
-          this.usernameHint = "Username already taken";
-          this.usernameError = true;
-          return false;
-        } else {
-          this.usernameError = false;
-          return true;
+          console.log(this.usernames[i], this.username);
+          return "Username already taken";
         }
       }
+      return true;
     },
     onDismissed() {
       this.$store.dispatch("user/clearError");
