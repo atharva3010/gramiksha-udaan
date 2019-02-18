@@ -19,13 +19,8 @@ exports.createUser = functions.firestore
           url: "http://localhost:8080/signinWithLink/" + newUser.email
         });
       })
-      .then(url => {
-        console.log(url)
-        return auth.generateEmailVerificationLink(newUser.email, {
-          url: url
-        });
-      })
       .then(link => {
+        console.log(link)
         var sendVerification = require("./verificationMailer")
         return sendVerification.handler(newUser.name, newUser.email, link)
       })

@@ -206,7 +206,6 @@
 </template>
 
 <script>
-import { firebase } from "../../scripts/firebase.js";
 export default {
   data() {
     return {
@@ -250,16 +249,6 @@ export default {
     }
   },
   created() {
-    firebase
-      .auth()
-      .sendSignInLinkToEmail("rohitsahu.4998@gmail.com", {
-        handleCodeInApp: true,
-
-        url:
-          "http://localhost:8080/signinWithLink/" + "rohitsahu.4998@gmail.com"
-      })
-      .then(url => console.log(url));
-
     if (!this.$store.getters["user/getIsSignedIn"]) this.$router.push("/login");
     this.$store.commit("school/deselectClass");
     this.$store.dispatch("school/getSchool", {
