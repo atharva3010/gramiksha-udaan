@@ -78,6 +78,27 @@ export default {
     }
   },
   actions: {
+    addUser({
+      commit
+    }, payload) {
+      return new Promise((resolve, reject) => {
+        db.collection("/users").where("email",
+            "==", payload).get().then((doc) => {
+            if (!doc.empty) {
+              reject("This Email Belongs to another User")
+            } else {
+              return db.collection("/unverified").add({
+                email: payload
+              })
+            }
+          }).then(() => {
+            resolve()
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     signInWithLink({
       commit
     }, payload) {
@@ -184,6 +205,7 @@ export default {
       commit("clearError");
       var userDetails = {
         uid: state.user.uid,
+        email: payload.email,
         name: payload.name,
         username: payload.username,
         accessLevel: 0

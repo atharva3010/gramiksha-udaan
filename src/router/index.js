@@ -8,27 +8,34 @@ import School from "@/components/Dashboard/school";
 import session from "@/components/Dashboard/session";
 import NewProfile from "@/components/User/NewProfile";
 import LoginScreen from "@/components/User/loggerin"
+import addUser from "@/components/User/addUser"
 Vue.use(Router);
 
 export default new Router({
-  routes: [{
+  routes: [
+
+    {
       path: "/",
       name: "Cities Home",
       component: CitiesHome
     },
-
+    {
+      path: "/addUser",
+      name: "Add user",
+      component: addUser
+    },
     // {
     //   path: "",
     //   name: "Dashboard",
     //   component: Dashboard
     // },
     {
-      path: "/signinWithLink/:link",
+      path: "/signinWithLink/:email",
       name: "Signing You In",
       component: LoginScreen
     },
     {
-      path: "/signup",
+      path: "/signup/:email",
       name: "Sign Up",
       component: signup
     },

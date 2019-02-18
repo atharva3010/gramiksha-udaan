@@ -22,7 +22,7 @@ exports.createUser = functions.firestore
       .then(link => {
         console.log(link)
         var sendVerification = require("./verificationMailer")
-        return sendVerification.handler(newUser.name, newUser.email, link)
+        return sendVerification.handler(newUser.email, link)
       })
       .then(() => {
         return Promise.resolve()

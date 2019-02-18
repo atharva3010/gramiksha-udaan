@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 EmailTemplate = require('email-templates').EmailTemplate
-exports.handler = (name, email, link) => {
+exports.handler = (email, link) => {
   return new Promise((resolve, reject) => {
     let transporter = nodemailer.createTransport({
       service: "Zoho",
@@ -15,7 +15,6 @@ exports.handler = (name, email, link) => {
     });
 
     let context = {
-      name,
       link
     }
     return loadTemplate(context).then((result) => {

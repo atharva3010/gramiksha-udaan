@@ -24,11 +24,11 @@ export default {
       .then(() => {
         return this.$store.dispatch(
           "user/signInWithLink",
-          this.$route.params.link
+          this.$route.params.email
         );
       })
       .then(() => {
-        this.$router.push("/signup");
+        this.$router.push("/signup/" + this.$route.params.email);
       })
       .catch(err => {
         console.log(err);

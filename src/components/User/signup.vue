@@ -113,7 +113,7 @@ import firebase from "firebase/app";
 export default {
   data() {
     return {
-      // email: "",
+      email: "",
       name: "",
       formValid: true,
       usernameHint: "",
@@ -129,6 +129,7 @@ export default {
     };
   },
   created() {
+    this.email = this.$route.params.email;
     if (this.$store.getters["user/getIsSignedIn"]) this.$router.push("/");
     firebase
       .firestore()
@@ -170,7 +171,8 @@ export default {
       this.$store.dispatch("user/SignUserup", {
         name: this.name,
         password: this.password,
-        username: this.username
+        username: this.username,
+        email: this.email
       });
       if (!this.loading) this.$router.push("/");
     },
