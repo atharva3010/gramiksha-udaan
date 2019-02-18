@@ -98,6 +98,7 @@
           v-model="date" 
           scrollable
           reactive
+          color="purple"
           >
           <v-spacer></v-spacer>
           <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
