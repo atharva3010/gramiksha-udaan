@@ -120,8 +120,33 @@
                 type="text"
               ></v-text-field>
             </v-flex>
+            <v-flex xs10 offset-xs1>
+        <v-combobox
+          v-model="select"
+          :items="items"
+          chips
+          label="Add Volunteers"
+          multiple
+        >
+          <template slot="selection" slot-scope="data">
+            <v-chip
+              :key="JSON.stringify(data.item)"
+              :selected="data.selected"
+              :disabled="data.disabled"
+              class="v-chip--select-multi"
+              @click.stop="data.parent.selectedIndex = data.index"
+              @input="data.parent.selectItem(data.item)"
+            >
+              <v-avatar class="primary white--text">
+                {{ data.item.slice(0, 1).toUpperCase() }}
+              </v-avatar>
+              {{ data.item }}
+            </v-chip>
+          </template>
+        </v-combobox>
+      </v-flex>
 
-            <v-flex v-for="(vol,index) in addSession.volunteer" :key="index" xs10 offset-xs1>
+            <!-- <v-flex v-for="(vol,index) in addSession.volunteer" :key="index" xs10 offset-xs1>
               <div style="display:flex">
                 <v-text-field
                   required
@@ -134,14 +159,14 @@
                   <v-icon>close</v-icon>
                 </v-btn>
               </div>
-            </v-flex>
+            </v-flex> -->
 
             <v-divider></v-divider>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn flat color="primary" @click="sessionAddVol()">add Volunteer</v-btn>
-              <v-spacer></v-spacer>
+              <!-- <v-btn flat color="primary" @click="sessionAddVol()">add Volunteer</v-btn>
+              <v-spacer></v-spacer> -->
               <v-btn type="submit" color="secondary">Submit</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
@@ -209,6 +234,13 @@
 export default {
   data() {
     return {
+        select: '',
+        items: [
+          'Parth',
+          'Sushant',
+          'Atharva',
+          'Rohit'
+        ],
       dialog: false,
       addSession: {
         volNo: 1,
