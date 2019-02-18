@@ -62,6 +62,50 @@
           <v-flex xs6>
             <v-btn dark @click="passwordDialog = true">Update Password</v-btn>
           </v-flex>
+          <v-layout row wrap>
+      <v-menu
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="date"
+        lazy
+        transition="scale-transition"
+        offset-y
+        full-width
+        min-width="290px"
+        >
+      </v-menu>
+      <v-flex xs12>
+        <v-dialog
+          ref="dialog"
+          v-model="modal"
+          :return-value.sync="date"
+          persistent
+          lazy
+          full-width
+          width="290px"
+        >
+          <v-text-field
+            slot="activator"
+            v-model="date"
+            label="Date of Birth"
+            prepend-icon="event"
+            persistent-hint
+            hint="YYYY/MM/DD format"
+          ></v-text-field>
+          <v-date-picker 
+          v-model="date" 
+          scrollable
+          reactive
+          >
+          <v-spacer></v-spacer>
+          <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
+          <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+        </v-date-picker>
+        </v-dialog>
+      </v-flex>
+      </v-layout>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -133,6 +177,10 @@ export default {
   },
   data() {
     return {
+      date: new Date().toISOString().substr(0, 10),
+      menu: false,
+      modal: false,
+      menu2: false,
       passwordDialog: false,
       changePassword: {
         old: "",
