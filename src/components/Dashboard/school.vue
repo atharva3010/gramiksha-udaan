@@ -121,30 +121,28 @@
               ></v-text-field>
             </v-flex>
             <v-flex xs10 offset-xs1>
-        <v-combobox
-          v-model="select"
-          :items="items"
-          chips
-          label="Add Volunteers"
-          multiple
-        >
-          <template slot="selection" slot-scope="data">
-            <v-chip
-              :key="JSON.stringify(data.item)"
-              :selected="data.selected"
-              :disabled="data.disabled"
-              class="v-chip--select-multi"
-              @click.stop="data.parent.selectedIndex = data.index"
-              @input="data.parent.selectItem(data.item)"
-            >
-              <v-avatar class="primary white--text">
-                {{ data.item.slice(0, 1).toUpperCase() }}
-              </v-avatar>
-              {{ data.item }}
-            </v-chip>
-          </template>
-        </v-combobox>
-      </v-flex>
+              <v-combobox
+                v-model="select"
+                :items="usernamesInCity"
+                chips
+                label="Add Volunteers"
+                multiple
+              >
+                <template slot="selection" slot-scope="data">
+                  <v-chip
+                    :key="JSON.stringify(data.item)"
+                    :selected="data.selected"
+                    :disabled="data.disabled"
+                    class="v-chip--select-multi"
+                    @click.stop="data.parent.selectedIndex = data.index"
+                    @input="data.parent.selectItem(data.item)"
+                  >
+                    <v-avatar class="primary white--text">{{ data.item.slice(0, 1).toUpperCase() }}</v-avatar>
+                    {{ data.item }}
+                  </v-chip>
+                </template>
+              </v-combobox>
+            </v-flex>
 
             <!-- <v-flex v-for="(vol,index) in addSession.volunteer" :key="index" xs10 offset-xs1>
               <div style="display:flex">
@@ -159,14 +157,13 @@
                   <v-icon>close</v-icon>
                 </v-btn>
               </div>
-            </v-flex> -->
-
+            </v-flex>-->
             <v-divider></v-divider>
 
             <v-card-actions>
               <v-spacer></v-spacer>
               <!-- <v-btn flat color="primary" @click="sessionAddVol()">add Volunteer</v-btn>
-              <v-spacer></v-spacer> -->
+              <v-spacer></v-spacer>-->
               <v-btn type="submit" color="secondary">Submit</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
@@ -234,13 +231,8 @@
 export default {
   data() {
     return {
-        select: '',
-        items: [
-          'Parth',
-          'Sushant',
-          'Atharva',
-          'Rohit'
-        ],
+      usernamesInCity: [],
+      select: "",
       dialog: false,
       addSession: {
         volNo: 1,
@@ -287,6 +279,11 @@ export default {
       school: this.school.name,
       class: this.SelectedClass
     });
+    this.$store
+      .dispatch("user/getUsernamesFromCity", this.$route.params.city)
+      .then(users => {
+        this.usernamesInCity = users;
+      });
   },
   methods: {
     selectSession(selsession) {

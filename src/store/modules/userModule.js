@@ -264,6 +264,24 @@ export default {
         }
       })
     },
+    getUsernamesFromCity({
+      commit
+    }, payload) {
+
+      return new Promise((resolve, reject) => {
+
+        var usersnames = []
+        db.collection("/users").where('city', "==", payload).get().then(res => {
+          res.docs.forEach(element => {
+            usersnames.push(element.id)
+          })
+          resolve(usersnames)
+        }).catch((err) => {
+          reject(err)
+        })
+      })
+
+    },
     async logout({
       commit
     }) {
