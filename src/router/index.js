@@ -8,7 +8,9 @@ import School from "@/components/Dashboard/school";
 import session from "@/components/Dashboard/session";
 import NewProfile from "@/components/User/NewProfile";
 import LoginScreen from "@/components/User/loggerin"
-import addUser from "@/components/User/addUser"
+import addVolunteer from "@/components/User/addVolunteer"
+import addProgramCoordinator from "@/components/User/addProgramCoordinator"
+
 Vue.use(Router);
 
 export default new Router({
@@ -20,15 +22,15 @@ export default new Router({
       component: CitiesHome
     },
     {
-      path: "/addUser",
-      name: "Add user",
-      component: addUser
+      path: "/addVolunteer",
+      name: "Add Volunteer",
+      component: addVolunteer
     },
-    // {
-    //   path: "",
-    //   name: "Dashboard",
-    //   component: Dashboard
-    // },
+    {
+      path: "/addProgramCoordinator",
+      name: "Add addProgramCoodinator",
+      component: addProgramCoordinator
+    },
     {
       path: "/signinWithLink/:email",
       name: "Signing You In",

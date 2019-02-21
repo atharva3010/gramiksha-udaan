@@ -21,15 +21,8 @@
                   ></v-text-field>
                 </v-flex>
               </v-layout>
-              <v-layout row>
-                <v-flex xs12>
-                  <h3 class="font-weight-thin">Add As</h3>
-                </v-flex>
-              </v-layout>
 
-              <v-btn :disabled="loading" style="margin-left:0" :loading="loading">volunteer</v-btn>
-
-              <v-btn @click="addUser" :disabled="loading" :loading="loading">Program coordinator</v-btn>
+              <v-btn @click="addUser" :disabled="loading" :loading="loading">Add Program coordinator</v-btn>
             </v-form>
           </v-container>
         </v-card>
