@@ -16,7 +16,7 @@
         <div style="margin:10px;">
           <v-hover>
             <v-card hover light slot-scope="{ hover }" :to="goto(city.name)">
-              <v-img style="padding-top:50%;max-height:250px;min-height:250px;" :src="city.imgURL">
+              <v-img style="padding-top:50%;max-height:225px;min-height:225px;" :src="city.imgURL">
                 <v-layout align-end fill-height pa-3 white--text>
                   <div>
                     <div class="font-weight-light display-1">{{city.name}}</div>

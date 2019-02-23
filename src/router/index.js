@@ -14,9 +14,7 @@ import addProgramCoordinator from "@/components/User/addProgramCoordinator"
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-
-    {
+  routes: [{
       path: "/",
       name: "Cities Home",
       component: CitiesHome

@@ -23,10 +23,38 @@
       </v-flex>
     </v-layout>
     <v-divider style="margin:35px 0px;"></v-divider>
+
     <h1 style="margin-left:15px;">Sessions</h1>
     <div v-if="SelectedClass==null">
-      <h2 style="font-weight:300;margin-left:15px;">Select a Class</h2>
+      <v-layout row>
+        <h2
+          v-if="Object.entries(classes).length === 0 && classes.constructor === Object
+"
+          style="font-weight:300;margin-left:15px;"
+          class="orange--text"
+        >No Classes Added</h2>
+        <h2 v-else style="font-weight:300;margin-left:15px;">Select a Class</h2>
+        <v-spacer/>
+        <v-dialog v-model="addclass" width="500">
+          <v-card>
+            <v-card-title style="font-weight:300" class="display-1">Add Class</v-card-title>
+            <v-form>
+              <v-flex xs10 offset-xs1>
+                <v-text-field
+                  label="Class Name"
+                  id="className"
+                  v-model="className"
+                  required
+                  type="text"
+                ></v-text-field>
+              </v-flex>
+              <v-btn @click="addClass">Add Class</v-btn>
+            </v-form>
+          </v-card>
+        </v-dialog>
 
+        <v-btn @click="addclass=true">Add Class</v-btn>
+      </v-layout>
       <v-layout wrap row>
         <v-flex v-if="loading['school']" sm12>
           <h2 style=" text-align:center;   padding: 80px 30%;" class="font-weight-thin">
@@ -39,9 +67,9 @@
           </h2>
         </v-flex>
         <v-flex
-          @click="SelectClass(classname)"
-          v-for="(classdata,classname) in classes"
-          :key="classname"
+          @click="SelectClass(className)"
+          v-for="(classdata,className) in classes"
+          :key="className"
           md4
           sm6
           xs12
@@ -51,7 +79,7 @@
               <v-layout row>
                 <v-flex xs6>
                   <v-card-text class="text-xs-center" style="margin-top:10px">
-                    <h2>{{classname}}</h2>
+                    <h2>{{className}}</h2>
                   </v-card-text>
                 </v-flex>
                 <v-flex xs6>
@@ -83,6 +111,7 @@
         </v-flex>
       </v-layout>
     </div>
+
     <div v-else>
       <v-layout row>
         <v-flex v-if="loading['classes']" sm12>
@@ -122,7 +151,7 @@
             </v-flex>
             <v-flex xs10 offset-xs1>
               <v-combobox
-                v-model="select"
+                v-model="addSession.volunteer"
                 :items="usernamesInCity"
                 chips
                 label="Add Volunteers"
@@ -231,18 +260,15 @@
 export default {
   data() {
     return {
+      className: "",
+      addclass: false,
       usernamesInCity: [],
       select: "",
       dialog: false,
       addSession: {
         volNo: 1,
         title: "",
-        volunteer: [
-          {
-            no: 1,
-            user: ""
-          }
-        ]
+        volunteer: []
       }
     };
   },
@@ -276,8 +302,8 @@ export default {
     if (!this.$store.getters["user/getIsSignedIn"]) this.$router.push("/login");
     this.$store.commit("school/deselectClass");
     this.$store.dispatch("school/getSchool", {
-      school: this.school.name,
-      class: this.SelectedClass
+      school: this.$route.params.school,
+      city: this.$route.params.city
     });
     this.$store
       .dispatch("user/getUsernamesFromCity", this.$route.params.city)
@@ -286,6 +312,14 @@ export default {
       });
   },
   methods: {
+    addClass() {
+      console.log(className);
+      this.$store.dispatch("school/addClass", {
+        school: this.$route.params.school,
+        city: this.$route.params.city,
+        newClass: this.className
+      });
+    },
     selectSession(selsession) {
       this.$router.push(
         "/" +
@@ -305,6 +339,7 @@ export default {
       this.$store.commit("school/deselectClass");
     },
     submitSession() {
+      console.log(this.select);
       this.$store.dispatch("school/addSession", {
         data: this.addSession,
         class: this.SelectedClass
