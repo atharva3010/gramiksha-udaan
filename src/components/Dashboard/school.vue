@@ -228,6 +228,11 @@
                       Module :
                       <b>{{session.title}}</b>
                     </h3>
+
+                    <h3 style="font-weight:300;">
+                      Volunteers :
+                      <b>{{volunteer}}</b>
+                    </h3>
                   </v-card-text>
                 </v-flex>
               </v-layout>

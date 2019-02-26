@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="text-xs-center display-2 font-weight-light text-capitalize">Chapters</div>
+    <!-- <div class="text-xs-center display-2 font-weight-light text-capitalize">Chapters</div> -->
     <v-layout justify-space-between justify-space-around align-center wrap>
       <v-flex v-if="loading['cities']" sm12>
         <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-regular">
@@ -19,7 +19,7 @@
               <v-img style="padding-top:50%;max-height:225px;min-height:225px;" :src="city.imgURL">
                 <v-layout align-end fill-height pa-3 white--text>
                   <div>
-                    <div class="font-weight-light display-1">{{city.name}}</div>
+                    <div class="font-weight-light display-1">{{city.name}} Chapter</div>
                     <div class="font-weight-light subheading">Click to see schools.</div>
                   </div>
                 </v-layout>
