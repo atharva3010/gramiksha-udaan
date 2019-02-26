@@ -6,6 +6,9 @@
           <h1>{{school.name}}</h1>
           <h2 style="font-weight:300">{{school.address}}, {{school.city}}</h2>
           <p>Total No of Students : {{school.total}}</p>
+          <v-btn dark color="purple" href="https://www.google.com/maps/dir/26.204889,78.1975869/sanjay+gandhi+middle+school+bhopal/@24.289795,77.0849308,7.4z/data=!4m9!4m8!1m1!4e1!1m5!1m1!1s0x397c425b64d669cd:0x7d735b12e48b76a2!2m2!1d77.4336499!2d23.2253308">
+            Get Directions
+          </v-btn>
         </div>
       </v-flex>
       <v-flex v-if="!loading['school']" sm8 xs12>
