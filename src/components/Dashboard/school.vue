@@ -28,8 +28,7 @@
     <div v-if="SelectedClass==null">
       <v-layout row>
         <h2
-          v-if="Object.entries(classes).length === 0 && classes.constructor === Object
-"
+          v-if="Object.entries(classes).length === 0 && classes.constructor === Object"
           style="font-weight:300;margin-left:15px;"
           class="orange--text"
         >No Classes Added</h2>
