@@ -50,7 +50,7 @@
                   type="text"
                 ></v-text-field>
               </v-flex>
-              <v-btn @click="addClass">Add Class</v-btn>
+              <v-btn @click="submitClass">Add Class</v-btn>
             </v-form>
           </v-card>
         </v-dialog>
@@ -231,12 +231,20 @@
                       <b>{{session.title}}</b>
                     </h3>
 
-                    <h3 style="font-weight:300;">
-                      Volunteers :
-                      <b>{{volunteer}}</b>
-                    </h3>
+                
                   </v-card-text>
                 </v-flex>
+                
+              </v-layout>
+              <v-layout row>
+<v-flex xs12>
+   <v-card-text>
+                    <h3 style="font-weight:300;">
+                      Volunteers :
+                     <div > <b>{{session.volunteer}}</b></div>
+                    </h3>
+   </v-card-text>
+</v-flex>
               </v-layout>
             </v-card>
           </div>
@@ -302,7 +310,10 @@ export default {
   watch: {
     refresh(newval, oldval) {
       if (newval)
-        this.$store.dispatch("school/getSessions", this.SelectedClass);
+        this.$store.dispatch("school/getSessions", {class:cls,
+      school: this.$route.params.school,
+        city: this.$route.params.city,
+      });
     }
   },
   created() {
@@ -319,7 +330,7 @@ export default {
       });
   },
   methods: {
-    addClass() {
+    submitClass() {
       console.log(className);
       this.$store.dispatch("school/addClass", {
         school: this.$route.params.school,
@@ -340,16 +351,21 @@ export default {
       );
     },
     SelectClass(cls) {
-      this.$store.dispatch("school/getSessions", cls);
+      this.$store.dispatch("school/getSessions", {class:cls,
+      school: this.$route.params.school,
+        city: this.$route.params.city,
+      });
     },
     deselectClass() {
       this.$store.commit("school/deselectClass");
     },
     submitSession() {
-      console.log(this.select);
+
       this.$store.dispatch("school/addSession", {
         data: this.addSession,
-        class: this.SelectedClass
+        class: this.SelectedClass,
+        school: this.$route.params.school,
+        city: this.$route.params.city,
       });
       this.dialog = false;
     },

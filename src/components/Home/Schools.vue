@@ -110,7 +110,8 @@
           address: '',
           classes: '',
           contact: '',
-          principalname: ''
+          principalname: '',
+          imgurl:'https://i.ndtvimg.com/i/2018-04/delhi-school-photo_650x400_61524588287.jpg'
         }
       };
     },

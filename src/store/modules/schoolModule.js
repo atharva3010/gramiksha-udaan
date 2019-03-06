@@ -1,10 +1,6 @@
 import {
   db
 } from "@/scripts/firebase";
-import {
-  resolve
-} from "url";
-
 export default {
   namespaced: true,
   state: {
@@ -44,23 +40,31 @@ export default {
       state.loading["classes"] = true;
       var classRef = db.collection(
         "cities/" +
-        state.currentcity +
+        payload.city +
         "/schools/" +
-        state.currentschoolname +
+        payload.school +
         "/classes/" +
-        payload +
+        payload.class +
         "/sessions"
       );
       classRef.get().then(doc => {
-        state.SelectedClass = payload;
-        state.currentschool.classes[payload].sessions = [];
+        state.SelectedClass = payload.class;
+        
+        state.currentschool.classes[payload.class].sessions = [];
         if (doc.docs.length > 0)
           doc.docs.forEach(function (sessiondoc, index) {
             let sessiondata = sessiondoc.data();
-            state.currentschool.classes[payload].sessions.unshift({
+            let volunteer="";
+            sessiondata.volunteers.forEach(username=>{
+              volunteer+=`${username} `;
+            })
+            sessiondata.volunteers
+    
+            state.currentschool.classes[payload.class].sessions.unshift({
               no: parseInt(sessiondoc.id),
               title: sessiondata.title,
-              date: sessiondata.date
+              date: sessiondata.date,
+              volunteer
             });
             state.loading["classes"] = false;
           });
@@ -81,14 +85,14 @@ export default {
         .doc(payload.school);
 
       schoolsRef.get().then(doc => {
-        console.log(doc.data())
+        
         state.currentschool.name = doc.id;
         state.currentschool.imgURL = doc.data().imgurl;
         state.currentschool.address = doc.data().address;
         state.currentschool.total = doc.data().total;
         state.currentschool.city = state.currentcity;
         return db.collection(
-            "cities/" + state.currentcity + "/schools/" + doc.id + "/classes"
+            "cities/" +  payload.city + "/schools/" + doc.id + "/classes"
           )
           .get()
       }).then(classdata => {
@@ -102,7 +106,7 @@ export default {
             classitr.id +
             "/sessions"
           ).get().then(function (docx) {
-            console.log(docx)
+            
             var noofsssion = docx.docs.length;
             state.currentschool.classes = {
               ...state.currentschool.classes,
@@ -122,7 +126,7 @@ export default {
       })
     },
     pushSession(state, payload) {
-      console.log(payload)
+      
       state.loading["classes"] = true;
       var today = new Date();
       var dd = today.getDate();
@@ -132,11 +136,11 @@ export default {
 
       var sessionref = db.collection(
         "cities/" +
-        state.currentcity +
+        payload.city +
         "/schools/" +
-        state.currentschoolname +
+        payload.school+
         "/classes/" +
-        state.SelectedClass +
+       payload.class+
         "/sessions"
       );
 
@@ -151,15 +155,8 @@ export default {
         .get()
         .then(classdoc => {
           classdoc.data();
-          var vol = [];
-          payload.data.volunteer.forEach(element => {
-            db.collection("users/")
-              .doc(element)
-              .get()
-              .then(doc => {
-                if (doc.exists) vol.push(doc.data().uid);
-              });
-          });
+          var vol =  payload.data.volunteer;
+   
           sessionref.get().then(doc => {
             payload.data = {
               title: payload.data.title,
@@ -190,8 +187,10 @@ export default {
     addClass({
       commit
     }, payload) {
-      console.log(payload)
-      return db.collection(`city/${payload.city}/schools/${payload.school}/classes`).doc(payload.newClass)
+      return new Promise((resolve,reject)=>{
+        db.collection(`cities/${payload.city}/schools/${payload.school}/classes`).doc(payload.newClass).set({strength:"0"}).then(resolve())
+      })
+       
     },
     getSessions({
       commit
@@ -217,6 +216,7 @@ export default {
       return state.refresh;
     },
     getSelectedClass(state) {
+      
       return state.SelectedClass;
     },
     getSchoolDetails(state) {
@@ -229,6 +229,7 @@ export default {
       };
     },
     getSchoolClasses(state) {
+      
       return state.currentschool.classes;
     },
     getsnackbar(state) {
