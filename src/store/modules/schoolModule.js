@@ -27,7 +27,8 @@ export default {
       city: "",
       imgURL: "",
       total: 0,
-      classes: {}
+      classes: {},
+      location:''
     }
   },
   mutations: {
@@ -78,6 +79,7 @@ export default {
       state.currentschool.total = "";
       state.currentschool.city = "";
       state.currentschool.classes = {};
+      state.currentschool.location = '';
       state.snackbar.bar = false;
       state.loading["school"] = true;
       var schoolsRef = db
@@ -91,6 +93,9 @@ export default {
         state.currentschool.address = doc.data().address;
         state.currentschool.total = doc.data().total;
         state.currentschool.city = state.currentcity;
+        if(doc.data().location){
+          state.currentschool.location=doc.data().location
+        }
         return db.collection(
             "cities/" +  payload.city + "/schools/" + doc.id + "/classes"
           )
@@ -225,7 +230,8 @@ export default {
         address: state.currentschool.address,
         url: state.currentschool.imgURL,
         city: state.currentschool.city,
-        total: state.currentschool.total
+        total: state.currentschool.total,
+        location: state.currentschool.location
       };
     },
     getSchoolClasses(state) {
