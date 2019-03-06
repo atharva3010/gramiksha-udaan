@@ -73,22 +73,24 @@
         <v-tab ripple>Assessment</v-tab>
         <v-tab-item>
           <v-card style="padding:25px;">
-            <v-textarea
+            <!-- <v-textarea
               v-if="editLessonPlan"
               :disabled="loading['lessonplan']"
               solo
               v-model="lessonplan.data"
               label="Write Lesson plan here"
-            ></v-textarea>
-            <p
+            ></v-textarea>-->
+            <froala class="px-5" :config="config" v-if="editLessonPlan" v-model="lessonplan.data"></froala>
+
+            <froalaView v-model="lessonplan.data" v-else></froalaView>
+            <!-- <p
               v-if="!editLessonPlan && lessonplan.data != ''"
               class="font-weight-light headline"
-            >{{lessonplan.data}}</p>
-            <p
+            >{{lessonplan.data}}</p>-->
+            <!-- <p
               v-if="!editLessonPlan && lessonplan.data == ''"
               class="font-weight-light headline"
-            >Please add a Lesson Plan.</p>
-
+            >Please add a Lesson Plan.</p>-->
             <v-btn
               color="primary"
               v-if="!editLessonPlan && lessonplan.data != ''"
@@ -276,10 +278,18 @@
 </template>
 
 <script>
+import VueFroala from "vue-froala-wysiwyg";
 import { mapState } from "vuex";
 export default {
   data() {
     return {
+      config: {
+        events: {
+          "froalaEditor.initialized": function() {
+            console.log("initialized");
+          }
+        }
+      },
       addStudentsList: [
         {
           name: ""

@@ -213,6 +213,8 @@ export default {
       addSession: {
         volNo: 1,
         title: "",
+        lessonplan:
+          '<p><span style="font-size: 24px; font-family: Arial, Helvetica, sans-serif;">Add Lession Plan Here</span></p>',
         volunteer: [
           {
             no: 1,

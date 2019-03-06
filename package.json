@@ -17,6 +17,7 @@
     "firebase": "^5.5.0",
     "firebase-functions": "^2.1.0",
     "vue": "^2.5.2",
+    "vue-froala-wysiwyg": "^2.9.2",
     "vue-router": "^3.0.1",
     "vue-style-loader": "^3.1.2",
     "vuetify": "^1.2.4",

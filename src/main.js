@@ -5,17 +5,27 @@ import App from "./App";
 import router from "./router";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
-import {
-  store
-} from "./store";
+import { store } from "./store";
 import "@/scripts/firebase";
 import AlertCmp from "./components/Shared/Alert.vue";
 import divider from "./components/Shared/divider.vue";
 import signout from "./components/Shared/signedout.vue";
+// Require Froala Editor js file.
+require("froala-editor/js/froala_editor.pkgd.min");
+
+// Require Froala Editor css files.
+require("froala-editor/css/froala_editor.pkgd.min.css");
+require("font-awesome/css/font-awesome.css");
+require("froala-editor/css/froala_style.min.css");
+
+// Import and use Vue Froala lib.
+import VueFroala from "vue-froala-wysiwyg";
+Vue.use(VueFroala);
+
 Vue.use(Vuetify);
 Vue.component("app-alert", AlertCmp);
 Vue.component("Divider", divider);
-Vue.component('signedout', signout);
+Vue.component("signedout", signout);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
