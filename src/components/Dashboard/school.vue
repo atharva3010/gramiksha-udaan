@@ -254,7 +254,7 @@
           <h3
             class="font-weight-light display-1 pt-4"
             style="text-align:center"
-          >No Sessions Have Been Added Yet.
+          >No sessions have been added yet.
             <br>
             <v-btn color="primary" flat @click="dialog = true">Add Session</v-btn>
           </h3>
@@ -311,7 +311,7 @@ export default {
   watch: {
     refresh(newval, oldval) {
       if (newval)
-        this.$store.dispatch("school/getSessions", {class:cls,
+        this.$store.dispatch("school/getSessions", {class:this.SelectedClass,
       school: this.$route.params.school,
         city: this.$route.params.city,
       });
