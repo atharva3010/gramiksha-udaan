@@ -88,7 +88,8 @@ export default {
               reject("This Email Belongs to another User")
             } else {
               return db.collection("/unverified").add({
-                email: payload
+                email: payload.email,
+                post:payload.post
               })
             }
           }).then(() => {
