@@ -3,4 +3,5 @@ import {
 } from "@/scripts/firebase";
 export default {
     namespaced:true,
+
 }
