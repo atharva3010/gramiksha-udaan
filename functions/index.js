@@ -6,13 +6,17 @@ admin.initializeApp();
 var auth = admin.auth();
 exports.createUser = functions.firestore
   .document("unverified/{uid}")
-  .onCreate((data, context) => {
-    var newUser = data.data();
+  .onCreate((data, context) => {var newUser = data.data();
+    var isvol=newUser.post==="vol"
+    var isprog=!isvol;
     return auth
       .createUser({
         email: newUser.email,
         emailVerified: false,
         disabled: false,
+      }).then((createdUser)=>{
+        return admin.auth().setCustomUserClaims(     createdUser.uid, {isvol,isprog})
+   
       })
       .then(() => {
         return auth.generateSignInWithEmailLink(newUser.email, {
