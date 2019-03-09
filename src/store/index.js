@@ -4,7 +4,8 @@ import Vuex from "vuex";
 import user from "./modules/userModule.js";
 import school from "./modules/schoolModule.js";
 import students from "./modules/students.js";
-import city from "./modules/city.js"
+import city from "./modules/city.js";
+import images from "./modules/images.js"
 Vue.use(Vuex);
 const vuexPersist = new VuexPersist({
   storage: window.localStorage
@@ -16,6 +17,7 @@ export const store = new Vuex.Store({
     user,
     school,
     students,
-    city
+    city,
+    images
   }
 });

@@ -27,7 +27,17 @@
       <v-flex xs12 class="text-xs-center pb-2">
         <img src="/static/images/profile/profile.svg" width="150" alt>
         <br>
-        <v-btn color="primary">Edit Profile Picture</v-btn>
+        <v-btn color="primary" @click="uploadCard=true">Edit Profile Picture</v-btn>
+        <v-dialog v-model="uploadCard" width="525">
+          <v-card id="upload" color="primary" dark>
+            <v-card-title class="font-weight-light display-1">Please select a file to upload.</v-card-title>
+            <div style="padding:20px;">
+              <input type="file" @change="onFileSelected" accept="image/*">
+            </div>
+            <v-btn color="green left" dark>Submit</v-btn>
+            <v-btn color="red right" dark @click="uploadCard=false">Cancel</v-btn>
+          </v-card>
+        </v-dialog>
       </v-flex>
       <v-flex xs6>
         <v-layout row wrap>
@@ -183,6 +193,7 @@ export default {
   },
   data() {
     return {
+      uploadCard: false,
       date: new Date().toISOString().substr(0, 10),
       menu: false,
       modal: false,
@@ -212,6 +223,9 @@ export default {
     };
   },
   methods: {
+    onFileSelected(event){
+      console.log(event)
+    },
     closePasswordDialog() {
       this.$refs.changePasswordForm.reset();
       this.changePassword.old = "";
@@ -253,4 +267,8 @@ export default {
 </script>
 
 <style>
+#upload{
+  padding: 15px;
+  margin: 15px;
+}
 </style>
