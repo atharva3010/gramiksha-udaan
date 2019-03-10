@@ -1,8 +1,4 @@
-import {
-  firebase,
-  db
-} from "@/scripts/firebase";
-
+import { firebase, db } from "@/scripts/firebase";
 
 export default {
   namespaced: true,
@@ -67,7 +63,7 @@ export default {
       payload.forEach(element => {
         var usersref = db.collection("users");
         var query = usersref.where("username", "==", element.user);
-        query.get().then(function (QuerySnapshot) {
+        query.get().then(function(QuerySnapshot) {
           if (QuerySnapshot.empty) {
             state.userExists[element.no] = false;
           } else {
@@ -78,50 +74,80 @@ export default {
     }
   },
   actions: {
-    addUser({
-      commit
-    }, payload) {
+    updateUserDetails: async ({ commit }, payload) => {
+      var _this = this;
+      return new Promise(async (resolve, reject) => {
+        let user = firebase.auth().currentUser;
+        await db
+          .collection("/users")
+          .doc(
+            JSON.parse(localStorage.getItem("gramiksha-udaan:userDetails"))
+              .username
+          )
+          .update({
+            ...payload
+          });
+        var docef = db
+          .collection("users")
+          .doc(
+            JSON.parse(localStorage.getItem("gramiksha-udaan:userDetails"))
+              .username
+          );
+        await docef
+          .get()
+          .then(function(doc) {
+            commit("setUser", user.user);
+            commit("setUserDetails", doc.data());
+            commit("setSignedIn", true);
+            resolve();
+          })
+          .catch(function(error) {
+            reject(error);
+          });
+      });
+    },
+    addUser({ commit }, payload) {
       return new Promise((resolve, reject) => {
-        db.collection("/users").where("email",
-            "==", payload).get().then((doc) => {
+        db.collection("/users")
+          .where("email", "==", payload)
+          .get()
+          .then(doc => {
             if (!doc.empty) {
-              reject("This Email Belongs to another User")
+              reject("This Email Belongs to another User");
             } else {
               return db.collection("/unverified").add({
                 email: payload.email,
-                post:payload.post
-              })
+                post: payload.post
+              });
             }
-          }).then(() => {
-            resolve()
+          })
+          .then(() => {
+            resolve();
           })
           .catch(err => {
-            reject(err)
-          })
-      })
+            reject(err);
+          });
+      });
     },
-    signInWithLink({
-      commit
-    }, payload) {
-      let link = window.location.href
+    signInWithLink({ commit }, payload) {
+      let link = window.location.href;
       return new Promise((resolve, reject) => {
         if (firebase.auth().isSignInWithEmailLink(link)) {
-          firebase.auth().signInWithEmailLink(payload, link)
-            .then((user) => {
-              console.log(user)
-              commit("setUser", user.user)
-              return resolve()
-            }).catch((err) => reject(err))
+          firebase
+            .auth()
+            .signInWithEmailLink(payload, link)
+            .then(user => {
+              console.log(user);
+              commit("setUser", user.user);
+              return resolve();
+            })
+            .catch(err => reject(err));
         } else {
-          reject("Invalid Sign In")
+          reject("Invalid Sign In");
         }
-      })
-
+      });
     },
-    SignUserIn({
-      commit,
-      dispatch
-    }, payload) {
+    SignUserIn({ commit, dispatch }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -129,16 +155,16 @@ export default {
         firebase
           .auth()
           .signInWithEmailAndPassword(payload.email, payload.password)
-          .then(function (user) {
+          .then(function(user) {
             var usersRef = db.collection("users");
             usersRef
               .where("uid", "==", user.user.uid)
               .get()
-              .then(function (qs) {
+              .then(function(qs) {
                 var docef = db.collection("users").doc(qs.docs[0].id);
                 docef
                   .get()
-                  .then(function (doc) {
+                  .then(function(doc) {
                     commit("setUser", user.user);
                     commit("setUserDetails", doc.data());
                     commit("setSignedIn", true);
@@ -157,7 +183,7 @@ export default {
         var docRef = db.collection("users").doc(payload.email);
         docRef
           .get()
-          .then(function (doc) {
+          .then(function(doc) {
             if (doc.exists) {
               firebase
                 .auth()
@@ -169,11 +195,11 @@ export default {
                     .get()
                     .then(qs => {
                       (docRef = db.collection("users").doc(qs.docs[0].id)),
-                      docRef.get().then(function (doc) {
-                        commit("setUser", user.user);
-                        commit("setUserDetails", doc.data());
-                        commit("setSignedIn", true);
-                      });
+                        docRef.get().then(function(doc) {
+                          commit("setUser", user.user);
+                          commit("setUserDetails", doc.data());
+                          commit("setSignedIn", true);
+                        });
                     });
                 })
                 .catch(error => {
@@ -188,7 +214,7 @@ export default {
               commit("setError", error);
             }
           })
-          .catch(function (error) {
+          .catch(function(error) {
             commit("setLoading", false);
             error => {
               message: "Can't access Server";
@@ -197,11 +223,7 @@ export default {
           });
       }
     },
-    SignUserup({
-      commit,
-      dispatch,
-      state
-    }, payload) {
+    SignUserup({ commit, dispatch, state }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var userDetails = {
@@ -211,8 +233,10 @@ export default {
         username: payload.username,
         accessLevel: 0
       };
-      db.collection("/users").doc(payload.username).set(userDetails)
-        .then(function () {
+      db.collection("/users")
+        .doc(payload.username)
+        .set(userDetails)
+        .then(function() {
           commit("setLoading", false);
           commit("setUser", state.user);
           commit("setUserDetails", userDetails);
@@ -221,17 +245,13 @@ export default {
           commit("setSignedIn", true);
         })
 
-
         .catch(error => {
           commit("setLoading", false);
           commit("setError", error);
         });
     },
-    resetPassword({
-      commit
-    }, payload) {
-
-      var id = payload
+    resetPassword({ commit }, payload) {
+      var id = payload;
 
       return new Promise((resolve, reject) => {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -240,59 +260,55 @@ export default {
             .auth()
             .sendPasswordResetEmail(id)
             .then(() => {
-              resolve()
+              resolve();
             })
             .catch(error => {
-              console.log(error)
-              reject(error)
+              console.log(error);
+              reject(error);
             });
         } else {
           var docRef = db.collection("users").doc(id);
           docRef
             .get()
-            .then(function (doc) {
+            .then(function(doc) {
               if (doc.exists) {
                 return firebase.auth().sendPasswordResetEmail(doc.data().email);
               }
             })
             .then(() => {
-              resolve()
+              resolve();
             })
             .catch(error => {
-              console.log(error)
-              reject(error)
+              console.log(error);
+              reject(error);
             });
         }
-      })
+      });
     },
-    getUsernamesFromCity({
-      commit
-    }, payload) {
-
+    getUsernamesFromCity({ commit }, payload) {
       return new Promise((resolve, reject) => {
-
-        var usersnames = []
-        db.collection("/users").where('city', "==", payload).get().then(res => {
-          res.docs.forEach(element => {
-            usersnames.push(element.id)
+        var usersnames = [];
+        db.collection("/users")
+          .where("city", "==", payload)
+          .get()
+          .then(res => {
+            res.docs.forEach(element => {
+              usersnames.push(element.id);
+            });
+            resolve(usersnames);
           })
-          resolve(usersnames)
-        }).catch((err) => {
-          reject(err)
-        })
-      })
-
+          .catch(err => {
+            reject(err);
+          });
+      });
     },
-    async logout({
-      commit
-    }) {
+    async logout({ commit }) {
       return new Promise(
-        await
-        function (resolve, reject) {
+        await function(resolve, reject) {
           firebase
             .auth()
             .signOut()
-            .then(function () {
+            .then(function() {
               commit("setUser", null);
               commit("setLoading", false);
               commit("setSignedIn", false);
@@ -301,44 +317,34 @@ export default {
               commit("setAccessLevel", -1);
               resolve();
             })
-            .catch(function (error) {
+            .catch(function(error) {
               reject(error);
             });
         }
       );
     },
-    clearError({
-      commit
-    }) {
+    clearError({ commit }) {
       commit("clearError");
     },
-    updatePassword({
-      commit
-    }, payload) {
-
+    updatePassword({ commit }, payload) {
       const oldPassword = payload.old;
       const newPassword = payload.reNew;
-      return new Promise(
-        (resolve, reject) => {
-
-          firebase
-            .auth()
-            .signInWithEmailAndPassword(this.state.user.user.email, oldPassword)
-            .then(() => {
-              return firebase
-                .auth()
-                .currentUser
-                .updatePassword(newPassword)
-            })
-            .then(() => {
-              console.log("yes")
-              resolve();
-            })
-            .catch(error => {
-              console.log(error)
-              reject(error)
-            });
-        })
+      return new Promise((resolve, reject) => {
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(this.state.user.user.email, oldPassword)
+          .then(() => {
+            return firebase.auth().currentUser.updatePassword(newPassword);
+          })
+          .then(() => {
+            console.log("yes");
+            resolve();
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error);
+          });
+      });
     }
   },
   getters: {

@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <app-alert></app-alert>
     <v-navigation-drawer
       class="nav-drawer"
       fixed
@@ -113,6 +114,7 @@
 
 
 <script>
+import Alert from "@/components/Global/Alert";
 export default {
   name: "App",
   data() {
@@ -122,6 +124,9 @@ export default {
       isMob: false,
       padStyle: "padding-left: 0"
     };
+  },
+  components: {
+    "app-alert": Alert
   },
   mounted() {
     this.onResize();

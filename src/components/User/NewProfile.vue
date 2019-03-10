@@ -25,29 +25,70 @@
     </v-layout>-->
     <v-layout column wrap>
       <v-flex xs12 class="text-xs-center pb-2">
-        <img src="/static/images/profile/profile.svg" width="150" alt>
+        <img
+          v-if="user.profilePic !== undefined && user.profilePic !== ''"
+          :src="user.profilePic"
+          width="150"
+          alt
+        >
+        <img v-else src="/static/images/profile/profile.svg" width="150" alt>
         <br>
         <v-btn color="primary" @click="uploadCard=true">Edit Profile Picture</v-btn>
         <v-dialog v-model="uploadCard" width="525">
           <v-card id="upload" dark wrap>
-            <v-card-title class="font-weight-light display-1">Please select a file to upload.</v-card-title>
-            <input 
-            type="file" 
-            @change="onFileSelected" 
-            accept="image/*"
-            ref="fileInput"
-            style="display:none"
-            >
-            <v-btn @click="$refs.fileInput.click()" color="purple" class="left mb-3" dark>Pick File</v-btn>
-            <v-btn color="green" class="mb-3" dark @click="onUpload">Upload</v-btn>
-            <v-btn color="red" class="mb-3 right" dark @click="uploadCard=false">Cancel</v-btn>
+            <v-card-title class="font-weight-light display-1">
+              <div v-if="selectedFile === null">Please select a file to upload.</div>
+              <div v-else>{{selectedFile.name}}</div>
+            </v-card-title>
+            <v-card-text>
+              <input
+                type="file"
+                @change="onFileSelected"
+                accept="image/*"
+                ref="fileInput"
+                style="display:none"
+              >
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                @click="$refs.fileInput.click()"
+                v-if="selectedFile === null"
+                color="purple"
+                class="left mb-3"
+                dark
+              >Pick File</v-btn>
+              <v-btn
+                color="green"
+                :loading="profilePicLoading"
+                class="mb-3"
+                v-else
+                dark
+                @click="onUpload"
+              >Upload</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue"
+                class="mb-3"
+                :disabled="profilePicLoading"
+                v-if="selectedFile !== null"
+                dark
+                @click="selectedFile=null;"
+              >Clear Files</v-btn>
+              <v-btn
+                color="red"
+                :disabled="profilePicLoading"
+                class="mb-3"
+                dark
+                @click="uploadCard=false; selectedFile=null;"
+              >Cancel</v-btn>
+            </v-card-actions>
           </v-card>
         </v-dialog>
       </v-flex>
       <v-flex xs6>
         <v-layout row wrap>
           <v-flex sm9 class="pb-3">
-          <h1 class="font-weight-light display-1 pb-3 pt-3">Basic Information:</h1>
+            <h1 class="font-weight-light display-1 pb-3 pt-3">Basic Information:</h1>
           </v-flex>
           <v-flex xs12 sm6 class="pb-3">
             <h3 class="title font-weight-regular">
@@ -83,50 +124,44 @@
             <v-btn dark color="red" @click="passwordDialog = true">Update Password</v-btn>
           </v-flex>
           <v-layout row wrap>
-      <v-menu
-        ref="menu"
-        v-model="menu"
-        :close-on-content-click="false"
-        :nudge-right="40"
-        :return-value.sync="date"
-        lazy
-        transition="scale-transition"
-        offset-y
-        full-width
-        min-width="290px"
-        >
-      </v-menu>
-      <v-flex sm3 class="pb-3">
-        <v-dialog
-          ref="dialog"
-          v-model="modal"
-          :return-value.sync="date"
-          persistent
-          lazy
-          full-width
-          width="290px"
-        >
-          <v-text-field
-            slot="activator"
-            v-model="date"
-            label="Date of Birth"
-            prepend-icon="event"
-            persistent-hint
-            hint="YYYY/MM/DD format"
-          ></v-text-field>
-          <v-date-picker 
-          v-model="date" 
-          scrollable
-          reactive
-          color="purple"
-          >
-          <v-spacer></v-spacer>
-          <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-          <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
-        </v-date-picker>
-        </v-dialog>
-      </v-flex>
-      </v-layout>
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              :return-value.sync="date"
+              lazy
+              transition="scale-transition"
+              offset-y
+              full-width
+              min-width="290px"
+            ></v-menu>
+            <v-flex sm3 class="pb-3">
+              <v-dialog
+                ref="dialog"
+                v-model="modal"
+                :return-value.sync="date"
+                persistent
+                lazy
+                full-width
+                width="290px"
+              >
+                <v-text-field
+                  slot="activator"
+                  v-model="date"
+                  label="Date of Birth"
+                  prepend-icon="event"
+                  persistent-hint
+                  hint="YYYY/MM/DD format"
+                ></v-text-field>
+                <v-date-picker v-model="date" scrollable reactive color="purple">
+                  <v-spacer></v-spacer>
+                  <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
+                  <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+                </v-date-picker>
+              </v-dialog>
+            </v-flex>
+          </v-layout>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -212,6 +247,7 @@ export default {
       },
       snackbar: false,
       passwordLoading: false,
+      profilePicLoading: false,
       message: "",
       showPassword: false,
       rules: {
@@ -229,19 +265,31 @@ export default {
     };
   },
   methods: {
-    onUpload(){
-      var user = firebase.auth().currentUser;
+    async onUpload() {
+      this.profilePicLoading = true;
+      var _this = this;
+      var user = this.$auth.currentUser;
       var file = this.selectedFile;
-
+      // console.log(file);
       // Create a Storage Ref w/ username
-      var storageRef = firebase.storage().ref(user.email + '/profilePicture/' + file.name);
+      var storageRef = this.$storage.ref(
+        "/profilePictures/" + user.email + "/profilepic.jpg"
+      );
 
       // Upload file
-      var task = storageRef.put(file);
-      console.log(task);
+      var task = await storageRef.put(file);
+      var dURL = await storageRef.getDownloadURL();
+      await this.$store.dispatch("user/updateUserDetails", {
+        profilePic: dURL
+      });
+      _this.profilePicLoading = false;
+      _this.selectedFile = null;
+      _this.uploadCard = false;
+      _this.$store.dispatch("setAlert", "Profile picture added successfully.");
     },
-    onFileSelected(event){
-      this.selectedFile = event.target.files[0]
+    onFileSelected(event) {
+      console.log("fired");
+      this.selectedFile = event.target.files[0];
     },
     closePasswordDialog() {
       this.$refs.changePasswordForm.reset();
@@ -284,7 +332,7 @@ export default {
 </script>
 
 <style>
-#upload{
+#upload {
   padding: 15px;
   margin: 15px;
 }

@@ -82,7 +82,13 @@
             ></v-textarea>-->
             <froala class="px-5" :config="config" v-if="editLessonPlan" v-model="lessonplan.data"></froala>
 
-            <froalaView v-model="lessonplan.data" v-else></froalaView>
+            <froalaView
+              v-model="lessonplan.data"
+              v-if="(lessonplan.data != undefined || lessonplan.data == '') && !editLessonPlan"
+            ></froalaView>
+            <p
+              v-if="!editLessonPlan && (lessonplan.data == undefined || lessonplan.data == '')"
+            >Enter Lesson Plan here.</p>
             <!-- <p
               v-if="!editLessonPlan && lessonplan.data != ''"
               class="font-weight-light headline"
@@ -377,6 +383,9 @@ export default {
       });
     },
     pushLessonPlan() {
+      if(this.lessonplan.data === undefined) {
+        this.lessonplan.data = ""
+      }
       if (this.$store.dispatch("students/pushLessonPlan", this.lessonplan)) {
         this.editLessonPlan = false;
       }
