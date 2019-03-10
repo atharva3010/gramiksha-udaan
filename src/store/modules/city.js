@@ -77,7 +77,7 @@ export default {
         (resolve,reject)=>{
           
           db.collection("/cities/"+payload.city+"/schools").doc(payload.data.name).set(payload.data).then(
-       ()=>{   return  resolve()}
+        ()=>{   return  resolve()}
           ).catch((err)=>{return reject(err)})
         }
       )

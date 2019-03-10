@@ -1,4 +1,4 @@
- <template>
+<template>
   <div>
     <h1 class="font-weight-regular">Dashboard</h1>
     <h1 class="font-weight-thin">{{user.name}}</h1>

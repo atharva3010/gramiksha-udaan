@@ -4,12 +4,12 @@ import CitiesHome from "@/components/Home/Cities";
 import CitySchools from "@/components/Home/Schools";
 import signup from "@/components/User/signup";
 import login from "@/components/User/Login";
-import signupmsg from "@/components/User/signupmsg";
-import Dashboard from "@/components/Dashboard/Dashboard";
 import School from "@/components/Dashboard/school";
 import session from "@/components/Dashboard/session";
 import NewProfile from "@/components/User/NewProfile";
-import Profile from "@/components/User/Profile";
+import LoginScreen from "@/components/User/loggerin"
+import addVolunteer from "@/components/User/addVolunteer"
+import addProgramCoordinator from "@/components/User/addProgramCoordinator"
 
 Vue.use(Router);
 
@@ -19,15 +19,23 @@ export default new Router({
       name: "Cities Home",
       component: CitiesHome
     },
-
-    // {
-    //   path: "",
-    //   name: "Dashboard",
-    //   component: Dashboard
-    // },
-
     {
-      path: "/signup",
+      path: "/addVolunteer",
+      name: "Add Volunteer",
+      component: addVolunteer
+    },
+    {
+      path: "/addProgramCoordinator",
+      name: "Add addProgramCoodinator",
+      component: addProgramCoordinator
+    },
+    {
+      path: "/signinWithLink/:email",
+      name: "Signing You In",
+      component: LoginScreen
+    },
+    {
+      path: "/signup/:email",
       name: "Sign Up",
       component: signup
     },
@@ -46,6 +54,7 @@ export default new Router({
     //   name: "Profile",
     //   component: Profile
     // },
+
     {
       path: "/:city/",
       name: "Schools",

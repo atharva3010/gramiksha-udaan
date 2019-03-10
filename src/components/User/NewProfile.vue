@@ -4,7 +4,7 @@
       {{ message }}
       <v-btn color="pink" flat @click="snackbar = false">Close</v-btn>
     </v-snackbar>
-    <div class="text-xs-center display-2 font-weight-light text-capitalize">Profile</div>
+    <div class="text-xs-center display-2 font-weight-light text-capitalize pb-5">Profile</div>
     <!-- <v-layout justify-space-between justify-space-around align-center wrap>
       <v-flex xs12 sm6 md4>
         <div style="margin:10px;">
@@ -23,12 +23,17 @@
         </div>
       </v-flex>
     </v-layout>-->
-    <v-layout row wrap>
-      <v-flex sm3 class="mt-5">
-        <img src="/static/images/profile/profile_man.png" width="200" alt>
+    <v-layout column wrap>
+      <v-flex xs12 class="text-xs-center pb-2">
+        <img src="/static/images/profile/profile.svg" width="150" alt>
+        <br>
+        <v-btn color="primary">Edit Profile Picture</v-btn>
       </v-flex>
-      <v-flex sm9 class="mt-5">
+      <v-flex xs6>
         <v-layout row wrap>
+          <v-flex sm9 class="pb-3">
+          <h1 class="font-weight-light display-1 pb-3 pt-3">Basic Information:</h1>
+          </v-flex>
           <v-flex xs12 sm6 class="pb-3">
             <h3 class="title font-weight-regular">
               Name:
@@ -53,15 +58,60 @@
               <span class="blue--text text--darken-3">{{ user.username }}</span>
             </h4>
           </v-flex>
-          <v-flex xs12 class="pb-3">
+          <v-flex xs12 sm6 class="pb-3">
             <h4 class="title font-weight-regular">
               Email:
               <span class="blue--text text--darken-3">{{user.email}}</span>
             </h4>
           </v-flex>
-          <v-flex xs6>
-            <v-btn dark @click="passwordDialog = true">Update Password</v-btn>
+          <v-flex sm6>
+            <v-btn dark color="red" @click="passwordDialog = true">Update Password</v-btn>
           </v-flex>
+          <v-layout row wrap>
+      <v-menu
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="date"
+        lazy
+        transition="scale-transition"
+        offset-y
+        full-width
+        min-width="290px"
+        >
+      </v-menu>
+      <v-flex sm3 class="pb-3">
+        <v-dialog
+          ref="dialog"
+          v-model="modal"
+          :return-value.sync="date"
+          persistent
+          lazy
+          full-width
+          width="290px"
+        >
+          <v-text-field
+            slot="activator"
+            v-model="date"
+            label="Date of Birth"
+            prepend-icon="event"
+            persistent-hint
+            hint="YYYY/MM/DD format"
+          ></v-text-field>
+          <v-date-picker 
+          v-model="date" 
+          scrollable
+          reactive
+          color="purple"
+          >
+          <v-spacer></v-spacer>
+          <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
+          <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+        </v-date-picker>
+        </v-dialog>
+      </v-flex>
+      </v-layout>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -133,6 +183,10 @@ export default {
   },
   data() {
     return {
+      date: new Date().toISOString().substr(0, 10),
+      menu: false,
+      modal: false,
+      menu2: false,
       passwordDialog: false,
       changePassword: {
         old: "",

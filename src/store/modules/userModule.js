@@ -78,6 +78,45 @@ export default {
     }
   },
   actions: {
+    addUser({
+      commit
+    }, payload) {
+      return new Promise((resolve, reject) => {
+        db.collection("/users").where("email",
+            "==", payload).get().then((doc) => {
+            if (!doc.empty) {
+              reject("This Email Belongs to another User")
+            } else {
+              return db.collection("/unverified").add({
+                email: payload
+              })
+            }
+          }).then(() => {
+            resolve()
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    signInWithLink({
+      commit
+    }, payload) {
+      let link = window.location.href
+      return new Promise((resolve, reject) => {
+        if (firebase.auth().isSignInWithEmailLink(link)) {
+          firebase.auth().signInWithEmailLink(payload, link)
+            .then((user) => {
+              console.log(user)
+              commit("setUser", user.user)
+              return resolve()
+            }).catch((err) => reject(err))
+        } else {
+          reject("Invalid Sign In")
+        }
+      })
+
+    },
     SignUserIn({
       commit,
       dispatch
@@ -159,40 +198,29 @@ export default {
     },
     SignUserup({
       commit,
-      dispatch
+      dispatch,
+      state
     }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var userDetails = {
+        uid: state.user.uid,
         email: payload.email,
         name: payload.name,
         username: payload.username,
-        city: payload.city,
-        wantedPost: payload.ngopost,
-        ngopost: "Joined",
         accessLevel: 0
       };
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(payload.email, payload.password)
-        .then(function (user) {
-          userDetails.uid = user.user.uid;
-          db.collection("users")
-            .doc(payload.username)
-            .set(userDetails)
-            .then(function () {
-              commit("setLoading", false);
-              commit("setUser", user.user);
-              commit("setUserDetails", userDetails);
-              dispatch("setAccessLevel");
-              commit("setSignedUp", true);
-              commit("setSignedIn", true);
-            })
-            .catch(error => {
-              commit("setLoading", false);
-              commit("setError", error);
-            });
+      db.collection("/users").doc(payload.username).set(userDetails)
+        .then(function () {
+          commit("setLoading", false);
+          commit("setUser", state.user);
+          commit("setUserDetails", userDetails);
+          dispatch("setAccessLevel");
+          commit("setSignedUp", true);
+          commit("setSignedIn", true);
         })
+
+
         .catch(error => {
           commit("setLoading", false);
           commit("setError", error);
@@ -235,6 +263,24 @@ export default {
             });
         }
       })
+    },
+    getUsernamesFromCity({
+      commit
+    }, payload) {
+
+      return new Promise((resolve, reject) => {
+
+        var usersnames = []
+        db.collection("/users").where('city', "==", payload).get().then(res => {
+          res.docs.forEach(element => {
+            usersnames.push(element.id)
+          })
+          resolve(usersnames)
+        }).catch((err) => {
+          reject(err)
+        })
+      })
+
     },
     async logout({
       commit

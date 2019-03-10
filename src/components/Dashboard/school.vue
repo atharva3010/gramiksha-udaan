@@ -6,6 +6,12 @@
           <h1>{{school.name}}</h1>
           <h2 style="font-weight:300">{{school.address}}, {{school.city}}</h2>
           <p>Total No of Students : {{school.total}}</p>
+          <v-btn
+            dark
+            color="purple"
+            target="_blank"
+            href="https://www.google.com/maps/dir/26.204889,78.1975869/sanjay+gandhi+middle+school+bhopal/@24.289795,77.0849308,7.4z/data=!4m9!4m8!1m1!4e1!1m5!1m1!1s0x397c425b64d669cd:0x7d735b12e48b76a2!2m2!1d77.4336499!2d23.2253308"
+          >Get Directions</v-btn>
         </div>
       </v-flex>
       <v-flex v-if="!loading['school']" sm8 xs12>
@@ -23,10 +29,37 @@
       </v-flex>
     </v-layout>
     <v-divider style="margin:35px 0px;"></v-divider>
+
     <h1 style="margin-left:15px;">Sessions</h1>
     <div v-if="SelectedClass==null">
-      <h2 style="font-weight:300;margin-left:15px;">Select a Class</h2>
+      <v-layout row>
+        <h2
+          v-if="Object.entries(classes).length === 0 && classes.constructor === Object"
+          style="font-weight:300;margin-left:15px;"
+          class="orange--text"
+        >No Classes Added</h2>
+        <h2 v-else style="font-weight:300;margin-left:15px;">Select a Class</h2>
+        <v-spacer/>
+        <v-dialog v-model="addclass" width="500">
+          <v-card>
+            <v-card-title style="font-weight:300" class="display-1">Add Class</v-card-title>
+            <v-form>
+              <v-flex xs10 offset-xs1>
+                <v-text-field
+                  label="Class Name"
+                  id="className"
+                  v-model="className"
+                  required
+                  type="text"
+                ></v-text-field>
+              </v-flex>
+              <v-btn @click="addClass">Add Class</v-btn>
+            </v-form>
+          </v-card>
+        </v-dialog>
 
+        <v-btn @click="addclass=true">Add Class</v-btn>
+      </v-layout>
       <v-layout wrap row>
         <v-flex v-if="loading['school']" sm12>
           <h2 style=" text-align:center;   padding: 80px 30%;" class="font-weight-thin">
@@ -39,9 +72,9 @@
           </h2>
         </v-flex>
         <v-flex
-          @click="SelectClass(classname)"
-          v-for="(classdata,classname) in classes"
-          :key="classname"
+          @click="SelectClass(className)"
+          v-for="(classdata,className) in classes"
+          :key="className"
           md4
           sm6
           xs12
@@ -51,7 +84,7 @@
               <v-layout row>
                 <v-flex xs6>
                   <v-card-text class="text-xs-center" style="margin-top:10px">
-                    <h2>{{classname}}</h2>
+                    <h2>{{className}}</h2>
                   </v-card-text>
                 </v-flex>
                 <v-flex xs6>
@@ -83,6 +116,7 @@
         </v-flex>
       </v-layout>
     </div>
+
     <div v-else>
       <v-layout row>
         <v-flex v-if="loading['classes']" sm12>
@@ -120,8 +154,31 @@
                 type="text"
               ></v-text-field>
             </v-flex>
+            <v-flex xs10 offset-xs1>
+              <v-combobox
+                v-model="addSession.volunteer"
+                :items="usernamesInCity"
+                chips
+                label="Add Volunteers"
+                multiple
+              >
+                <template slot="selection" slot-scope="data">
+                  <v-chip
+                    :key="JSON.stringify(data.item)"
+                    :selected="data.selected"
+                    :disabled="data.disabled"
+                    class="v-chip--select-multi"
+                    @click.stop="data.parent.selectedIndex = data.index"
+                    @input="data.parent.selectItem(data.item)"
+                  >
+                    <v-avatar class="primary white--text">{{ data.item.slice(0, 1).toUpperCase() }}</v-avatar>
+                    {{ data.item }}
+                  </v-chip>
+                </template>
+              </v-combobox>
+            </v-flex>
 
-            <v-flex v-for="(vol,index) in addSession.volunteer" :key="index" xs10 offset-xs1>
+            <!-- <v-flex v-for="(vol,index) in addSession.volunteer" :key="index" xs10 offset-xs1>
               <div style="display:flex">
                 <v-text-field
                   required
@@ -134,14 +191,13 @@
                   <v-icon>close</v-icon>
                 </v-btn>
               </div>
-            </v-flex>
-
+            </v-flex>-->
             <v-divider></v-divider>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn flat color="primary" @click="sessionAddVol()">add Volunteer</v-btn>
-              <v-spacer></v-spacer>
+              <!-- <v-btn flat color="primary" @click="sessionAddVol()">add Volunteer</v-btn>
+              <v-spacer></v-spacer>-->
               <v-btn type="submit" color="secondary">Submit</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
@@ -177,6 +233,11 @@
                       Module :
                       <b>{{session.title}}</b>
                     </h3>
+
+                    <h3 style="font-weight:300;">
+                      Volunteers :
+                      <b>{{volunteer}}</b>
+                    </h3>
                   </v-card-text>
                 </v-flex>
               </v-layout>
@@ -209,18 +270,17 @@
 export default {
   data() {
     return {
+      className: "",
+      addclass: false,
+      usernamesInCity: [],
+      select: "",
       dialog: false,
       addSession: {
         volNo: 1,
         title: "",
         lessonplan:
           '<p><span style="font-size: 24px; font-family: Arial, Helvetica, sans-serif;">Add Lession Plan Here</span></p>',
-        volunteer: [
-          {
-            no: 1,
-            user: ""
-          }
-        ]
+        volunteer: []
       }
     };
   },
@@ -254,11 +314,23 @@ export default {
     if (!this.$store.getters["user/getIsSignedIn"]) this.$router.push("/login");
     this.$store.commit("school/deselectClass");
     this.$store.dispatch("school/getSchool", {
-      school: this.school.name,
-      class: this.SelectedClass
+      school: this.$route.params.school,
+      city: this.$route.params.city
     });
+    this.$store
+      .dispatch("user/getUsernamesFromCity", this.$route.params.city)
+      .then(users => {
+        this.usernamesInCity = users;
+      });
   },
   methods: {
+    addClass() {
+      this.$store.dispatch("school/addClass", {
+        school: this.$route.params.school,
+        city: this.$route.params.city,
+        newClass: this.className
+      });
+    },
     selectSession(selsession) {
       this.$router.push(
         "/" +
