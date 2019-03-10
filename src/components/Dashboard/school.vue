@@ -6,12 +6,9 @@
           <h1>{{school.name}}</h1>
           <h2 style="font-weight:300">{{school.address}}, {{school.city}}</h2>
           <p>Total No of Students : {{school.total}}</p>
-          <v-btn
-            dark
-            color="purple"
-            target="_blank"
-            href="https://www.google.com/maps/dir/26.204889,78.1975869/sanjay+gandhi+middle+school+bhopal/@24.289795,77.0849308,7.4z/data=!4m9!4m8!1m1!4e1!1m5!1m1!1s0x397c425b64d669cd:0x7d735b12e48b76a2!2m2!1d77.4336499!2d23.2253308"
-          >Get Directions</v-btn>
+          <v-btn dark color="green" :href="school.location">
+            <v-icon>directions</v-icon>Get Directions
+          </v-btn>
         </div>
       </v-flex>
       <v-flex v-if="!loading['school']" sm8 xs12>
@@ -53,7 +50,7 @@
                   type="text"
                 ></v-text-field>
               </v-flex>
-              <v-btn @click="addClass">Add Class</v-btn>
+              <v-btn @click="submitClass">Add Class</v-btn>
             </v-form>
           </v-card>
         </v-dialog>
@@ -233,10 +230,16 @@
                       Module :
                       <b>{{session.title}}</b>
                     </h3>
-
-                    <h3 style="font-weight:300;">
-                      Volunteers :
-                      <b>{{volunteer}}</b>
+                  </v-card-text>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs12>
+                  <v-card-text>
+                    <h3 style="font-weight:300;">Volunteers :
+                      <div>
+                        <b>{{session.volunteer}}</b>
+                      </div>
                     </h3>
                   </v-card-text>
                 </v-flex>
@@ -248,7 +251,7 @@
           <h3
             class="font-weight-light display-1 pt-4"
             style="text-align:center"
-          >No Sessions Have Been Added Yet.
+          >No sessions have been added yet.
             <br>
             <v-btn color="primary" flat @click="dialog = true">Add Session</v-btn>
           </h3>
@@ -307,7 +310,11 @@ export default {
   watch: {
     refresh(newval, oldval) {
       if (newval)
-        this.$store.dispatch("school/getSessions", this.SelectedClass);
+        this.$store.dispatch("school/getSessions", {
+          class: this.SelectedClass,
+          school: this.$route.params.school,
+          city: this.$route.params.city
+        });
     }
   },
   created() {
@@ -324,7 +331,8 @@ export default {
       });
   },
   methods: {
-    addClass() {
+    submitClass() {
+      console.log(className);
       this.$store.dispatch("school/addClass", {
         school: this.$route.params.school,
         city: this.$route.params.city,
@@ -344,7 +352,11 @@ export default {
       );
     },
     SelectClass(cls) {
-      this.$store.dispatch("school/getSessions", cls);
+      this.$store.dispatch("school/getSessions", {
+        class: cls,
+        school: this.$route.params.school,
+        city: this.$route.params.city
+      });
     },
     deselectClass() {
       this.$store.commit("school/deselectClass");
@@ -352,7 +364,9 @@ export default {
     submitSession() {
       this.$store.dispatch("school/addSession", {
         data: this.addSession,
-        class: this.SelectedClass
+        class: this.SelectedClass,
+        school: this.$route.params.school,
+        city: this.$route.params.city
       });
       this.dialog = false;
     },

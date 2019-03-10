@@ -27,7 +27,22 @@
       <v-flex xs12 class="text-xs-center pb-2">
         <img src="/static/images/profile/profile.svg" width="150" alt>
         <br>
-        <v-btn color="primary">Edit Profile Picture</v-btn>
+        <v-btn color="primary" @click="uploadCard=true">Edit Profile Picture</v-btn>
+        <v-dialog v-model="uploadCard" width="525">
+          <v-card id="upload" dark wrap>
+            <v-card-title class="font-weight-light display-1">Please select a file to upload.</v-card-title>
+            <input 
+            type="file" 
+            @change="onFileSelected" 
+            accept="image/*"
+            ref="fileInput"
+            style="display:none"
+            >
+            <v-btn @click="$refs.fileInput.click()" color="purple" class="left mb-3" dark>Pick File</v-btn>
+            <v-btn color="green" class="mb-3" dark @click="onUpload">Upload</v-btn>
+            <v-btn color="red" class="mb-3 right" dark @click="uploadCard=false">Cancel</v-btn>
+          </v-card>
+        </v-dialog>
       </v-flex>
       <v-flex xs6>
         <v-layout row wrap>
@@ -183,6 +198,8 @@ export default {
   },
   data() {
     return {
+      selectedFile: null,
+      uploadCard: false,
       date: new Date().toISOString().substr(0, 10),
       menu: false,
       modal: false,
@@ -212,6 +229,20 @@ export default {
     };
   },
   methods: {
+    onUpload(){
+      var user = firebase.auth().currentUser;
+      var file = this.selectedFile;
+
+      // Create a Storage Ref w/ username
+      var storageRef = firebase.storage().ref(user.email + '/profilePicture/' + file.name);
+
+      // Upload file
+      var task = storageRef.put(file);
+      console.log(task);
+    },
+    onFileSelected(event){
+      this.selectedFile = event.target.files[0]
+    },
     closePasswordDialog() {
       this.$refs.changePasswordForm.reset();
       this.changePassword.old = "";
@@ -253,4 +284,8 @@ export default {
 </script>
 
 <style>
+#upload{
+  padding: 15px;
+  margin: 15px;
+}
 </style>
