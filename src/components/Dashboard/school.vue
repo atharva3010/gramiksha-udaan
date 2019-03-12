@@ -27,7 +27,6 @@
       </v-flex>
     </v-layout>
     <v-divider style="margin:35px 0px;"></v-divider>
-
     <h1 style="margin-left:15px;">Sessions</h1>
     <div v-if="SelectedClass==null">
       <v-layout row>
@@ -91,7 +90,6 @@
                       Students :
                       <b>{{classdata.strength}}</b>
                     </h3>
-
                     <h3 style="font-weight:300;">
                       Sessions :
                       <b>{{classdata.noofsession}}</b>
@@ -114,7 +112,6 @@
         </v-flex>
       </v-layout>
     </div>
-
     <div v-else>
       <v-layout row>
         <v-flex v-if="loading['classes']" sm12>
@@ -134,7 +131,6 @@
       <v-btn v-if="!loading['classes']" @click="deselectClass()">
         <v-icon left>arrow_back</v-icon>Select Class
       </v-btn>
-
       <v-dialog v-if="!loading['classes']" style="float:right;" v-model="dialog" width="500">
         <v-btn slot="activator">
           <v-icon left>add</v-icon>Add Session
@@ -142,7 +138,6 @@
         <v-card>
           <form @submit.prevent="submitSession">
             <v-card-title class="headline grey lighten-2" primary-title>Add Session</v-card-title>
-
             <v-flex xs10 offset-xs1>
               <v-text-field
                 label="Session Title"
@@ -175,7 +170,6 @@
                 </template>
               </v-combobox>
             </v-flex>
-
             <!-- <v-flex v-for="(vol,index) in addSession.volunteer" :key="index" xs10 offset-xs1>
               <div style="display:flex">
                 <v-text-field
@@ -191,7 +185,6 @@
               </div>
             </v-flex>-->
             <v-divider></v-divider>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <!-- <v-btn flat color="primary" @click="sessionAddVol()">add Volunteer</v-btn>
@@ -213,48 +206,15 @@
           xs12
         >
           <div v-if="!loading['classes']">
-            <v-card style="border-radius:8px;margin:15px;" hover>
-              <v-layout row>
-                <v-flex xs6>
-                  <v-card-text class="text-xs-center" style="margin-top:10px">
-                    <h2>Session {{session.no}}</h2>
-                  </v-card-text>
-                </v-flex>
-                <v-flex xs6>
-                  <v-card-text>
-                    <h3 style="font-weight:300;">
-                      Date :
-                      <b>{{session.date}}</b>
-                    </h3>
-
-                    <h3 style="font-weight:300;">
-                      Module :
-                      <b>{{session.title}}</b>
-                    </h3>
-
-                
-                  </v-card-text>
-                </v-flex>
-                
-              </v-layout>
-              <v-layout row>
-<v-flex xs12>
-   <v-card-text>
-                    <h3 style="font-weight:300;">
-                      Volunteers :
-                     <div > <b>{{session.volunteer}}</b></div>
-                    </h3>
-   </v-card-text>
-</v-flex>
-              </v-layout>
-            </v-card>
+            <SessionBox :no="session.no" :date="session.date" :title="session.title" :volunteer="session.volunteer"/>
+       
           </div>
         </v-flex>
-        <v-flex v-if="classes[SelectedClass].sessions.length == 0">
+        <v-flex v-if="classes[SelectedClass].sessions.length == 0  " >
           <h3
             class="font-weight-light display-1 pt-4"
-            style="text-align:center"
-          >No sessions have been added yet.
+            style="text-align:center" >
+            No sessions have been added yet.
             <br>
             <v-btn color="primary" flat @click="dialog = true">Add Session</v-btn>
           </h3>
@@ -273,9 +233,15 @@
 </template>
 
 <script>
+import SessionBox from "./sessionbox"
 export default {
+  components:{
+    SessionBox
+  }
+  ,
   data() {
     return {
+    
       className: "",
       addclass: false,
       usernamesInCity: [],
@@ -299,6 +265,7 @@ export default {
       return this.$store.getters["school/getSchoolDetails"];
     },
     classes() {
+      
       return this.$store.getters["school/getSchoolClasses"];
     },
     SelectedClass() {
@@ -331,13 +298,27 @@ export default {
       });
   },
   methods: {
+    rotateIcon(open){
+console.log(open)
+    },
+    printsss(a){
+      
+console.log(a)
+a.open=!a.open
+    },
     submitClass() {
       console.log(className);
       this.$store.dispatch("school/addClass", {
         school: this.$route.params.school,
         city: this.$route.params.city,
         newClass: this.className
-      });
+      }).then(()=>{
+         this.$store.dispatch("school/getSchool", {
+      school: this.$route.params.school,
+      city: this.$route.params.city
+    });
+    this.addclass=false;
+      })
     },
     selectSession(selsession) {
       this.$router.push(
