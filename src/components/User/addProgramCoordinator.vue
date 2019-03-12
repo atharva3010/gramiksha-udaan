@@ -50,7 +50,7 @@ export default {
       this.snackbar = false;
       this.message = "";
       this.$store
-        .dispatch("user/addUser", this.email)
+        .dispatch("user/addUser",{email: this.email,post:"prog"})
         .then(() => {
           this.loading = false;
           this.snackbar = true;

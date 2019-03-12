@@ -7,8 +7,7 @@
           <h2 style="font-weight:300">{{school.address}}, {{school.city}}</h2>
           <p>Total No of Students : {{school.total}}</p>
           <v-btn dark color="green" :href="school.location">
-            <v-icon>directions</v-icon>
-            Get Directions
+            <v-icon>directions</v-icon>Get Directions
           </v-btn>
         </div>
       </v-flex>
@@ -250,6 +249,7 @@ export default {
       addSession: {
         volNo: 1,
         title: "",
+        lessonplan: "",
         volunteer: []
       }
     };
@@ -278,10 +278,11 @@ export default {
   watch: {
     refresh(newval, oldval) {
       if (newval)
-        this.$store.dispatch("school/getSessions", {class:this.SelectedClass,
-      school: this.$route.params.school,
-        city: this.$route.params.city,
-      });
+        this.$store.dispatch("school/getSessions", {
+          class: this.SelectedClass,
+          school: this.$route.params.school,
+          city: this.$route.params.city
+        });
     }
   },
   created() {
@@ -333,21 +334,21 @@ a.open=!a.open
       );
     },
     SelectClass(cls) {
-      this.$store.dispatch("school/getSessions", {class:cls,
-      school: this.$route.params.school,
-        city: this.$route.params.city,
+      this.$store.dispatch("school/getSessions", {
+        class: cls,
+        school: this.$route.params.school,
+        city: this.$route.params.city
       });
     },
     deselectClass() {
       this.$store.commit("school/deselectClass");
     },
     submitSession() {
-
       this.$store.dispatch("school/addSession", {
         data: this.addSession,
         class: this.SelectedClass,
         school: this.$route.params.school,
-        city: this.$route.params.city,
+        city: this.$route.params.city
       });
       this.dialog = false;
     },
