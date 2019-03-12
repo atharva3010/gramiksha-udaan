@@ -9,13 +9,6 @@
           <v-btn dark color="green" :href="school.location">
             <v-icon>directions</v-icon>Get Directions
           </v-btn>
-          <img
-          v-if="user.schoolPhoto !== undefined && user.schoolPhoto !== ''"
-          :src="user.schoolPhoto"
-          width="150"
-          alt
-        >
-        <img v-else src="/static/images/profile/profile.svg" width="150" alt>
         <br>
         <v-btn color="primary" @click="uploadCard=true">Edit School Photo</v-btn>
         <v-dialog v-model="uploadCard" width="525">
@@ -71,7 +64,15 @@
         </div>
       </v-flex>
       <v-flex v-if="!loading['school']" sm8 xs12>
-        <v-img style="border-radius:8px;" :src="school.url" height="400px"></v-img>
+        <v-img 
+        v-if="school.schoolPhoto !== undefined && school.schoolPhoto !== ''"
+        style="border-radius:8px;" 
+        :src="school.schoolPhoto" 
+        height="400px"
+        alt>
+        </v-img>
+        <v-img
+        else :src="school.url" height="400px" alt></v-img>
       </v-flex>
       <v-flex v-if="loading['school']" sm12>
         <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-thin">
