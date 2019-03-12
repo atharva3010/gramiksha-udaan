@@ -8,7 +8,7 @@
       <v-flex sx12 sm6 offset-sm3>
         <v-card>
           <v-container>
-            <h1 class="font-weight-light display-2">Add User</h1>
+            <h1 class="font-weight-light display-1">Add Program coordinator</h1>
             <v-form>
               <v-layout style="margin:10px 0" row>
                 <v-flex xs12>
