@@ -29,7 +29,7 @@ export default {
       total: 0,
       classes: {},
       location:''
-    }
+    },
   },
   mutations: {
     deselectClass(state) {
@@ -65,7 +65,7 @@ export default {
               no: parseInt(sessiondoc.id),
               title: sessiondata.title,
               date: sessiondata.date,
-              volunteer
+              volunteer,
             });
             state.loading["classes"] = false;
           });
@@ -193,7 +193,9 @@ export default {
       commit
     }, payload) {
       return new Promise((resolve,reject)=>{
-        db.collection(`cities/${payload.city}/schools/${payload.school}/classes`).doc(payload.newClass).set({strength:"0"}).then(resolve())
+        db.collection(`cities/${payload.city}/schools/${payload.school}/classes`).doc(payload.newClass).set({strength:"0"}).then(resolve()).catch(err=>{
+          reject(err)
+        })
       })
        
     },

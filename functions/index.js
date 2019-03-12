@@ -6,7 +6,8 @@ admin.initializeApp();
 var auth = admin.auth();
 exports.createUser = functions.firestore
   .document("unverified/{uid}")
-  .onCreate((data, context) => {var newUser = data.data();
+  .onCreate((data, context) => {
+    var newUser = data.data();
     var isvol=newUser.post==="vol"
     var isprog=!isvol;
     return auth
