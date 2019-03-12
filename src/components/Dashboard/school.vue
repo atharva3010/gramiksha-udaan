@@ -9,70 +9,69 @@
           <v-btn dark color="green" :href="school.location">
             <v-icon>directions</v-icon>Get Directions
           </v-btn>
-        <br>
-        <v-btn color="primary" @click="uploadCard=true">Edit School Photo</v-btn>
-        <v-dialog v-model="uploadCard" width="525">
-          <v-card id="upload" dark wrap>
-            <v-card-title class="font-weight-light display-1">
-              <div v-if="selectedFile === null">Please select a file to upload.</div>
-              <div v-else>{{selectedFile.name}}</div>
-            </v-card-title>
-            <v-card-text>
-              <input
-                type="file"
-                @change="onFileSelected"
-                accept="image/*"
-                ref="fileInput"
-                style="display:none"
-              >
-            </v-card-text>
-            <v-card-actions>
-              <v-btn
-                @click="$refs.fileInput.click()"
-                v-if="selectedFile === null"
-                color="purple"
-                class="left mb-3"
-                dark
-              >Pick File</v-btn>
-              <v-btn
-                color="green"
-                :loading="schoolPhotoLoading"
-                class="mb-3"
-                v-else
-                dark
-                @click="onUpload"
-              >Upload</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue"
-                class="mb-3"
-                :disabled="schoolPhotoLoading"
-                v-if="selectedFile !== null"
-                dark
-                @click="selectedFile=null;"
-              >Clear Files</v-btn>
-              <v-btn
-                color="red"
-                :disabled="schoolPhotoLoading"
-                class="mb-3"
-                dark
-                @click="uploadCard=false; selectedFile=null;"
-              >Cancel</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+          <br>
+          <v-btn color="primary" @click="uploadCard=true">Edit School Photo</v-btn>
+          <v-dialog v-model="uploadCard" width="525">
+            <v-card id="upload" dark wrap>
+              <v-card-title class="font-weight-light display-1">
+                <div v-if="selectedFile === null">Please select a file to upload.</div>
+                <div v-else>{{selectedFile.name}}</div>
+              </v-card-title>
+              <v-card-text>
+                <input
+                  type="file"
+                  @change="onFileSelected"
+                  accept="image/*"
+                  ref="fileInput"
+                  style="display:none"
+                >
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  @click="$refs.fileInput.click()"
+                  v-if="selectedFile === null"
+                  color="purple"
+                  class="left mb-3"
+                  dark
+                >Pick File</v-btn>
+                <v-btn
+                  color="green"
+                  :loading="schoolPhotoLoading"
+                  class="mb-3"
+                  v-else
+                  dark
+                  @click="onUpload"
+                >Upload</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue"
+                  class="mb-3"
+                  :disabled="schoolPhotoLoading"
+                  v-if="selectedFile !== null"
+                  dark
+                  @click="selectedFile=null;"
+                >Clear Files</v-btn>
+                <v-btn
+                  color="red"
+                  :disabled="schoolPhotoLoading"
+                  class="mb-3"
+                  dark
+                  @click="uploadCard=false; selectedFile=null;"
+                >Cancel</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </div>
       </v-flex>
       <v-flex v-if="!loading['school']" sm8 xs12>
-        <v-img 
-        v-if="school.schoolPhoto !== undefined && school.schoolPhoto !== ''"
-        style="border-radius:8px;" 
-        :src="school.schoolPhoto" 
-        height="400px"
-        alt>
-        </v-img>
         <v-img
-        else :src="school.url" height="400px" alt></v-img>
+          v-if="school.imgurl !== undefined && school.imgUrl !== ''"
+          style="border-radius:8px;"
+          :src="school.imgurl"
+          height="400px"
+          alt
+        ></v-img>
+        <v-img else :src="school.url" height="400px" alt></v-img>
       </v-flex>
       <v-flex v-if="loading['school']" sm12>
         <h2 style="text-align:center;padding: 179px 30%;" class="font-weight-thin">
@@ -265,15 +264,19 @@
           xs12
         >
           <div v-if="!loading['classes']">
-            <SessionBox :no="session.no" :date="session.date" :title="session.title" :volunteer="session.volunteer"/>
-       
+            <SessionBox
+              :no="session.no"
+              :date="session.date"
+              :title="session.title"
+              :volunteer="session.volunteer"
+            />
           </div>
         </v-flex>
-        <v-flex v-if="classes[SelectedClass].sessions.length == 0  " >
+        <v-flex v-if="classes[SelectedClass].sessions.length == 0  ">
           <h3
             class="font-weight-light display-1 pt-4"
-            style="text-align:center" >
-            No sessions have been added yet.
+            style="text-align:center"
+          >No sessions have been added yet.
             <br>
             <v-btn color="primary" flat @click="dialog = true">Add Session</v-btn>
           </h3>
@@ -292,20 +295,21 @@
 </template>
 
 <script>
-import SessionBox from "./sessionbox"
+import SessionBox from "./sessionbox";
 export default {
-  components:{
+  components: {
     SessionBox
-  }
-  ,
+  },
   data() {
     return {
-    
       className: "",
       addclass: false,
       usernamesInCity: [],
       select: "",
+      selectedFile: null,
+      uploadCard: false,
       dialog: false,
+      schoolPhotoLoading: false,
       addSession: {
         volNo: 1,
         title: "",
@@ -325,7 +329,6 @@ export default {
       return this.$store.getters["school/getSchoolDetails"];
     },
     classes() {
-      
       return this.$store.getters["school/getSchoolClasses"];
     },
     SelectedClass() {
@@ -367,13 +370,21 @@ export default {
       // console.log(file);
       // Create a Storage Ref w/ username
       var storageRef = this.$storage.ref(
-        "/schoolPhoto/" + school.name + "/schoolPhoto.jpg"
+        `/schoolPhotos/${_this.$route.params.city}/${
+          _this.$route.params.school
+        }/schoolPhoto.jpg`
       );
       // Upload file
       var task = await storageRef.put(file);
       var dURL = await storageRef.getDownloadURL();
-      await this.$store.dispatch("user/updateUserDetails", {
-        schoolPhoto: dURL
+      await this.$store.dispatch("school/updateSchoolDetails", {
+        schoolPhotoURL: dURL,
+        city: _this.$route.params.city,
+        school: _this.$route.params.school
+      });
+      this.$store.dispatch("school/getSchool", {
+        school: this.$route.params.school,
+        city: this.$route.params.city
       });
       _this.schoolPhotoLoading = false;
       _this.selectedFile = null;
@@ -381,30 +392,30 @@ export default {
       _this.$store.dispatch("setAlert", "School photo added successfully.");
     },
     onFileSelected(event) {
-      console.log("fired");
       this.selectedFile = event.target.files[0];
     },
-    rotateIcon(open){
-console.log(open)
+    rotateIcon(open) {
+      console.log(open);
     },
-    printsss(a){
-      
-console.log(a)
-a.open=!a.open
+    printsss(a) {
+      console.log(a);
+      a.open = !a.open;
     },
     submitClass() {
       console.log(className);
-      this.$store.dispatch("school/addClass", {
-        school: this.$route.params.school,
-        city: this.$route.params.city,
-        newClass: this.className
-      }).then(()=>{
-         this.$store.dispatch("school/getSchool", {
-      school: this.$route.params.school,
-      city: this.$route.params.city
-    });
-    this.addclass=false;
-      })
+      this.$store
+        .dispatch("school/addClass", {
+          school: this.$route.params.school,
+          city: this.$route.params.city,
+          newClass: this.className
+        })
+        .then(() => {
+          this.$store.dispatch("school/getSchool", {
+            school: this.$route.params.school,
+            city: this.$route.params.city
+          });
+          this.addclass = false;
+        });
     },
     selectSession(selsession) {
       this.$router.push(

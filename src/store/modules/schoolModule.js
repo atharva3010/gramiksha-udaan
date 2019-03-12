@@ -1,6 +1,4 @@
-import {
-  db
-} from "@/scripts/firebase";
+import { db } from "@/scripts/firebase";
 export default {
   namespaced: true,
   state: {
@@ -28,8 +26,8 @@ export default {
       imgURL: "",
       total: 0,
       classes: {},
-      location:''
-    },
+      location: ""
+    }
   },
   mutations: {
     deselectClass(state) {
@@ -41,31 +39,31 @@ export default {
       state.loading["classes"] = true;
       var classRef = db.collection(
         "cities/" +
-        payload.city +
-        "/schools/" +
-        payload.school +
-        "/classes/" +
-        payload.class +
-        "/sessions"
+          payload.city +
+          "/schools/" +
+          payload.school +
+          "/classes/" +
+          payload.class +
+          "/sessions"
       );
       classRef.get().then(doc => {
         state.SelectedClass = payload.class;
-        
+
         state.currentschool.classes[payload.class].sessions = [];
         if (doc.docs.length > 0)
-          doc.docs.forEach(function (sessiondoc, index) {
+          doc.docs.forEach(function(sessiondoc, index) {
             let sessiondata = sessiondoc.data();
-            let volunteer="";
-            sessiondata.volunteers.forEach(username=>{
-              volunteer+=`${username} `;
-            })
-            sessiondata.volunteers
-    
+            let volunteer = "";
+            sessiondata.volunteers.forEach(username => {
+              volunteer += `${username} `;
+            });
+            sessiondata.volunteers;
+
             state.currentschool.classes[payload.class].sessions.unshift({
               no: parseInt(sessiondoc.id),
               title: sessiondata.title,
               date: sessiondata.date,
-              volunteer,
+              volunteer
             });
             state.loading["classes"] = false;
           });
@@ -74,64 +72,67 @@ export default {
     },
     getSchool(state, payload) {
       state.currentschool.name = "";
-      state.currentschool.imgURL = "";
+      state.currentschool.imgurl = "";
       state.currentschool.address = "";
       state.currentschool.total = "";
       state.currentschool.city = "";
       state.currentschool.classes = {};
-      state.currentschool.location = '';
+      state.currentschool.location = "";
       state.snackbar.bar = false;
       state.loading["school"] = true;
       var schoolsRef = db
         .collection("cities/" + payload.city + "/schools/")
         .doc(payload.school);
 
-      schoolsRef.get().then(doc => {
-        
-        state.currentschool.name = doc.id;
-        state.currentschool.imgURL = doc.data().imgurl;
-        state.currentschool.address = doc.data().address;
-        state.currentschool.total = doc.data().total;
-        state.currentschool.city = state.currentcity;
-        if(doc.data().location){
-          state.currentschool.location=doc.data().location
-        }
-        return db.collection(
-            "cities/" +  payload.city + "/schools/" + doc.id + "/classes"
-          )
-          .get()
-      }).then(classdata => {
-        var classpromises = classdata.docs.map(classitr => {
-          db.collection(
-            "cities/" +
-            payload.city +
-            "/schools/" +
-            payload.school +
-            "/classes/" +
-            classitr.id +
-            "/sessions"
-          ).get().then(function (docx) {
-            
-            var noofsssion = docx.docs.length;
-            state.currentschool.classes = {
-              ...state.currentschool.classes,
-              ...{
-                [classitr.id]: {
-                  strength: classitr.data().strength,
-                  noofsession: noofsssion
-                }
-              }
-            };
-
-          })
+      schoolsRef
+        .get()
+        .then(doc => {
+          state.currentschool.name = doc.id;
+          state.currentschool.imgURL = doc.data().imgurl;
+          state.currentschool.address = doc.data().address;
+          state.currentschool.total = doc.data().total;
+          state.currentschool.city = state.currentcity;
+          if (doc.data().location) {
+            state.currentschool.location = doc.data().location;
+          }
+          return db
+            .collection(
+              "cities/" + payload.city + "/schools/" + doc.id + "/classes"
+            )
+            .get();
+        })
+        .then(classdata => {
+          var classpromises = classdata.docs.map(classitr => {
+            db.collection(
+              "cities/" +
+                payload.city +
+                "/schools/" +
+                payload.school +
+                "/classes/" +
+                classitr.id +
+                "/sessions"
+            )
+              .get()
+              .then(function(docx) {
+                var noofsssion = docx.docs.length;
+                state.currentschool.classes = {
+                  ...state.currentschool.classes,
+                  ...{
+                    [classitr.id]: {
+                      strength: classitr.data().strength,
+                      noofsession: noofsssion
+                    }
+                  }
+                };
+              });
+          });
+          return Promise.all(classpromises);
+        })
+        .then(() => {
+          state.loading["school"] = false;
         });
-        return Promise.all(classpromises)
-      }).then(() => {
-        state.loading['school'] = false
-      })
     },
     pushSession(state, payload) {
-      
       state.loading["classes"] = true;
       var today = new Date();
       var dd = today.getDate();
@@ -141,27 +142,27 @@ export default {
 
       var sessionref = db.collection(
         "cities/" +
-        payload.city +
-        "/schools/" +
-        payload.school+
-        "/classes/" +
-       payload.class+
-        "/sessions"
+          payload.city +
+          "/schools/" +
+          payload.school +
+          "/classes/" +
+          payload.class +
+          "/sessions"
       );
 
       db.collection(
-          "cities/" +
+        "cities/" +
           state.currentcity +
           "/schools/" +
           state.currentschoolname +
           "/classes/"
-        )
+      )
         .doc(state.SelectedClass)
         .get()
         .then(classdoc => {
           classdoc.data();
-          var vol =  payload.data.volunteer;
-   
+          var vol = payload.data.volunteer;
+
           sessionref.get().then(doc => {
             payload.data = {
               title: payload.data.title,
@@ -189,29 +190,36 @@ export default {
     }
   },
   actions: {
-    addClass({
-      commit
-    }, payload) {
-      return new Promise((resolve,reject)=>{
-        db.collection(`cities/${payload.city}/schools/${payload.school}/classes`).doc(payload.newClass).set({strength:"0"}).then(resolve()).catch(err=>{
-          reject(err)
-        })
-      })
-       
+    updateSchoolDetails: async ({ commit }, payload) => {
+      await db
+        .collection("/cities")
+        .doc(payload.city)
+        .collection("/schools")
+        .doc(payload.school)
+        .update({
+          imgurl: payload.schoolPhotoURL
+        });
     },
-    getSessions({
-      commit
-    }, payload) {
+    addClass({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        db.collection(
+          `cities/${payload.city}/schools/${payload.school}/classes`
+        )
+          .doc(payload.newClass)
+          .set({ strength: "0" })
+          .then(resolve())
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+    getSessions({ commit }, payload) {
       commit("getSessions", payload);
     },
-    getSchool({
-      commit
-    }, payload) {
+    getSchool({ commit }, payload) {
       commit("getSchool", payload);
     },
-    addSession({
-      commit
-    }, payload) {
+    addSession({ commit }, payload) {
       commit("pushSession", payload);
     }
   },
@@ -223,7 +231,6 @@ export default {
       return state.refresh;
     },
     getSelectedClass(state) {
-      
       return state.SelectedClass;
     },
     getSchoolDetails(state) {
@@ -237,7 +244,6 @@ export default {
       };
     },
     getSchoolClasses(state) {
-      
       return state.currentschool.classes;
     },
     getsnackbar(state) {

@@ -288,7 +288,6 @@ export default {
       _this.$store.dispatch("setAlert", "Profile picture added successfully.");
     },
     onFileSelected(event) {
-      console.log("fired");
       this.selectedFile = event.target.files[0];
     },
     closePasswordDialog() {
