@@ -115,22 +115,17 @@ export default {
     };
   },
   created() {
-    if (this.$store.getters["user/getIsSignedIn"]) this.$router.push("/");
+    let _this = this;
+    this.$auth.onAuthStateChanged(user => {
+      if (user) _this.$router.push("/");
+    });
   },
   computed: {
-    userSignedIn() {
-      return this.$store.getters["user/getIsSignedIn"];
-    },
     error() {
-      return this.$store.getters["user/error"];
+      return this.$store.getters["user/error"] || false;
     },
     loading() {
-      return this.$store.getters["user/loading"];
-    }
-  },
-  watch: {
-    userSignedIn(value) {
-      this.$router.push(decodeURIComponent(this.$route.query.redirect) || "/");
+      return this.$store.getters["user/loading"] || false;
     }
   },
   methods: {
@@ -166,7 +161,9 @@ export default {
       if (!validate) return;
       this.$store.dispatch("user/SignUserIn", {
         email: this.email,
-        password: this.password
+        password: this.password,
+        router: this.$router,
+        route: this.$route
       });
     },
     onDismissed() {

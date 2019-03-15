@@ -20,8 +20,12 @@ require("froala-editor/css/froala_style.min.css");
 
 // Import and use Vue Froala lib.
 import VueFroala from "vue-froala-wysiwyg";
-Vue.use(VueFroala);
+import VueProgressiveImage from "vue-progressive-image";
 
+Vue.use(VueFroala);
+Vue.use(VueProgressiveImage, {
+  cache: false
+});
 Vue.use(Vuetify);
 Vue.component("app-alert", AlertCmp);
 Vue.component("Divider", divider);

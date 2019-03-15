@@ -6,21 +6,17 @@ export default {
     userExists: {
       no: false
     },
-    user: JSON.parse(localStorage.getItem("gramiksha-udaan:user")),
+    user: null,
     isSignedUp: false,
-    userDetails: JSON.parse(
-      localStorage.getItem("gramiksha-udaan:userDetails")
-    ),
-    isSignedIn: localStorage.getItem("gramiksha-udaan:signedIn") === "true",
+    userDetails: null,
+    isSignedIn: null,
     SignedUpUser: null,
     loading: false,
-    error: null,
-    accessLevel: localStorage.getItem("gramiksha-udaan:accessLevel")
+    error: null
   },
   mutations: {
     setUser(state, payload) {
       state.user = payload;
-      localStorage.setItem("gramiksha-udaan:user", JSON.stringify(payload));
     },
     setUserExists(state, payload) {
       state.userExist = payload;
@@ -30,21 +26,9 @@ export default {
     },
     setUserDetails(state, payload) {
       state.userDetails = payload;
-      if (payload != null) {
-        state.accessLevel = payload.accessLevel;
-        localStorage.setItem(
-          "gramiksha-udaan:accessLevel",
-          payload.accessLevel
-        );
-      }
-      localStorage.setItem(
-        "gramiksha-udaan:userDetails",
-        JSON.stringify(payload)
-      );
     },
     setSignedIn(state, payload) {
       state.isSignedIn = payload;
-      localStorage.setItem("gramiksha-udaan:signedIn", payload);
     },
     setLoading(state, payload) {
       state.loading = payload;
@@ -54,10 +38,6 @@ export default {
     },
     clearError(state) {
       state.error = null;
-    },
-    setAccessLevel(state, payload) {
-      state.accessLevel = payload;
-      localStorage.setItem("gramiksha-udaan:accessLevel", payload);
     },
     CheckUsernames(state, payload) {
       payload.forEach(element => {
@@ -75,24 +55,20 @@ export default {
   },
   actions: {
     updateUserDetails: async ({ commit }, payload) => {
-      var _this = this;
       return new Promise(async (resolve, reject) => {
         let user = firebase.auth().currentUser;
+        let userDetSnapshot = await db
+          .collection("users")
+          .where("uid", "==", user.uid)
+          .get();
+        let userDetails = userDetSnapshot.docs[0].data();
         await db
           .collection("/users")
-          .doc(
-            JSON.parse(localStorage.getItem("gramiksha-udaan:userDetails"))
-              .username
-          )
+          .doc(userDetails.username)
           .update({
             ...payload
           });
-        var docef = db
-          .collection("users")
-          .doc(
-            JSON.parse(localStorage.getItem("gramiksha-udaan:userDetails"))
-              .username
-          );
+        var docef = db.collection("users").doc(userDetails.username);
         await docef
           .get()
           .then(function(doc) {
@@ -137,7 +113,6 @@ export default {
             .auth()
             .signInWithEmailLink(payload, link)
             .then(user => {
-              console.log(user);
               commit("setUser", user.user);
               return resolve();
             })
@@ -147,7 +122,7 @@ export default {
         }
       });
     },
-    SignUserIn({ commit, dispatch }, payload) {
+    async SignUserIn({ commit, dispatch }, payload) {
       commit("setLoading", true);
       commit("clearError");
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -155,7 +130,10 @@ export default {
         firebase
           .auth()
           .signInWithEmailAndPassword(payload.email, payload.password)
-          .then(function(user) {
+          .then(async function(user) {
+            // await firebase
+            //   .auth()
+            //   .setPersistence(firebase.auth.Auth.Persistence.SESSION);
             var usersRef = db.collection("users");
             usersRef
               .where("uid", "==", user.user.uid)
@@ -217,7 +195,7 @@ export default {
           .catch(function(error) {
             commit("setLoading", false);
             error => {
-              message: "Can't access Server";
+              message: "Can't  Server";
             };
             commit("setError", error);
           });
@@ -230,8 +208,7 @@ export default {
         uid: state.user.uid,
         email: payload.email,
         name: payload.name,
-        username: payload.username,
-        accessLevel: 0
+        username: payload.username
       };
       db.collection("/users")
         .doc(payload.username)
@@ -240,7 +217,6 @@ export default {
           commit("setLoading", false);
           commit("setUser", state.user);
           commit("setUserDetails", userDetails);
-          dispatch("setAccessLevel");
           commit("setSignedUp", true);
           commit("setSignedIn", true);
         })
@@ -314,7 +290,6 @@ export default {
               commit("setSignedIn", false);
               commit("setSignedUp", false);
               commit("setUserDetails", null);
-              commit("setAccessLevel", -1);
               resolve();
             })
             .catch(function(error) {
@@ -337,7 +312,6 @@ export default {
             return firebase.auth().currentUser.updatePassword(newPassword);
           })
           .then(() => {
-            console.log("yes");
             resolve();
           })
           .catch(error => {
@@ -368,9 +342,6 @@ export default {
     },
     getIsSignedIn(state) {
       return state.isSignedIn;
-    },
-    getAccessLevel(state) {
-      return state.accessLevel;
     }
   }
 };

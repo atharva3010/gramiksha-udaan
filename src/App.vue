@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <app-alert></app-alert>
     <v-navigation-drawer
       class="nav-drawer"
       fixed
@@ -20,7 +19,7 @@
           </v-list-tile-avatar>
 
           <v-list-tile-content>
-            <v-list-tile-title>{{user.name}}</v-list-tile-title>
+            <!-- <v-list-tile-title>{{user.email}}</v-list-tile-title> -->
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile v-for="item in menuItems" :key="item.title" :to="item.link">
@@ -62,11 +61,8 @@
         <v-btn v-if="userSignedIn" @click="logout">Logout
           <v-icon right>power_settings_new</v-icon>
         </v-btn>
-        <v-btn @click="goto('/login')" v-if="!userSignedIn">Sign In
+        <v-btn to="/login" v-if="!userSignedIn">Sign In
           <v-icon right>exit_to_app</v-icon>
-        </v-btn>
-        <v-btn @click="goto('/signup')" v-if="!userSignedIn">Sign Up
-          <v-icon right>person_add</v-icon>
         </v-btn>
       </v-toolbar-items>
       <v-toolbar-items v-else>
@@ -81,9 +77,6 @@
         </v-btn>
         <v-btn icon @click="goto('/login')" v-if="!userSignedIn">
           <v-icon>exit_to_app</v-icon>
-        </v-btn>
-        <v-btn icon @click="goto('/signup')" v-if="!userSignedIn">
-          <v-icon>person_add¯</v-icon>
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
@@ -115,14 +108,17 @@
 
 <script>
 import Alert from "@/components/Global/Alert";
+import firebase from "firebase/app";
+import "firebase/auth";
 export default {
-  name: "App",
   data() {
     return {
       isDrawer: true,
       toolbarMargin: "",
       isMob: false,
-      padStyle: "padding-left: 0"
+      padStyle: "padding-left: 0",
+      userSignedIn: false,
+      user: null
     };
   },
   components: {
@@ -130,17 +126,23 @@ export default {
   },
   mounted() {
     this.onResize();
+    var _this = this;
     window.addEventListener("resize", this.onResize, { passive: true });
+    this.$auth.onAuthStateChanged(function(user) {
+      if (user) {
+        user.name = "";
+        _this.userSignedIn = true;
+        _this.user = user;
+      } else {
+        _this.userSignedIn = false;
+        _this.user = null;
+      }
+    });
   },
 
   computed: {
     menuItems() {
       let menuItems = [
-        {
-          icon: "face",
-          title: "Sign up",
-          link: "/signup"
-        },
         {
           icon: "lock_open",
           title: "Sign in",
@@ -151,18 +153,9 @@ export default {
         menuItems = [];
       }
       return menuItems;
-    },
-    userSignedIn() {
-      return this.$store.getters["user/getIsSignedIn"];
-    },
-    user() {
-      return this.$store.getters["user/getUserDetails"];
     }
   },
   watch: {
-    userSignedIn(value) {
-      if (value) this.$router.push("/");
-    },
     isDrawer(value) {
       if (value == true && this.isMob) {
         this.padStyle = "padding-left: 0";
@@ -181,10 +174,17 @@ export default {
       this.$router.push(route);
     },
     logout() {
-      var self = this;
-      this.$store.dispatch("user/logout").then(function() {
-        self.$router.push("/login");
-      });
+      let _this = this;
+      this.$auth
+        .signOut()
+        .then(function() {
+          _this.userSignedIn = false;
+          _this.user = null;
+          _this.$router.push("/login");
+        })
+        .catch(function(error) {
+          alert("Error");
+        });
     },
     back() {
       this.$router.go(-1);

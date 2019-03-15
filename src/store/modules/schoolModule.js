@@ -23,7 +23,7 @@ export default {
       name: "",
       address: "",
       city: "",
-      imgURL: "",
+      imgurl: "",
       total: 0,
       classes: {},
       location: ""
@@ -88,10 +88,11 @@ export default {
         .get()
         .then(doc => {
           state.currentschool.name = doc.id;
-          state.currentschool.imgURL = doc.data().imgurl;
+          state.currentschool.imgurl = doc.data().imgurl;
           state.currentschool.address = doc.data().address;
           state.currentschool.total = doc.data().total;
           state.currentschool.city = state.currentcity;
+          console.log(state);
           if (doc.data().location) {
             state.currentschool.location = doc.data().location;
           }
@@ -237,7 +238,7 @@ export default {
       return {
         name: state.currentschool.name,
         address: state.currentschool.address,
-        url: state.currentschool.imgURL,
+        imgurl: state.currentschool.imgurl,
         city: state.currentschool.city,
         total: state.currentschool.total,
         location: state.currentschool.location

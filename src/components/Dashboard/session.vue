@@ -64,7 +64,7 @@
       </v-dialog>
     </v-layout>
     <v-divider style="margin:30px 0px;"></v-divider>
-    <signedout></signedout>
+    <signedout :dialog="!userSignedIn"></signedout>
     <div>
       <v-tabs v-model="active" color="transparent" slider-color="primary">
         <v-tab ripple>Lesson Plan</v-tab>
@@ -291,9 +291,7 @@ export default {
     return {
       config: {
         events: {
-          "froalaEditor.initialized": function() {
-            console.log("initialized");
-          }
+          "froalaEditor.initialized": function() {}
         }
       },
       addStudentsList: [
@@ -305,6 +303,7 @@ export default {
       editLessonPlan: false,
       editAttendance: false,
       editAssessment: false,
+      userSignedIn: false,
       dialog2: false,
       active: null,
       text:
@@ -350,6 +349,12 @@ export default {
     }
   },
   created() {
+    let _this = this;
+    this.$auth.onAuthStateChanged(user => {
+      user = user ? true : false;
+      if (!user) _this.userSignedIn = false;
+      else _this.userSignedIn = true;
+    });
     //when page is rendered we set session's identity in state from the url,then fetch the details from firebase by getStudents
     this.$store.dispatch("students/setSession", {
       city: this.$route.params.city,
@@ -383,8 +388,8 @@ export default {
       });
     },
     pushLessonPlan() {
-      if(this.lessonplan.data === undefined) {
-        this.lessonplan.data = ""
+      if (this.lessonplan.data === undefined) {
+        this.lessonplan.data = "";
       }
       if (this.$store.dispatch("students/pushLessonPlan", this.lessonplan)) {
         this.editLessonPlan = false;

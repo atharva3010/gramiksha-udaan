@@ -57,30 +57,39 @@ export default {
       commit("getSchools", state.city);
     },
     getSchools({ commit }, payload) {
-      db.collection("cities/" + payload + "/schools")
-        .get()
-        .then(result => {
-          var schools = [];
-          result.docs.forEach(element => {
-            schools.push({
-              ...element.data(),
-              ...{
-                name: element.id
-              }
+      return new Promise((resolve, reject) => {
+        db.collection("cities/" + payload + "/schools")
+          .get()
+          .then(result => {
+            var schools = [];
+            result.docs.forEach(element => {
+              schools.push({
+                ...element.data(),
+                ...{
+                  name: element.id
+                }
+              });
             });
+            commit("setSchools", schools);
+            resolve();
+          })
+          .catch(function(error) {
+            reject(error);
           });
-          commit("setSchools", schools);
-        });
+      });
     },
-    addSchool({commit}, payload) {
-      return new Promise(
-        (resolve,reject)=>{
-          
-          db.collection("/cities/"+payload.city+"/schools").doc(payload.data.name).set(payload.data).then(
-        ()=>{   return  resolve()}
-          ).catch((err)=>{return reject(err)})
-        }
-      )
+    addSchool({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        db.collection("/cities/" + payload.city + "/schools")
+          .doc(payload.data.name)
+          .set(payload.data)
+          .then(() => {
+            return resolve();
+          })
+          .catch(err => {
+            return reject(err);
+          });
+      });
     },
     getAllSchools({ commit }) {
       commit("getAllSchools");
