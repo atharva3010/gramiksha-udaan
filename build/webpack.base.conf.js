@@ -42,7 +42,8 @@ module.exports = {
           resolve("src"),
           resolve("test"),
           resolve("node_modules/webpack-dev-server/client")
-        ]
+        ],
+        exclude: /node_modules/
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
