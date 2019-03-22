@@ -69,7 +69,7 @@
         <v-btn icon @click="goto('/')">
           <v-icon>home</v-icon>
         </v-btn>
-        <v-btn icon>
+        <v-btn icon  @click="goto('/profile')" v-if="userSignedIn">
           <v-icon>person</v-icon>
         </v-btn>
         <v-btn icon v-if="userSignedIn" @click="logout">
