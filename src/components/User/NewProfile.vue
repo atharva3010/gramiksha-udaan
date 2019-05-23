@@ -11,9 +11,9 @@
           <v-card width="100%">
             <div style="margin:10px; padding:10px;">
               <h1>
-                Name: 
+                Name:
               </h1>
-              <h1> 
+              <h1>
                 {{user.name}}
               </h1>
               <br>
@@ -133,7 +133,7 @@
           <v-flex sm6>
             <v-btn dark color="red" @click="passwordDialog = true">Update Password</v-btn>
           </v-flex>
-          <!-- <v-layout row wrap>
+          <v-layout row wrap>
             <v-menu
               ref="menu"
               v-model="menu"
@@ -164,14 +164,14 @@
                   persistent-hint
                   hint="YYYY/MM/DD format"
                 ></v-text-field>
-                <v-date-picker v-model="date" scrollable reactive color="purple">
+                <v-date-picker v-model="date" scrollable reactive color="primary">
                   <v-spacer></v-spacer>
                   <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
                   <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
                 </v-date-picker>
               </v-dialog>
             </v-flex>
-          </v-layout>-->
+          </v-layout>
         </v-layout>
       </v-flex>
     </v-layout>
