@@ -14,7 +14,7 @@
     "firebase": "^5.8.6",
     "firebase-admin": "^6.0.0",
     "firebase-functions": "^2.1.0",
-    "handlebars": "^4.0.12",
+    "handlebars": "^4.1.2",
     "nodemailer": "^5.1.1"
   },
   "devDependencies": {
